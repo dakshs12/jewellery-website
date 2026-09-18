@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-alabaster: #FAF8F5;
+  --color-warm-oat: #F3EFEA;
+  --color-champagne: #D4AF37;
+  --color-champagne-dark: #C5A059;
+  --color-champagne-light: #F5ECD2;
+  --color-rose-pearl: #E8D7D0;
+  --color-rose-pearl-light: #F9F3F0;
+  --color-espresso: #1C1917;
+  --color-espresso-light: #2E2925;
+  --color-warm-stone: #78716C;
+  --color-warm-stone-light: #A8A29E;
+  --color-border-subtle: #E9E3DB;
+  --color-emerald-deep: #2D4F3E;
+
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", "Cinzel", Georgia, serif;
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --bg-base: #FAF8F5;
+  --card-base: #F3EFEA;
+  --gold-accent: #D4AF37;
+  --gold-dark: #C5A059;
+  --rose-pearl: #E8D7D0;
+  --text-primary: #1C1917;
+  --text-muted: #78716C;
+  --border-subtle: #E9E3DB;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #E8D7D0;
+  color: #1C1917;
+}
+
+/* Editorial luxury typography classes */
+.font-display {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+}
+
+.font-body {
+  font-family: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF8F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8D0C5;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A059;
+}
+
+/* Touch targets */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
