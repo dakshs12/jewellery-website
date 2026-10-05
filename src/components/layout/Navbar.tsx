@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, ShoppingBag, Search, X, Sparkles } from "lucide-react";
 import { useHydratedCart } from "@/hooks/useHydratedCart";
@@ -64,18 +65,20 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                 </div>
               </div>
 
-              {/* Center: Brand Typography Wordmark */}
+              {/* Center: Brand Logo */}
               <div className="flex flex-col items-center justify-center text-center">
                 <Link
                   href="/"
-                  className="group focus:outline-none focus:ring-1 focus:ring-[#C5A059] rounded-sm px-2"
+                  className="group focus:outline-none focus:ring-1 focus:ring-[#C5A059] rounded-sm px-2 flex items-center justify-center py-0.5"
                 >
-                  <span className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-[0.28em] text-[#1C1917] transition-colors group-hover:text-[#C5A059]">
-                    A N A Y A S
-                  </span>
-                  <span className="block text-[9px] sm:text-[10px] uppercase tracking-[0.32em] text-[#78716C] -mt-0.5">
-                    Artisanal Imitation Jewellery
-                  </span>
+                  <Image
+                    src="/anayas.png"
+                    alt="Anayas"
+                    width={280}
+                    height={142}
+                    priority
+                    className="h-14 sm:h-16 md:h-[72px] w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
+                  />
                 </Link>
               </div>
 

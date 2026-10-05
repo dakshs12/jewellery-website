@@ -9,10 +9,6 @@ export default function AnnouncementBar() {
       <span className="truncate">
         Complimentary Insured Express Delivery Across India on Orders Above ₹3,000
       </span>
-      <span className="hidden sm:inline text-[#C5A059]">•</span>
-      <span className="hidden sm:inline font-serif italic text-[#78716C]">
-        Artisanal Jadau & Polki Heirlooms
-      </span>
     </div>
   );
 }

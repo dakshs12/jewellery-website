@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Shield, Gem } from "lucide-react";
+import { ArrowRight, Shield, Gem } from "lucide-react";
 
 export default function HeroBanner() {
   const scrollToCatalog = () => {
@@ -25,10 +25,9 @@ export default function HeroBanner() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="lg:col-span-7 flex flex-col justify-center text-left"
           >
-            {/* Tagline */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F3EFEA] border border-[#E9E3DB] w-fit mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span className="text-[11px] uppercase tracking-[0.2em] font-medium text-[#1C1917]">
+            {/* Editorial Kicker */}
+            <div className="mb-6">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-medium text-[#78716C] block">
                 Artisanal Festive & Bridal Collection 2026
               </span>
             </div>

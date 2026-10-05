@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import AgentationDev from "@/components/dev/AgentationDev";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -57,6 +58,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-[#FAF8F5] text-[#1C1917] font-sans flex flex-col selection:bg-[#E8D7D0] selection:text-[#1C1917]">
         {children}
+        <AgentationDev />
       </body>
     </html>
   );
