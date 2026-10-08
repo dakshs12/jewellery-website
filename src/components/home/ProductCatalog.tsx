@@ -11,10 +11,13 @@ interface ProductCatalogProps {
 
 const CATEGORIES: { label: string; value: ProductCategory | "ALL" }[] = [
   { label: "All Heirlooms", value: "ALL" },
-  { label: "Necklaces & Chokers", value: "Necklaces" },
+  { label: "Necklaces & Chokers", value: "Necklace" },
+  { label: "Pendant Sets", value: "Pendant Sets" },
+  { label: "Everyday Wear", value: "Everyday Wear" },
   { label: "Statement Earrings", value: "Earrings" },
-  { label: "Artisan Bangles", value: "Bangles" },
-  { label: "Imperial Bridal Sets", value: "Bridal Sets" },
+  { label: "Rings", value: "Rings" },
+  { label: "Artisan Bracelets", value: "Bracelets" },
+  { label: "Mangalsutra", value: "Mangalsutra" },
 ];
 
 export default function ProductCatalog({ products }: ProductCatalogProps) {

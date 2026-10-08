@@ -1,8 +1,11 @@
 export type ProductCategory =
-  | "Necklaces"
+  | "Necklace"
+  | "Pendant Sets"
+  | "Everyday Wear"
   | "Earrings"
-  | "Bangles"
-  | "Bridal Sets";
+  | "Rings"
+  | "Bracelets"
+  | "Mangalsutra";
 
 export interface ProductSpecifications {
   material: string;

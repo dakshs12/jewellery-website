@@ -2,22 +2,16 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, PhoneCall, ShieldCheck, ArrowRight } from "lucide-react";
+
+import { COLLECTIONS } from "@/data/collections";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const CATEGORIES = [
-  { name: "All Heirlooms", href: "/#products", badge: "New" },
-  { name: "Necklaces & Chokers", href: "/#necklaces", subtitle: "Polki, Kundan & Temple Malas" },
-  { name: "Statement Earrings", href: "/#earrings", subtitle: "Chandbalis & Jhumkas" },
-  { name: "Artisan Bangles & Kadas", href: "/#bangles", subtitle: "18K Plated & Meenakari" },
-  { name: "Imperial Bridal Sets", href: "/#bridal-sets", subtitle: "Ensembles for the Modern Bride" },
-  { name: "Bestseller Gallery", href: "/#bestsellers", badge: "Trending" },
-];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   // Prevent body scroll when open
@@ -58,12 +52,13 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div>
               <div className="flex items-center justify-between p-5 border-b border-[#E9E3DB]">
                 <div>
-                  <span className="font-serif text-2xl tracking-[0.25em] font-semibold text-[#1C1917]">
-                    ANAYAS
-                  </span>
-                  <p className="text-[10px] tracking-widest text-[#78716C] uppercase mt-0.5">
-                    Haute Imitation Jewellery
-                  </p>
+                  <Image
+                    src="/2.svg"
+                    alt="Anayas"
+                    width={180}
+                    height={91}
+                    className="h-10 w-auto object-contain"
+                  />
                 </div>
                 <button
                   type="button"
@@ -77,36 +72,47 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
               {/* Navigation Links */}
               <div className="p-5 space-y-1">
-                <p className="text-[11px] font-semibold tracking-widest uppercase text-[#78716C] px-3 pb-2">
-                  Artisanal Collections
+                <Link
+                  href="/"
+                  onClick={onClose}
+                  className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
+                >
+                  <span className="font-serif text-lg tracking-wide group-hover:text-[#C5A059] transition-colors font-medium">
+                    HOME
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-[#C5A059] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                </Link>
+
+                <p className="text-[11px] font-semibold tracking-widest uppercase text-[#78716C] px-3 pt-3 pb-1">
+                  Shop by Collection
                 </p>
-                {CATEGORIES.map((cat) => (
+                {COLLECTIONS.map((cat) => (
                   <Link
-                    key={cat.name}
-                    href={cat.href}
+                    key={cat.id}
+                    href={`/products?category=${encodeURIComponent(cat.name)}`}
                     onClick={onClose}
-                    className="flex items-center justify-between px-3 py-3.5 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[48px]"
+                    className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
                   >
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-serif text-lg tracking-wide group-hover:text-[#C5A059] transition-colors">
-                          {cat.name}
-                        </span>
-                        {cat.badge && (
-                          <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-[#E8D7D0] text-[#1C1917]">
-                            {cat.badge}
-                          </span>
-                        )}
-                      </div>
-                      {cat.subtitle && (
-                        <p className="text-xs text-[#78716C] mt-0.5">
-                          {cat.subtitle}
-                        </p>
-                      )}
+                      <span className="font-serif text-base tracking-wide group-hover:text-[#C5A059] transition-colors">
+                        {cat.name}
+                      </span>
+                      <p className="text-[11px] text-[#78716C]">
+                        {cat.subtitle}
+                      </p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-[#C5A059] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                   </Link>
                 ))}
+
+                <Link
+                  href="/products"
+                  onClick={onClose}
+                  className="flex items-center justify-between px-3 py-2.5 rounded-lg text-[#C5A059] font-medium text-xs tracking-wider uppercase hover:bg-[#F3EFEA] transition-colors"
+                >
+                  <span>View All Heirlooms</span>
+                  <ArrowRight className="w-4 h-4 text-[#C5A059]" />
+                </Link>
               </div>
             </div>
 

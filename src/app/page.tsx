@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import HeroBanner from "@/components/home/HeroBanner";
-import ProductCatalog from "@/components/home/ProductCatalog";
-import ArtisanStory from "@/components/home/ArtisanStory";
+import CollectionSection from "@/components/home/CollectionSection";
+import ReviewsSection from "@/components/home/ReviewsSection";
+import InstagramSection from "@/components/home/InstagramSection";
 import Footer from "@/components/layout/Footer";
 import GuestCheckoutModal from "@/components/checkout/GuestCheckoutModal";
-import { MOCK_PRODUCTS } from "@/data/mockProducts";
 import { useCartStore } from "@/store/useCartStore";
 
 export default function Home() {
@@ -21,22 +21,25 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF8F5] selection:bg-[#E8D7D0] selection:text-[#1C1917]">
-      {/* Responsive Navigation Header */}
+      {/* 1. Navbar: HOME | COLLECTION | LOGO | SEARCH | CART */}
       <Navbar onProceedCheckout={handleOpenCheckout} />
 
-      {/* Main Luxury Storefront Presentation */}
+      {/* Main Luxury Storefront Flow */}
       <main className="flex-1">
-        {/* Editorial Hero Banner */}
+        {/* 2. Hero Section */}
         <HeroBanner />
 
-        {/* Curated Product Gallery & Filters */}
-        <ProductCatalog products={MOCK_PRODUCTS} />
+        {/* 3. Shop by Collection (7 Category Cards linking to filtered product page) */}
+        <CollectionSection />
 
-        {/* Brand Artisan & Heritage Story */}
-        <ArtisanStory />
+        {/* 4. Reviews Section (Patron Comments & Stories - No Star/Metric clutter) */}
+        <ReviewsSection />
+
+        {/* 5. Social Media Instagram Section (Split Horizon & Terracotta Card for @_anayasjewels) */}
+        <InstagramSection />
       </main>
 
-      {/* Luxury Editorial Footer */}
+      {/* 6. Footer (Native 3.svg Logo & 7 Collection Links) */}
       <Footer />
 
       {/* Guest Express Checkout Modal */}

@@ -1,82 +1,28 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, ShieldCheck, Mail, Check } from "lucide-react";
+import Image from "next/image";
+import { ShieldCheck } from "lucide-react";
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setTimeout(() => {
-        setSubscribed(false);
-        setEmail("");
-      }, 4000);
-    }
-  };
-
   return (
-    <footer className="bg-[#1C1917] text-[#FAF8F5] pt-16 pb-12 border-t border-[#2E2925]">
+    <footer className="bg-[#1C1917] text-[#FAF8F5] pt-12 pb-12 border-t border-[#2E2925]/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Newsletter / Salon Invitation */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#292524] border border-[#3E3835] mb-16 relative overflow-hidden">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 mb-3 text-[#C5A059]">
-              <Sparkles className="w-4 h-4" />
-              <span className="text-[11px] uppercase tracking-[0.25em] font-semibold">
-                Private Salon Invitation
-              </span>
-            </div>
-            <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight mb-2">
-              Receive First Access to Limited Bridal Edits
-            </h3>
-            <p className="text-sm text-[#A8A29E] leading-relaxed mb-6">
-              Members of the Anayas Salon receive curated styling lookbooks, private trunk show invites, and complimentary express upgrades.
-            </p>
-
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8A29E]" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address..."
-                  required
-                  className="w-full bg-[#1C1917] border border-[#3E3835] rounded-full pl-11 pr-4 py-3 text-sm text-[#FAF8F5] placeholder:text-[#78716C] focus:outline-none focus:border-[#C5A059] min-h-[44px]"
-                />
-              </div>
-              <button
-                type="submit"
-                className="px-8 py-3 rounded-full bg-[#C5A059] hover:bg-[#D4AF37] text-[#1C1917] font-semibold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 min-h-[44px] shadow-md"
-              >
-                {subscribed ? (
-                  <>
-                    <Check className="w-4 h-4" />
-                    <span>Subscribed</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Request Invitation</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
 
         {/* 4-Column Editorial Directory */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#2E2925]">
           {/* Brand Info */}
           <div className="lg:col-span-2">
-            <span className="font-serif text-2xl sm:text-3xl font-semibold tracking-[0.25em] block mb-3">
-              ANAYAS
-            </span>
+            <Link
+              href="/"
+              className="inline-block mb-4 focus:outline-none focus:ring-1 focus:ring-[#C5A059] rounded"
+            >
+              <Image
+                src="/3.svg"
+                alt="Anayas"
+                width={240}
+                height={122}
+                className="h-14 sm:h-16 w-auto object-contain transition-opacity hover:opacity-90"
+              />
+            </Link>
             <p className="text-sm text-[#A8A29E] max-w-sm leading-relaxed mb-6">
               Artisanal imitation jewellery bridging ancestral royal Indian techniques with contemporary silhouettes. Designed for weddings, festivities, and heirloom keepsakes.
             </p>
@@ -93,28 +39,38 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[#A8A29E]">
               <li>
-                <Link href="/#necklaces" className="hover:text-white transition-colors">
-                  Polki & Kundan Chokers
+                <Link href="/products?category=Necklace" className="hover:text-white transition-colors">
+                  Necklace
                 </Link>
               </li>
               <li>
-                <Link href="/#earrings" className="hover:text-white transition-colors">
-                  Chandbalis & Jhumkas
+                <Link href="/products?category=Pendant%20Sets" className="hover:text-white transition-colors">
+                  Pendant Sets
                 </Link>
               </li>
               <li>
-                <Link href="/#bangles" className="hover:text-white transition-colors">
-                  18K Gold Plated Kadas
+                <Link href="/products?category=Everyday%20Wear" className="hover:text-white transition-colors">
+                  Everyday Wear
                 </Link>
               </li>
               <li>
-                <Link href="/#bridal-sets" className="hover:text-white transition-colors">
-                  Imperial Bridal Ensembles
+                <Link href="/products?category=Earrings" className="hover:text-white transition-colors">
+                  Earrings
                 </Link>
               </li>
               <li>
-                <Link href="/#bestsellers" className="hover:text-white transition-colors">
-                  Bestseller Gallery
+                <Link href="/products?category=Rings" className="hover:text-white transition-colors">
+                  Rings
+                </Link>
+              </li>
+              <li>
+                <Link href="/products?category=Bracelets" className="hover:text-white transition-colors">
+                  Bracelets
+                </Link>
+              </li>
+              <li>
+                <Link href="/products?category=Mangalsutra" className="hover:text-white transition-colors">
+                  Mangalsutra
                 </Link>
               </li>
             </ul>
@@ -147,7 +103,7 @@ export default function Footer() {
               Trust & Security
             </h4>
             <ul className="space-y-2.5 text-xs text-[#A8A29E]">
-              <li>Complimentary Shipping &gt; ₹3,000</li>
+              <li>Free Express Delivery &gt; ₹2,000</li>
               <li>Tamper-proof Velvet Box Packaging</li>
               <li>Razorpay Standard 256-bit SSL</li>
               <li>Guest Checkout Supported</li>
