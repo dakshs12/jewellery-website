@@ -43,7 +43,7 @@ export default function CollectionSection() {
               <Link
                 key={col.id}
                 href={`/products?category=${encodeURIComponent(col.name)}`}
-                className="group relative h-[460px] sm:h-[500px] rounded-2xl overflow-hidden bg-[#24201D] border border-[#E5DDD2] hover:border-[#C5A059] shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-end p-6 sm:p-7 block"
+                className="group relative h-[460px] sm:h-[500px] rounded-2xl overflow-hidden bg-[#F3EFEA] border border-[#E5DDD2] hover:border-[#C5A059] shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-end p-6 sm:p-7 block"
               >
                 {/* Background Heirloom Image with Smooth Hover Zoom */}
                 <Image
@@ -54,17 +54,14 @@ export default function CollectionSection() {
                   className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-106"
                 />
 
-                {/* Atmospheric Gradient for Rich Legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent group-hover:from-black/90 group-hover:via-black/40 transition-colors duration-500" />
-
                 {/* Bottom Editorial Content */}
-                <div className="relative z-10 text-white">
+                <div className="relative z-10 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
                   <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-white group-hover:text-[#F3E5D0] transition-colors duration-300">
                     {col.name}
                   </h3>
 
                   {/* Animated Gold Divider */}
-                  <div className="my-3.5 h-[1.5px] w-10 bg-[#C5A059]/70 transition-all duration-300 group-hover:w-20 group-hover:bg-[#C5A059]" />
+                  <div className="my-3.5 h-[1.5px] w-10 bg-[#C5A059] transition-all duration-300 group-hover:w-20 shadow-sm" />
 
                   {/* CTA link */}
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#FAF8F5] group-hover:text-[#C5A059] transition-colors">
@@ -86,7 +83,7 @@ export default function CollectionSection() {
               <Link
                 key={col.id}
                 href={`/products?category=${encodeURIComponent(col.name)}`}
-                className="group relative h-[360px] sm:h-[400px] rounded-2xl overflow-hidden bg-[#24201D] border border-[#E5DDD2] hover:border-[#C5A059] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-end p-5 sm:p-6 block"
+                className="group relative h-[360px] sm:h-[400px] rounded-2xl overflow-hidden bg-[#F3EFEA] border border-[#E5DDD2] hover:border-[#C5A059] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-end p-5 sm:p-6 block"
               >
                 {/* Background Heirloom Image */}
                 <Image
@@ -97,17 +94,14 @@ export default function CollectionSection() {
                   className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-106"
                 />
 
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent group-hover:from-black/90 group-hover:via-black/40 transition-colors duration-500" />
-
                 {/* Bottom Editorial Content */}
-                <div className="relative z-10 text-white">
+                <div className="relative z-10 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
                   <h3 className="font-serif text-xl sm:text-2xl font-medium tracking-tight text-white group-hover:text-[#F3E5D0] transition-colors duration-300">
                     {col.name}
                   </h3>
 
                   {/* Subtle Gold Line */}
-                  <div className="my-3 h-[1px] w-8 bg-[#C5A059]/60 transition-all duration-300 group-hover:w-14 group-hover:bg-[#C5A059]" />
+                  <div className="my-3 h-[1px] w-8 bg-[#C5A059] transition-all duration-300 group-hover:w-14 shadow-sm" />
 
                   {/* CTA link */}
                   <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#FAF8F5] group-hover:text-[#C5A059] transition-colors">

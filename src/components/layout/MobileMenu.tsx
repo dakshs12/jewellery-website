@@ -110,7 +110,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   onClick={onClose}
                   className="flex items-center justify-between px-3 py-2.5 rounded-lg text-[#C5A059] font-medium text-xs tracking-wider uppercase hover:bg-[#F3EFEA] transition-colors"
                 >
-                  <span>View All Heirlooms</span>
+                  <span>View All Products</span>
                   <ArrowRight className="w-4 h-4 text-[#C5A059]" />
                 </Link>
               </div>

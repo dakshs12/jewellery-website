@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { SlidersHorizontal, Sparkles, Search, ChevronRight, X } from "lucide-react";
+import { ChevronRight, X, ChevronDown, Check } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/product/ProductCard";
@@ -16,7 +16,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 const CATEGORIES: { label: string; value: ProductCategory | "ALL" }[] = [
-  { label: "All Heirlooms", value: "ALL" },
+  { label: "All Jewellery", value: "ALL" },
   { label: "Necklace", value: "Necklace" },
   { label: "Pendant Sets", value: "Pendant Sets" },
   { label: "Everyday Wear", value: "Everyday Wear" },
@@ -26,21 +26,48 @@ const CATEGORIES: { label: string; value: ProductCategory | "ALL" }[] = [
   { label: "Mangalsutra", value: "Mangalsutra" },
 ];
 
+const SORT_OPTIONS: { label: string; value: "featured" | "price-asc" | "price-desc" | "bestsellers" }[] = [
+  { label: "Featured", value: "featured" },
+  { label: "Price: Low to High", value: "price-asc" },
+  { label: "Price: High to Low", value: "price-desc" },
+  { label: "Bestsellers", value: "bestsellers" },
+];
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const categoryParam = searchParams.get("category");
+  const searchParam = searchParams.get("search") || searchParams.get("q") || "";
 
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "ALL">(
     (categoryParam as ProductCategory) || "ALL"
   );
-  const [searchQuery, setSearchQuery] = useState("");
+  const [maxPrice, setMaxPrice] = useState<number>(10000);
+  const [searchQuery, setSearchQuery] = useState(searchParam);
   const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "bestsellers">("featured");
+  const [openDropdown, setOpenDropdown] = useState<"category" | "price" | "sort" | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const closeCart = useCartStore((state) => state.closeCart);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+
+  // Sync searchQuery when URL query parameter changes
+  useEffect(() => {
+    setSearchQuery(searchParam);
+  }, [searchParam]);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (toolsRef.current && !toolsRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Sync category when URL changes
   useEffect(() => {
@@ -70,11 +97,25 @@ function ProductsContent() {
     return COLLECTIONS.find((c) => c.name.toLowerCase() === selectedCategory.toLowerCase());
   }, [selectedCategory]);
 
+  const selectedCategoryLabel = useMemo(() => {
+    const found = CATEGORIES.find((c) => c.value === selectedCategory);
+    return found ? found.label : "All Jewellery";
+  }, [selectedCategory]);
+
+  const selectedSortLabel = useMemo(() => {
+    const found = SORT_OPTIONS.find((s) => s.value === sortBy);
+    return found ? found.label : "Featured";
+  }, [sortBy]);
+
   const filteredProducts = useMemo(() => {
     let list = [...MOCK_PRODUCTS];
 
     if (selectedCategory !== "ALL") {
       list = list.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase());
+    }
+
+    if (maxPrice < 10000) {
+      list = list.filter((p) => (p.sale_price ?? p.price) <= maxPrice);
     }
 
     if (searchQuery.trim()) {
@@ -98,7 +139,7 @@ function ProductsContent() {
     }
 
     return list;
-  }, [selectedCategory, searchQuery, sortBy]);
+  }, [selectedCategory, maxPrice, searchQuery, sortBy]);
 
   // Subtle GSAP stagger animation on products grid whenever filter changes
   useGSAP(
@@ -113,7 +154,7 @@ function ProductsContent() {
         );
       }
     },
-    { dependencies: [selectedCategory, sortBy, searchQuery], scope: containerRef }
+    { dependencies: [selectedCategory, sortBy, searchQuery, maxPrice], scope: containerRef }
   );
 
   return (
@@ -139,104 +180,250 @@ function ProductsContent() {
             )}
           </nav>
 
-          {/* Dynamic Editorial Header */}
+          {/* Header */}
           <div className="max-w-3xl mb-10">
-            <div className="inline-flex items-center gap-2 mb-2 text-[#C5A059]">
-              <Sparkles className="w-4 h-4" />
-              <span className="text-[11px] uppercase tracking-[0.25em] font-semibold">
-                {currentCollectionMeta?.subtitle || "Artisanal Heirlooms"}
-              </span>
-            </div>
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium text-[#1C1917] tracking-tight">
-              {currentCollectionMeta?.name || "Curated Heirloom Gallery"}
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[#1C1917] tracking-tight">
+              {currentCollectionMeta?.name || "Our Products"}
             </h1>
             <p className="font-sans text-sm sm:text-base text-[#78716C] mt-3 leading-relaxed">
-              {currentCollectionMeta?.description ||
-                "Handcrafted in Jaipur with 22K antique micron gold plating, uncut synthetic Polki diamonds, and genuine pearl drops."}
+              From subtle everyday favourites to statement-making pieces, find the jewellery that speaks your style.
             </p>
           </div>
 
-          {/* Filter Bar: Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-[#E9E3DB]">
-            {CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat.value;
-              return (
-                <button
-                  key={cat.value}
-                  type="button"
-                  onClick={() => handleSelectCategory(cat.value)}
-                  className={`px-4 py-2 rounded-full text-xs font-medium tracking-wider whitespace-nowrap transition-all duration-200 min-h-[40px] flex items-center justify-center ${
-                    isActive
-                      ? "bg-[#1C1917] text-[#FAF8F5] shadow-sm font-semibold"
-                      : "bg-[#F3EFEA] text-[#1C1917] hover:bg-[#E8D7D0] border border-[#E9E3DB]"
+          {/* 3 Underlined Tools Matching Screenshot */}
+          <div ref={toolsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 mb-8">
+            {/* 1. CATEGORY */}
+            <div className="relative">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+                CATEGORY
+              </span>
+              <button
+                type="button"
+                onClick={() => setOpenDropdown(openDropdown === "category" ? null : "category")}
+                className="w-full flex items-center justify-between pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
+                aria-expanded={openDropdown === "category"}
+              >
+                <span className="font-sans font-semibold text-base sm:text-[17px] text-[#1C1917] truncate">
+                  {selectedCategoryLabel}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-2 ${
+                    openDropdown === "category" ? "rotate-180" : ""
                   }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
+                />
+              </button>
 
-          {/* Controls Bar: Search & Sort */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8">
-            {/* Search Input */}
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#78716C]" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by piece or stone..."
-                className="w-full pl-10 pr-9 py-2 rounded-xl bg-[#F3EFEA] border border-[#E9E3DB] text-xs text-[#1C1917] placeholder:text-[#A8A29E] focus:outline-none focus:border-[#C5A059] min-h-[42px]"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#78716C] hover:text-[#1C1917]"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+              {/* Category Dropdown */}
+              {openDropdown === "category" && (
+                <div className="absolute left-0 top-full mt-2 w-full min-w-[240px] bg-[#FAF8F5] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
+                  {CATEGORIES.map((cat) => {
+                    const isSelected = selectedCategory === cat.value;
+                    return (
+                      <button
+                        key={cat.value}
+                        type="button"
+                        onClick={() => {
+                          handleSelectCategory(cat.value);
+                          setOpenDropdown(null);
+                        }}
+                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition-colors text-left cursor-pointer ${
+                          isSelected
+                            ? "bg-[#1C1917] text-[#FAF8F5] font-semibold"
+                            : "text-[#1C1917] hover:bg-[#F3EFEA]"
+                        }`}
+                      >
+                        <span>{cat.label}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[#C5A059]" />}
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
 
-            {/* Results count & Sort Dropdown */}
-            <div className="flex items-center justify-between sm:justify-end gap-3">
-              <span className="text-xs text-[#78716C]">
-                Showing <strong className="text-[#1C1917]">{filteredProducts.length}</strong> creations
+            {/* 2. PRICE RANGE */}
+            <div className="relative">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+                PRICE RANGE
               </span>
+              <button
+                type="button"
+                onClick={() => setOpenDropdown(openDropdown === "price" ? null : "price")}
+                className="w-full flex items-center justify-between pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
+                aria-expanded={openDropdown === "price"}
+              >
+                <span className="font-sans font-semibold text-base sm:text-[17px] text-[#1C1917] truncate">
+                  {maxPrice >= 10000 ? "All prices" : `Under ₹${maxPrice.toLocaleString("en-IN")}`}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-2 ${
+                    openDropdown === "price" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[#78716C]" />
-                <select
-                  value={sortBy}
-                  onChange={(e) =>
-                    setSortBy(
-                      e.target.value as "featured" | "price-asc" | "price-desc" | "bestsellers"
-                    )
-                  }
-                  className="bg-[#F3EFEA] border border-[#E9E3DB] rounded-xl px-3 py-2 text-xs font-medium text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] cursor-pointer min-h-[42px]"
-                >
-                  <option value="featured">Featured Curations</option>
-                  <option value="bestsellers">Bestsellers First</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                </select>
-              </div>
+              {/* Price Range Manual Slider Popover */}
+              {openDropdown === "price" && (
+                <div className="absolute left-0 top-full mt-2 w-full sm:w-[320px] bg-[#FAF8F5] border border-[#E9E3DB] rounded-2xl shadow-xl p-5 z-40">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+                        Price Filter
+                      </span>
+                      <span className="font-serif text-sm font-bold text-[#1C1917]">
+                        {maxPrice >= 10000 ? "All Prices" : `Up to ₹${maxPrice.toLocaleString("en-IN")}`}
+                      </span>
+                    </div>
+
+                    {/* Manual Range Slider */}
+                    <div>
+                      <input
+                        type="range"
+                        min={1000}
+                        max={10000}
+                        step={250}
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(Number(e.target.value))}
+                        className="w-full h-2 bg-[#E9E3DB] rounded-lg appearance-none cursor-pointer accent-[#1C1917]"
+                      />
+                      <div className="flex items-center justify-between text-[11px] text-[#78716C] mt-1.5 font-medium">
+                        <span>₹1,000</span>
+                        <span>₹10,000</span>
+                      </div>
+                    </div>
+
+                    {/* Quick Preset Buttons */}
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E9E3DB]">
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(3000)}
+                        className={`px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left cursor-pointer ${
+                          maxPrice === 3000 ? "bg-[#1C1917] text-[#FAF8F5] font-semibold" : "bg-[#F3EFEA] hover:bg-[#E8D7D0] text-[#1C1917]"
+                        }`}
+                      >
+                        Under ₹3,000
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(5000)}
+                        className={`px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left cursor-pointer ${
+                          maxPrice === 5000 ? "bg-[#1C1917] text-[#FAF8F5] font-semibold" : "bg-[#F3EFEA] hover:bg-[#E8D7D0] text-[#1C1917]"
+                        }`}
+                      >
+                        Under ₹5,000
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(7500)}
+                        className={`px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left cursor-pointer ${
+                          maxPrice === 7500 ? "bg-[#1C1917] text-[#FAF8F5] font-semibold" : "bg-[#F3EFEA] hover:bg-[#E8D7D0] text-[#1C1917]"
+                        }`}
+                      >
+                        Under ₹7,500
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(10000)}
+                        className={`px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left cursor-pointer ${
+                          maxPrice >= 10000 ? "bg-[#1C1917] text-[#FAF8F5] font-semibold" : "bg-[#F3EFEA] hover:bg-[#E8D7D0] text-[#1C1917]"
+                        }`}
+                      >
+                        All Prices
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-[#E9E3DB]">
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(10000)}
+                        className="text-xs text-[#78716C] hover:text-[#1C1917] underline cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOpenDropdown(null)}
+                        className="px-3.5 py-1.5 bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059] rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3. SORT BY */}
+            <div className="relative">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+                SORT BY
+              </span>
+              <button
+                type="button"
+                onClick={() => setOpenDropdown(openDropdown === "sort" ? null : "sort")}
+                className="w-full flex items-center justify-between pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
+                aria-expanded={openDropdown === "sort"}
+              >
+                <span className="font-sans font-semibold text-base sm:text-[17px] text-[#1C1917] truncate">
+                  {selectedSortLabel}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-2 ${
+                    openDropdown === "sort" ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Sort Dropdown */}
+              {openDropdown === "sort" && (
+                <div className="absolute right-0 top-full mt-2 w-full min-w-[220px] bg-[#FAF8F5] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
+                  {SORT_OPTIONS.map((opt) => {
+                    const isSelected = sortBy === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => {
+                          setSortBy(opt.value);
+                          setOpenDropdown(null);
+                        }}
+                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition-colors text-left cursor-pointer ${
+                          isSelected
+                            ? "bg-[#1C1917] text-[#FAF8F5] font-semibold"
+                            : "text-[#1C1917] hover:bg-[#F3EFEA]"
+                        }`}
+                      >
+                        <span>{opt.label}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[#C5A059]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Active Filter Chips */}
-          {(selectedCategory !== "ALL" || searchQuery) && (
+          {(selectedCategory !== "ALL" || searchQuery || maxPrice < 10000) && (
             <div className="flex items-center gap-2 mb-8 flex-wrap">
               <span className="text-xs text-[#78716C]">Active Filters:</span>
               {selectedCategory !== "ALL" && (
                 <button
                   type="button"
                   onClick={() => handleSelectCategory("ALL")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1917] text-white text-[11px] font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1917] text-white text-[11px] font-medium cursor-pointer"
                 >
                   Category: {selectedCategory}
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+              {maxPrice < 10000 && (
+                <button
+                  type="button"
+                  onClick={() => setMaxPrice(10000)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1917] text-white text-[11px] font-medium cursor-pointer"
+                >
+                  Price: Under ₹{maxPrice.toLocaleString("en-IN")}
                   <X className="w-3 h-3" />
                 </button>
               )}
@@ -244,7 +431,7 @@ function ProductsContent() {
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1917] text-white text-[11px] font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C1917] text-white text-[11px] font-medium cursor-pointer"
                 >
                   Query: {searchQuery}
                   <X className="w-3 h-3" />
@@ -254,9 +441,10 @@ function ProductsContent() {
                 type="button"
                 onClick={() => {
                   handleSelectCategory("ALL");
+                  setMaxPrice(10000);
                   setSearchQuery("");
                 }}
-                className="text-xs text-[#C5A059] hover:underline font-medium ml-2"
+                className="text-xs text-[#C5A059] hover:underline font-medium ml-2 cursor-pointer"
               >
                 Reset All
               </button>
@@ -278,7 +466,7 @@ function ProductsContent() {
                 }}
                 className="mt-6 px-6 py-2.5 rounded-full bg-[#C5A059] text-[#1C1917] font-semibold text-xs uppercase tracking-wider"
               >
-                View All Heirlooms
+                View All Products
               </button>
             </div>
           ) : (

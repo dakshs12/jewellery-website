@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Quote, Sparkles } from "lucide-react";
+import { Quote } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -92,17 +92,11 @@ export default function ReviewsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 mb-3 text-[#C5A059]">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-[11px] uppercase tracking-[0.25em] font-semibold">
-              Words of Adornment
-            </span>
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium text-[#1C1917] tracking-tight leading-tight">
-            Patron Heirlooms &amp; Stories
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1C1917] tracking-tight leading-tight">
+            What Our Customers Say
           </h2>
           <p className="font-sans text-sm sm:text-base text-[#78716C] mt-3 leading-relaxed">
-            Authentic reflections from brides, connoisseurs, and festive celebrants across India.
+            Real stories and reviews from our customers.
           </p>
         </div>
       </div>

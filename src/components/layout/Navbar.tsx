@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, ShoppingBag, Search, X, ChevronDown, ArrowRight, Sparkles } from "lucide-react";
 import { useHydratedCart } from "@/hooks/useHydratedCart";
@@ -15,11 +16,24 @@ interface NavbarProps {
   onProceedCheckout?: () => void;
 }
 
+const ALL_PRODUCTS_SPOTLIGHT = {
+  id: "all-products",
+  name: "All Products",
+  image: "/5000RS.png",
+  href: "/products",
+};
+
 export default function Navbar({ onProceedCheckout }: NavbarProps) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [hoveredCollection, setHoveredCollection] = useState<CollectionCategory>(COLLECTIONS[0]);
+  const [activeSpotlight, setActiveSpotlight] = useState({
+    id: COLLECTIONS[0].id,
+    name: COLLECTIONS[0].name,
+    image: COLLECTIONS[0].image,
+    href: `/products?category=${encodeURIComponent(COLLECTIONS[0].name)}`,
+  });
   const { totalCount, openCart, isHydrated } = useHydratedCart();
 
   return (
@@ -66,31 +80,25 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                     {/* Luxury Grand Mega-Menu */}
                     <div className="absolute top-full left-0 pt-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 transform origin-top-left -translate-y-2 group-hover:translate-y-0">
                       <div className="w-[880px] xl:w-[920px] max-w-[calc(100vw-48px)] bg-[#FAF8F5] border border-[#E2D9CC] shadow-[0_30px_70px_rgba(28,25,23,0.22)] rounded-3xl p-6 sm:p-7">
-                        {/* Top Accent Header */}
-                        <div className="flex items-center justify-between pb-4 mb-5 border-b border-[#E9E3DB]">
-                          <div className="flex items-center gap-2.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
-                            <span className="text-[11px] font-sans font-semibold tracking-[0.25em] text-[#C5A059] uppercase">
-                              Signature Collections
-                            </span>
-                          </div>
-                          <span className="text-xs font-serif italic text-[#78716C]">
-                            7 Disciplines of Ancestral Craftsmanship
-                          </span>
-                        </div>
-
                         {/* Dual Column Layout: Categories Grid + Interactive Visual Spotlight */}
                         <div className="grid grid-cols-12 gap-6 items-stretch">
                           {/* Left Column: 7 Categories + 1 Complete Collection Card */}
                           <div className="col-span-7 grid grid-cols-2 gap-2.5">
                             {COLLECTIONS.map((col) => {
-                              const isSelected = hoveredCollection.id === col.id;
+                              const isSelected = activeSpotlight.id === col.id;
                               return (
                                 <Link
                                   key={col.id}
                                   href={`/products?category=${encodeURIComponent(col.name)}`}
-                                  onMouseEnter={() => setHoveredCollection(col)}
-                                  className={`group/item flex items-center gap-3 p-2.5 rounded-2xl transition-all duration-200 border ${
+                                  onMouseEnter={() =>
+                                    setActiveSpotlight({
+                                      id: col.id,
+                                      name: col.name,
+                                      image: col.image,
+                                      href: `/products?category=${encodeURIComponent(col.name)}`,
+                                    })
+                                  }
+                                  className={`group/item flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 border ${
                                     isSelected
                                       ? "bg-[#F3ECE0] border-[#C5A059]/40 text-[#1C1917] shadow-sm"
                                       : "bg-transparent border-transparent hover:bg-[#F5EFE6] text-[#1C1917]"
@@ -105,121 +113,93 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                       sizes="44px"
                                     />
                                   </div>
-                                  <div className="flex-1 min-w-0 pr-1">
-                                    <div className="flex items-center justify-between">
-                                      <span
-                                        className={`font-serif text-[15px] font-semibold transition-colors truncate ${
-                                          isSelected
-                                            ? "text-[#C5A059]"
-                                            : "text-[#1C1917] group-hover/item:text-[#C5A059]"
-                                        }`}
-                                      >
-                                        {col.name}
-                                      </span>
-                                      <ArrowRight
-                                        className={`w-3.5 h-3.5 text-[#C5A059] transition-all duration-200 shrink-0 ${
-                                          isSelected
-                                            ? "opacity-100 translate-x-0"
-                                            : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                                        }`}
-                                      />
-                                    </div>
-                                    <span className="text-[11px] text-[#78716C] block font-sans truncate mt-0.5 leading-snug">
-                                      {col.subtitle}
+                                  <div className="flex-1 min-w-0 pr-1 flex items-center justify-between">
+                                    <span
+                                      className={`font-serif text-[15px] font-semibold transition-colors truncate ${
+                                        isSelected
+                                          ? "text-[#C5A059]"
+                                          : "text-[#1C1917] group-hover/item:text-[#C5A059]"
+                                      }`}
+                                    >
+                                      {col.name}
                                     </span>
+                                    <ArrowRight
+                                      className={`w-3.5 h-3.5 text-[#C5A059] transition-all duration-200 shrink-0 ${
+                                        isSelected
+                                          ? "opacity-100 translate-x-0"
+                                          : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
+                                      }`}
+                                    />
                                   </div>
                                 </Link>
                               );
                             })}
 
-                            {/* 8th Balanced Slot: View All Heirlooms */}
+                            {/* 8th Balanced Slot: View All Products */}
                             <Link
                               href="/products"
-                              onMouseEnter={() => setHoveredCollection(COLLECTIONS[0])}
-                              className="group/item flex items-center justify-between p-2.5 rounded-2xl border border-dashed border-[#C5A059]/50 bg-[#FAF8F5] hover:bg-[#F5EFE6] hover:border-[#C5A059] transition-all"
+                              onMouseEnter={() => setActiveSpotlight(ALL_PRODUCTS_SPOTLIGHT)}
+                              className={`group/item flex items-center justify-between px-3 py-3 rounded-2xl transition-all duration-200 border ${
+                                activeSpotlight.id === "all-products"
+                                  ? "bg-[#F3ECE0] border-[#C5A059]/40 text-[#1C1917] shadow-sm"
+                                  : "bg-transparent border-dashed border-[#C5A059]/40 hover:bg-[#F5EFE6] text-[#1C1917]"
+                              }`}
                             >
-                              <div className="flex items-center gap-3 min-w-0">
-                                <div className="w-11 h-11 rounded-xl bg-[#C5A059]/10 flex items-center justify-center text-[#C5A059] shrink-0 group-hover/item:bg-[#C5A059] group-hover/item:text-white transition-colors">
+                              <div className="flex items-center gap-3 min-w-0 flex-1">
+                                <div
+                                  className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                                    activeSpotlight.id === "all-products"
+                                      ? "bg-[#C5A059] text-white"
+                                      : "bg-[#C5A059]/10 text-[#C5A059] group-hover/item:bg-[#C5A059] group-hover/item:text-white"
+                                  }`}
+                                >
                                   <Sparkles className="w-4 h-4" />
                                 </div>
-                                <div className="min-w-0">
-                                  <span className="font-serif text-[15px] font-semibold text-[#1C1917] group-hover/item:text-[#C5A059] transition-colors block truncate">
-                                    All Heirlooms
-                                  </span>
-                                  <span className="text-[11px] text-[#78716C] block font-sans truncate">
-                                    Complete Atelier Catalog
-                                  </span>
-                                </div>
+                                <span
+                                  className={`font-serif text-[15px] font-semibold transition-colors block truncate ${
+                                    activeSpotlight.id === "all-products"
+                                      ? "text-[#C5A059]"
+                                      : "text-[#1C1917] group-hover/item:text-[#C5A059]"
+                                  }`}
+                                >
+                                  All Products
+                                </span>
                               </div>
-                              <ArrowRight className="w-3.5 h-3.5 text-[#C5A059] shrink-0 transition-transform duration-200 group-hover/item:translate-x-1 mr-1" />
+                              <ArrowRight
+                                className={`w-3.5 h-3.5 text-[#C5A059] shrink-0 transition-all duration-200 mr-1 ${
+                                  activeSpotlight.id === "all-products"
+                                    ? "opacity-100 translate-x-0"
+                                    : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
+                                }`}
+                              />
                             </Link>
                           </div>
 
                           {/* Right Column: Dynamic Interactive Spotlight Stage */}
                           <div className="col-span-5 relative flex flex-col">
                             <Link
-                              href={`/products?category=${encodeURIComponent(hoveredCollection.name)}`}
-                              className="group/spotlight relative w-full h-full min-h-[320px] rounded-2xl overflow-hidden border border-[#E2D9CC] bg-[#1C1917] flex flex-col justify-end p-6 transition-all duration-300 shadow-md"
+                              href={activeSpotlight.href}
+                              className="group/spotlight relative w-full h-full min-h-[300px] rounded-2xl overflow-hidden border border-[#E2D9CC] bg-[#1C1917] flex flex-col justify-end p-6 transition-all duration-300 shadow-md"
                             >
                               {/* Background Image Preview */}
                               <div className="absolute inset-0">
                                 <Image
-                                  key={hoveredCollection.id}
-                                  src={hoveredCollection.image}
-                                  alt={hoveredCollection.name}
+                                  key={activeSpotlight.id}
+                                  src={activeSpotlight.image}
+                                  alt={activeSpotlight.name}
                                   fill
                                   className="object-cover transition-all duration-700 ease-out group-hover/spotlight:scale-105"
                                   sizes="380px"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/95 via-[#1C1917]/45 to-black/15" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                               </div>
 
-                              {/* Top Floating Badge */}
-                              <div className="relative z-10 self-start mb-auto">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] text-[10px] font-sans font-semibold tracking-wider text-[#1C1917] uppercase shadow-md">
-                                  <Sparkles className="w-3 h-3 text-[#C5A059]" />
-                                  {hoveredCollection.pieceCount} Curated Pieces
-                                </span>
-                              </div>
-
-                              {/* Bottom Details */}
-                              <div className="relative z-10 text-white space-y-1">
-                                <span className="text-[10px] uppercase font-sans tracking-[0.25em] text-[#E8D7B5] font-medium block">
-                                  Handcrafted Discipline
-                                </span>
-                                <h4 className="font-serif text-2xl font-semibold leading-tight text-[#FAF8F5]">
-                                  {hoveredCollection.name}
-                                </h4>
-                                <p className="text-xs text-stone-200/90 font-sans leading-relaxed pt-0.5">
-                                  {hoveredCollection.subtitle}
-                                </p>
-                                <div className="pt-2.5 flex items-center gap-1.5 text-xs font-serif font-medium text-[#C5A059] group-hover/spotlight:text-[#E8D7B5] transition-colors">
-                                  <span>Explore {hoveredCollection.name}</span>
-                                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover/spotlight:translate-x-1" />
-                                </div>
+                              {/* Bottom Details - Only the Explore label */}
+                              <div className="relative z-10 flex items-center gap-2 text-xs font-serif font-semibold tracking-wider uppercase text-[#FAF8F5] group-hover/spotlight:text-[#C5A059] transition-colors drop-shadow-md">
+                                <span>Explore {activeSpotlight.name}</span>
+                                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/spotlight:translate-x-1 text-[#C5A059]" />
                               </div>
                             </Link>
-                          </div>
-                        </div>
-
-                        {/* Bottom Heritage Quality Strip */}
-                        <div className="mt-5 pt-4 border-t border-[#E9E3DB] flex items-center justify-between">
-                          <Link
-                            href="/products"
-                            className="inline-flex items-center gap-2 text-xs font-serif font-semibold text-[#C5A059] hover:text-[#9A7B38] transition-colors group/viewall"
-                          >
-                            <span>Browse Complete Catalogue (240+ Heirlooms)</span>
-                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/viewall:translate-x-1" />
-                          </Link>
-
-                          <div className="flex items-center gap-3 text-[10px] tracking-wider text-[#78716C] uppercase font-sans">
-                            <span className="flex items-center gap-1.5">
-                              <span className="text-[#C5A059]">✦</span> Free Delivery Above ₹2,000
-                            </span>
-                            <span className="w-1 h-1 rounded-full bg-[#D6CEBE]" />
-                            <span className="flex items-center gap-1.5">
-                              <span className="text-[#C5A059]">✦</span> 100% Anti-Tarnish
-                            </span>
                           </div>
                         </div>
                       </div>
@@ -308,7 +288,16 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               className="relative w-full max-w-2xl bg-[#FAF8F5] border border-[#E9E3DB] shadow-2xl rounded-2xl p-6 z-10"
             >
-              <div className="flex items-center justify-between border-b border-[#E9E3DB] pb-4">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    setSearchOpen(false);
+                    router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                  }
+                }}
+                className="flex items-center justify-between border-b border-[#E9E3DB] pb-4"
+              >
                 <div className="flex items-center gap-3 flex-1">
                   <Search className="w-5 h-5 text-[#C5A059]" />
                   <input
@@ -328,7 +317,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                 >
                   <X className="w-5 h-5" />
                 </button>
-              </div>
+              </form>
 
               <div className="mt-4">
                 <p className="text-xs uppercase tracking-wider text-[#78716C] mb-2 font-medium">
@@ -348,8 +337,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                       onClick={() => {
                         setSearchQuery(tag);
                         setSearchOpen(false);
-                        const element = document.getElementById("products");
-                        element?.scrollIntoView({ behavior: "smooth" });
+                        router.push(`/products?search=${encodeURIComponent(tag)}`);
                       }}
                       className="px-3.5 py-1.5 rounded-full text-xs bg-[#F3EFEA] hover:bg-[#E8D7D0] text-[#1C1917] transition-colors border border-[#E9E3DB]"
                     >

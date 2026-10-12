@@ -14,8 +14,10 @@
   --color-warm-stone-light: #A8A29E;
   --color-border-subtle: #E9E3DB;
   --color-emerald-deep: #2D4F3E;
+  --color-garnet-wine: #712B31;
 
   --font-serif: var(--font-cormorant), "Cormorant Garamond", "Cinzel", Georgia, serif;
+  --font-playfair: var(--font-playfair), "Playfair Display", Georgia, serif;
   --font-sans: var(--font-jakarta), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 }
 
@@ -85,3 +87,39 @@ body {
   min-height: 44px;
   min-width: 44px;
 }
+
+/* Continuous infinite text marquee loop */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation-duration: 90s;
+  }
+}
+
+/* Add to Bag button hover styling */
+.add-to-bag-btn:hover {
+  background-color: #C5A059 !important;
+  color: #FFFFFF !important;
+}
+
+.add-to-bag-btn:hover svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+

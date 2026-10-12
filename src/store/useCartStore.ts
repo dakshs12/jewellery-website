@@ -17,7 +17,7 @@ interface CartStore {
   toggleCart: () => void;
 
   // Item operations
-  addItem: (product: Product, quantity?: number) => void;
+  addItem: (product: Product, quantity?: number, openDrawer?: boolean) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -42,7 +42,7 @@ export const useCartStore = create<CartStore>()(
       closeCart: () => set({ isOpen: false }),
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
-      addItem: (product: Product, quantity = 1) => {
+      addItem: (product: Product, quantity = 1, openDrawer = false) => {
         set((state) => {
           const existingIndex = state.items.findIndex(
             (item) => item.product.id === product.id
@@ -51,11 +51,11 @@ export const useCartStore = create<CartStore>()(
           if (existingIndex > -1) {
             const newItems = [...state.items];
             newItems[existingIndex].quantity += quantity;
-            return { items: newItems, isOpen: true };
+            return { items: newItems, isOpen: openDrawer ? true : state.isOpen };
           } else {
             return {
               items: [...state.items, { product, quantity }],
-              isOpen: true,
+              isOpen: openDrawer ? true : state.isOpen,
             };
           }
         });

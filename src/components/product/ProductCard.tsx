@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Eye, X, Check, Shield, Award, Sparkles } from "lucide-react";
+import { ShoppingBag, Eye, X, Check } from "lucide-react";
 import { Product } from "@/types/database";
 import { useCartStore } from "@/store/useCartStore";
 import { formatPrice } from "@/lib/utils";
+import ProductFeatures from "./ProductFeatures";
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [addedAnimation, setAddedAnimation] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
@@ -93,41 +95,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           >
             <Eye className="w-4 h-4" />
           </button>
-
-          {/* Add to Bag Floating Action (Desktop Hover & Mobile Always Ready) */}
-          <div className="absolute bottom-3 inset-x-3 z-10">
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              className={`w-full py-3 px-4 rounded-xl font-medium text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all duration-300 min-h-[44px] ${
-                addedAnimation
-                  ? "bg-[#2D4F3E] text-white"
-                  : "bg-white/95 backdrop-blur-md text-[#1C1917] hover:bg-[#1C1917] hover:text-[#FAF8F5]"
-              }`}
-            >
-              {addedAnimation ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-300" />
-                  <span>Added to Bag</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-4 h-4 text-[#C5A059]" />
-                  <span>Add to Bag</span>
-                </>
-              )}
-            </button>
-          </div>
         </div>
 
         {/* Product Meta & Typography */}
         <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between bg-white/50">
           <div>
-            <div className="flex items-center justify-between text-xs text-[#78716C] mb-1">
+            <div className="text-xs text-[#78716C] mb-1">
               <span className="uppercase tracking-widest text-[10px] font-semibold text-[#C5A059]">
                 {product.category}
               </span>
-              <span className="text-[11px] font-sans">Handcrafted</span>
             </div>
 
             <h3
@@ -136,14 +112,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             >
               {product.title}
             </h3>
-
-            <p className="mt-1 text-xs text-[#78716C] line-clamp-2 leading-relaxed">
-              {product.description}
-            </p>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#E9E3DB] flex items-baseline justify-between">
-            <div className="flex items-baseline gap-2">
+          <div className="mt-4 pt-3 border-t border-[#E9E3DB] flex items-center justify-between gap-2">
+            <div className="flex items-baseline gap-1.5 sm:gap-2">
               <span className="font-serif text-lg sm:text-xl font-bold text-[#1C1917]">
                 {formatPrice(activePrice)}
               </span>
@@ -154,13 +126,54 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
 
-            <span className="text-[11px] text-[#2D4F3E] font-medium bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#E9E3DB]">
-              {product.specifications.plating.includes("24K")
-                ? "24K Gold"
-                : product.specifications.plating.includes("22K")
-                ? "22K Gold"
-                : "18K Gold"}
-            </span>
+            {/* Animated Add to Bag Button */}
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.88 }}
+              whileHover={{ scale: 1.03 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              onMouseEnter={() => setIsBtnHovered(true)}
+              onMouseLeave={() => setIsBtnHovered(false)}
+              onClick={handleAddToCart}
+              className={`add-to-bag-btn group/btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors duration-300 shadow-sm cursor-pointer select-none shrink-0 ${
+                addedAnimation
+                  ? "bg-[#2D4F3E] text-white ring-2 ring-[#2D4F3E]/40"
+                  : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059]"
+              }`}
+              aria-label={`Add ${product.title} to bag`}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {addedAnimation ? (
+                  <motion.span
+                    key="added"
+                    initial={{ opacity: 0, scale: 0.5, y: 4 }}
+                    animate={{ opacity: 1, scale: [0.5, 1.15, 1], y: 0 }}
+                    exit={{ opacity: 0, scale: 0.7, y: -4 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="flex items-center gap-1 text-emerald-200 font-semibold"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Added</span>
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="add"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-center gap-1.5"
+                  >
+                    <ShoppingBag
+                      className={`w-3.5 h-3.5 transition-colors duration-200 ${
+                        isBtnHovered ? "text-white" : "text-[#C5A059]"
+                      }`}
+                    />
+                    <span>Add to Bag</span>
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -224,59 +237,8 @@ export default function ProductCard({ product }: ProductCardProps) {
                     )}
                   </div>
 
-                  <p className="text-sm text-[#78716C] leading-relaxed mb-6">
-                    {product.description}
-                  </p>
-
-                  {/* Curated Specifications Table */}
-                  <div className="border-t border-[#E9E3DB] pt-4 mb-6 space-y-2.5 text-xs">
-                    <div className="flex justify-between">
-                      <span className="text-[#78716C]">Base Material:</span>
-                      <span className="font-medium text-[#1C1917]">
-                        {product.specifications.material}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-[#78716C]">Plating:</span>
-                      <span className="font-medium text-[#1C1917]">
-                        {product.specifications.plating}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-[#78716C]">Stones & Pearls:</span>
-                      <span className="font-medium text-[#1C1917]">
-                        {product.specifications.stones}
-                      </span>
-                    </div>
-                    {product.specifications.weight && (
-                      <div className="flex justify-between">
-                        <span className="text-[#78716C]">Weight:</span>
-                        <span className="font-medium text-[#1C1917]">
-                          {product.specifications.weight}
-                        </span>
-                      </div>
-                    )}
-                    {product.specifications.closure && (
-                      <div className="flex justify-between">
-                        <span className="text-[#78716C]">Fastening:</span>
-                        <span className="font-medium text-[#1C1917]">
-                          {product.specifications.closure}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Trust markers */}
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-[#78716C] bg-[#F3EFEA] p-3 rounded-xl mb-6">
-                    <div className="flex items-center gap-1.5">
-                      <Award className="w-3.5 h-3.5 text-[#C5A059]" />
-                      <span>Artisanal Finish</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Shield className="w-3.5 h-3.5 text-[#C5A059]" />
-                      <span>Skin-Safe & Nickel-Free</span>
-                    </div>
-                  </div>
+                  {/* Four Core Features (Skin Safe, Anti-Tarnish, Premium Quality, Water Proof) */}
+                  <ProductFeatures />
                 </div>
 
                 <button

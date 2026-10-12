@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import HeroBanner from "@/components/home/HeroBanner";
+import TextLoopSeparator from "@/components/home/TextLoopSeparator";
 import CollectionSection from "@/components/home/CollectionSection";
 import ReviewsSection from "@/components/home/ReviewsSection";
 import InstagramSection from "@/components/home/InstagramSection";
@@ -28,6 +29,9 @@ export default function Home() {
       <main className="flex-1">
         {/* 2. Hero Section */}
         <HeroBanner />
+
+        {/* Text Loop Separator Ribbon */}
+        <TextLoopSeparator />
 
         {/* 3. Shop by Collection (7 Category Cards linking to filtered product page) */}
         <CollectionSection />

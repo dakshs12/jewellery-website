@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Shield, Gem } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function HeroBanner() {
   const scrollToCatalog = () => {
@@ -11,7 +11,7 @@ export default function HeroBanner() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#FAF8F5] pt-8 pb-16 lg:pt-16 lg:pb-24 border-b border-[#E9E3DB]">
+    <section className="relative overflow-hidden bg-[#FAF8F5] pt-8 pb-16 lg:pt-16 lg:pb-24">
       {/* Subtle gold decorative gradient orbs */}
       <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-[#D4AF37]/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-96 h-96 rounded-full bg-[#E8D7D0]/20 blur-3xl pointer-events-none" />
@@ -28,22 +28,21 @@ export default function HeroBanner() {
             {/* Editorial Kicker */}
             <div className="mb-6">
               <span className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-medium text-[#78716C] block">
-                Artisanal Festive & Bridal Collection 2026
+                Everyday luxury, thoughtfully made
               </span>
             </div>
 
-            {/* Fluid Luxury Headline */}
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-medium text-[#1C1917] tracking-tight leading-[1.08] mb-6">
-              Heirlooms of <br className="hidden sm:inline" />
-              <span className="italic font-normal text-[#C5A059]">
-                Timeless Splendor,
-              </span>{" "}
-              Crafted with Soul.
+            {/* High-Impact Editorial Bold Headline */}
+            <h1 className="font-playfair text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.25rem] font-bold text-[#1C1917] tracking-tight leading-[1.03] mb-6">
+              Jewels for the <br className="hidden sm:inline" />
+              <span className="italic font-bold text-[#712B31]">
+                life you live.
+              </span>
             </h1>
 
             {/* Subheading */}
             <p className="font-sans text-base sm:text-lg text-[#78716C] max-w-xl leading-relaxed mb-8">
-              Immerse yourself in regal Jadau, uncut Polki, and 22K antique micron gold-plated imitation jewellery. Indistinguishable from ancestral heirlooms, handcrafted for life&apos;s most cherished celebrations.
+              From everyday elegance to moments worth dressing up for, discover jewellery that makes every look feel a little more special.
             </p>
 
             {/* CTA Buttons */}
@@ -60,39 +59,33 @@ export default function HeroBanner() {
               <button
                 type="button"
                 onClick={() => {
-                  const el = document.getElementById("bridal-sets");
+                  const el = document.getElementById("collections");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="px-8 py-4 rounded-full bg-[#F3EFEA] border border-[#E9E3DB] text-[#1C1917] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#E8D7D0] transition-all duration-300 flex items-center justify-center min-h-[48px]"
               >
-                Bridal Trousseau
+                EXPLORE CATEGORIES
               </button>
             </div>
 
             {/* Value Highlights */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#E9E3DB] max-w-lg">
-              <div>
-                <span className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917] block">
-                  24K
-                </span>
-                <span className="text-[11px] text-[#78716C] leading-tight block mt-0.5">
-                  Micron Gold Layering
+            <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-[#E9E3DB] max-w-lg">
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-[#1C1917] leading-tight">
+                  SKIN-FRIENDLY
                 </span>
               </div>
-              <div>
-                <span className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917] block">
-                  100%
-                </span>
-                <span className="text-[11px] text-[#78716C] leading-tight block mt-0.5">
-                  Anti-Tarnish Sealed
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-[#1C1917] leading-tight">
+                  PREMIUM FINISH
                 </span>
               </div>
-              <div>
-                <span className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917] block">
-                  5,000+
-                </span>
-                <span className="text-[11px] text-[#78716C] leading-tight block mt-0.5">
-                  Royal Brides Adorned
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-[#1C1917] leading-tight">
+                  CLOSE TO REAL
                 </span>
               </div>
             </div>
@@ -108,7 +101,7 @@ export default function HeroBanner() {
             {/* Primary Hero Portrait */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#FAF8F5] bg-[#F3EFEA]">
               <Image
-                src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200&auto=format&fit=crop"
+                src="/5000Rs.png"
                 alt="Royal Anayas Artisanal Bridal Collection"
                 fill
                 priority
@@ -121,23 +114,8 @@ export default function HeroBanner() {
                   Imperial Edition
                 </span>
                 <h2 className="font-serif text-xl sm:text-2xl font-light tracking-wide mt-1">
-                  The Mumtaz Rajputana Ensemble
+                  The Gulmohar Crystal
                 </h2>
-              </div>
-            </div>
-
-            {/* Overlapping Floating Detail Card */}
-            <div className="hidden sm:flex absolute -bottom-6 -left-8 bg-white/95 backdrop-blur-md border border-[#E9E3DB] p-4 rounded-2xl shadow-xl items-center gap-3.5 max-w-xs">
-              <div className="w-12 h-12 rounded-xl bg-[#F3EFEA] flex items-center justify-center text-[#C5A059] flex-shrink-0">
-                <Gem className="w-6 h-6 stroke-1" />
-              </div>
-              <div>
-                <p className="text-xs font-serif font-semibold text-[#1C1917]">
-                  Jadau Polki Artistry
-                </p>
-                <p className="text-[11px] text-[#78716C]">
-                  Reverse Meenakari enameling on each heirloom piece.
-                </p>
               </div>
             </div>
           </motion.div>
