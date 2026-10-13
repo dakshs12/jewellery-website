@@ -79,7 +79,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
 
                     {/* Luxury Grand Mega-Menu */}
                     <div className="absolute top-full left-0 pt-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 transform origin-top-left -translate-y-2 group-hover:translate-y-0">
-                      <div className="w-[880px] xl:w-[920px] max-w-[calc(100vw-48px)] bg-[#FAF8F5] border border-[#E2D9CC] shadow-[0_30px_70px_rgba(28,25,23,0.22)] rounded-3xl p-6 sm:p-7">
+                      <div className="w-[960px] xl:w-[1020px] max-w-[calc(100vw-48px)] bg-[#FAF8F5] border border-[#E2D9CC] shadow-[0_30px_70px_rgba(28,25,23,0.22)] rounded-3xl p-6 sm:p-7">
                         {/* Dual Column Layout: Categories Grid + Interactive Visual Spotlight */}
                         <div className="grid grid-cols-12 gap-6 items-stretch">
                           {/* Left Column: 7 Categories + 1 Complete Collection Card */}
@@ -98,7 +98,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                       href: `/products?category=${encodeURIComponent(col.name)}`,
                                     })
                                   }
-                                  className={`group/item flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 border ${
+                                  className={`group/item flex items-center gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200 border ${
                                     isSelected
                                       ? "bg-[#F3ECE0] border-[#C5A059]/40 text-[#1C1917] shadow-sm"
                                       : "bg-transparent border-transparent hover:bg-[#F5EFE6] text-[#1C1917]"
@@ -115,7 +115,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                   </div>
                                   <div className="flex-1 min-w-0 pr-1 flex items-center justify-between">
                                     <span
-                                      className={`font-serif text-[15px] font-semibold transition-colors truncate ${
+                                      className={`font-serif text-[14px] sm:text-[14.5px] font-semibold tracking-wider uppercase transition-colors whitespace-nowrap ${
                                         isSelected
                                           ? "text-[#C5A059]"
                                           : "text-[#1C1917] group-hover/item:text-[#C5A059]"
@@ -124,7 +124,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                       {col.name}
                                     </span>
                                     <ArrowRight
-                                      className={`w-3.5 h-3.5 text-[#C5A059] transition-all duration-200 shrink-0 ${
+                                      className={`w-3.5 h-3.5 text-[#C5A059] transition-all duration-200 shrink-0 ml-1.5 ${
                                         isSelected
                                           ? "opacity-100 translate-x-0"
                                           : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
@@ -139,7 +139,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                             <Link
                               href="/products"
                               onMouseEnter={() => setActiveSpotlight(ALL_PRODUCTS_SPOTLIGHT)}
-                              className={`group/item flex items-center justify-between px-3 py-3 rounded-2xl transition-all duration-200 border ${
+                              className={`group/item flex items-center justify-between px-3.5 py-3 rounded-2xl transition-all duration-200 border ${
                                 activeSpotlight.id === "all-products"
                                   ? "bg-[#F3ECE0] border-[#C5A059]/40 text-[#1C1917] shadow-sm"
                                   : "bg-transparent border-dashed border-[#C5A059]/40 hover:bg-[#F5EFE6] text-[#1C1917]"
@@ -156,7 +156,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                   <Sparkles className="w-4 h-4" />
                                 </div>
                                 <span
-                                  className={`font-serif text-[15px] font-semibold transition-colors block truncate ${
+                                  className={`font-serif text-[14px] sm:text-[14.5px] font-semibold tracking-wider uppercase transition-colors block whitespace-nowrap ${
                                     activeSpotlight.id === "all-products"
                                       ? "text-[#C5A059]"
                                       : "text-[#1C1917] group-hover/item:text-[#C5A059]"
@@ -166,7 +166,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                 </span>
                               </div>
                               <ArrowRight
-                                className={`w-3.5 h-3.5 text-[#C5A059] shrink-0 transition-all duration-200 mr-1 ${
+                                className={`w-3.5 h-3.5 text-[#C5A059] shrink-0 transition-all duration-200 mr-1 ml-1.5 ${
                                   activeSpotlight.id === "all-products"
                                     ? "opacity-100 translate-x-0"
                                     : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
