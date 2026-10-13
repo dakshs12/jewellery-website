@@ -1,15 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 export default function HeroBanner() {
-  const scrollToCatalog = () => {
-    const el = document.getElementById("products");
-    el?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <section className="relative overflow-hidden bg-[#FAF8F5] pt-8 pb-16 lg:pt-16 lg:pb-24">
       {/* Subtle gold decorative gradient orbs */}
@@ -47,14 +43,13 @@ export default function HeroBanner() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
-              <button
-                type="button"
-                onClick={scrollToCatalog}
+              <Link
+                href="/products"
                 className="px-8 py-4 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#C5A059] transition-all duration-300 flex items-center justify-center gap-3 shadow-lg group min-h-[48px]"
               >
                 <span>Explore The Collection</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
 
               <button
                 type="button"
