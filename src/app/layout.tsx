@@ -45,6 +45,13 @@ export const metadata: Metadata = {
     "Anayas jewellery",
     "handcrafted Indian jewellery",
   ],
+  icons: {
+    icon: [
+      { url: "/5.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/5.svg",
+    apple: "/5.svg",
+  },
   openGraph: {
     title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
     description:

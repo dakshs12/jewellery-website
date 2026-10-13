@@ -33,10 +33,10 @@ export default function HeroBanner() {
             </div>
 
             {/* High-Impact Editorial Bold Headline */}
-            <h1 className="font-playfair text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.25rem] font-bold text-[#1C1917] tracking-tight leading-[1.03] mb-6">
-              Jewels for the <br className="hidden sm:inline" />
-              <span className="italic font-bold text-[#712B31]">
-                life you live.
+            <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.15rem] font-bold text-[#1C1917] tracking-tight leading-[1.18] mb-6">
+              <span className="block">Jewellery that feels like you,</span>
+              <span className="italic font-bold text-[#712B31] block">
+                <span className="not-italic">J</span>ewellery that feels like real
               </span>
             </h1>
 
