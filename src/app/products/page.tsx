@@ -12,6 +12,7 @@ import { MOCK_PRODUCTS } from "@/data/mockProducts";
 import { COLLECTIONS } from "@/data/collections";
 import { Product, ProductCategory } from "@/types/database";
 import { useCartStore } from "@/store/useCartStore";
+import { getProducts } from "@/lib/sanity/queries";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -39,6 +40,7 @@ function ProductsContent() {
   const categoryParam = searchParams.get("category");
   const searchParam = searchParams.get("search") || searchParams.get("q") || "";
 
+  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "ALL">(
     (categoryParam as ProductCategory) || "ALL"
   );
@@ -52,6 +54,19 @@ function ProductsContent() {
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const toolsRef = useRef<HTMLDivElement>(null);
+
+  // Fetch products from Sanity with zero-crash fallback
+  useEffect(() => {
+    let isMounted = true;
+    getProducts().then((data) => {
+      if (isMounted && data && data.length > 0) {
+        setProducts(data);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Sync searchQuery when URL query parameter changes
   useEffect(() => {
@@ -108,7 +123,7 @@ function ProductsContent() {
   }, [sortBy]);
 
   const filteredProducts = useMemo(() => {
-    let list = [...MOCK_PRODUCTS];
+    let list = [...products];
 
     if (selectedCategory !== "ALL") {
       list = list.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase());
@@ -139,7 +154,7 @@ function ProductsContent() {
     }
 
     return list;
-  }, [selectedCategory, maxPrice, searchQuery, sortBy]);
+  }, [products, selectedCategory, maxPrice, searchQuery, sortBy]);
 
   // Subtle GSAP stagger animation on products grid whenever filter changes
   useGSAP(

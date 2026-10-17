@@ -64,22 +64,22 @@ export default function HeroBanner() {
             </div>
 
             {/* Value Highlights */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-[#E9E3DB] max-w-lg">
-              <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 lg:gap-8 pt-6 border-t border-[#E9E3DB] w-full max-w-xl">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-[#1C1917] leading-tight">
-                  SKIN-FRIENDLY
+                <span className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
+                  FOR ALL OCCASIONS
                 </span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-[#1C1917] leading-tight">
+                <span className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
                   PREMIUM FINISH
                 </span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-medium text-[#1C1917] leading-tight">
+                <span className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
                   CLOSE TO REAL
                 </span>
               </div>

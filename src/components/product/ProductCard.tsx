@@ -20,6 +20,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [addedAnimation, setAddedAnimation] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
+  const isOutOfStock = product.in_stock === false;
   const activePrice = product.sale_price ?? product.price;
   const hasDiscount = product.sale_price && product.sale_price < product.price;
   const discountPercent = hasDiscount
@@ -28,6 +29,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isOutOfStock) return;
     addItem(product, 1);
     setAddedAnimation(true);
     setTimeout(() => setAddedAnimation(false), 1500);
@@ -71,15 +73,23 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Luxury Floating Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-            {product.is_bestseller && (
-              <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-[#1C1917] text-[#FAF8F5] shadow-sm">
-                Bestseller
+            {isOutOfStock ? (
+              <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-stone-800/90 text-white shadow-sm backdrop-blur-xs">
+                Out of Stock
               </span>
-            )}
-            {hasDiscount && (
-              <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-[#E8D7D0] text-[#1C1917] shadow-sm">
-                Save {discountPercent}%
-              </span>
+            ) : (
+              <>
+                {product.is_bestseller && (
+                  <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-[#1C1917] text-[#FAF8F5] shadow-sm">
+                    Bestseller
+                  </span>
+                )}
+                {hasDiscount && (
+                  <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-[#E8D7D0] text-[#1C1917] shadow-sm">
+                    Save {discountPercent}%
+                  </span>
+                )}
+              </>
             )}
           </div>
 
@@ -126,54 +136,60 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
 
-            {/* Animated Add to Bag Button */}
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.88 }}
-              whileHover={{ scale: 1.03 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              onMouseEnter={() => setIsBtnHovered(true)}
-              onMouseLeave={() => setIsBtnHovered(false)}
-              onClick={handleAddToCart}
-              className={`add-to-bag-btn group/btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors duration-300 shadow-sm cursor-pointer select-none shrink-0 ${
-                addedAnimation
-                  ? "bg-[#2D4F3E] text-white ring-2 ring-[#2D4F3E]/40"
-                  : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059]"
-              }`}
-              aria-label={`Add ${product.title} to bag`}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {addedAnimation ? (
-                  <motion.span
-                    key="added"
-                    initial={{ opacity: 0, scale: 0.5, y: 4 }}
-                    animate={{ opacity: 1, scale: [0.5, 1.15, 1], y: 0 }}
-                    exit={{ opacity: 0, scale: 0.7, y: -4 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="flex items-center gap-1 text-emerald-200 font-semibold"
-                  >
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Added</span>
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="add"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center gap-1.5"
-                  >
-                    <ShoppingBag
-                      className={`w-3.5 h-3.5 transition-colors duration-200 ${
-                        isBtnHovered ? "text-white" : "text-[#C5A059]"
-                      }`}
-                    />
-                    <span>Add to Bag</span>
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.button>
+            {/* Animated Add to Bag Button / Out of Stock Button */}
+            {isOutOfStock ? (
+              <span className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[11px] uppercase tracking-wider flex items-center gap-1 bg-[#78716C]/15 text-[#78716C] border border-[#78716C]/20 cursor-not-allowed select-none shrink-0">
+                Out of Stock
+              </span>
+            ) : (
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.88 }}
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                onMouseEnter={() => setIsBtnHovered(true)}
+                onMouseLeave={() => setIsBtnHovered(false)}
+                onClick={handleAddToCart}
+                className={`add-to-bag-btn group/btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors duration-300 shadow-sm cursor-pointer select-none shrink-0 ${
+                  addedAnimation
+                    ? "bg-[#2D4F3E] text-white ring-2 ring-[#2D4F3E]/40"
+                    : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059]"
+                }`}
+                aria-label={`Add ${product.title} to bag`}
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  {addedAnimation ? (
+                    <motion.span
+                      key="added"
+                      initial={{ opacity: 0, scale: 0.5, y: 4 }}
+                      animate={{ opacity: 1, scale: [0.5, 1.15, 1], y: 0 }}
+                      exit={{ opacity: 0, scale: 0.7, y: -4 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="flex items-center gap-1 text-emerald-200 font-semibold"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Added</span>
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="add"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-1.5"
+                    >
+                      <ShoppingBag
+                        className={`w-3.5 h-3.5 transition-colors duration-200 ${
+                          isBtnHovered ? "text-white" : "text-[#C5A059]"
+                        }`}
+                      />
+                      <span>Add to Bag</span>
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            )}
           </div>
         </div>
       </div>
@@ -243,14 +259,20 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 <button
                   type="button"
+                  disabled={isOutOfStock}
                   onClick={(e) => {
+                    if (isOutOfStock) return;
                     handleAddToCart(e);
                     setQuickViewOpen(false);
                   }}
-                  className="w-full py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors flex items-center justify-center gap-2 shadow-lg min-h-[48px]"
+                  className={`w-full py-3.5 px-6 rounded-full text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg min-h-[48px] ${
+                    isOutOfStock
+                      ? "bg-stone-300 text-stone-500 cursor-not-allowed select-none"
+                      : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059] transition-colors cursor-pointer"
+                  }`}
                 >
                   <ShoppingBag className="w-4 h-4" />
-                  <span>Add to Bag & View Cart</span>
+                  <span>{isOutOfStock ? "Out of Stock" : "Add to Bag & View Cart"}</span>
                 </button>
               </div>
             </motion.div>

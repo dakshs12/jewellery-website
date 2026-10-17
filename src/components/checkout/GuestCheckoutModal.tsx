@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
@@ -11,17 +11,37 @@ import {
   Sparkles,
   Truck,
   CheckCircle2,
-  ArrowRight,
-  ExternalLink,
   PackageCheck,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { useHydratedCart } from "@/hooks/useHydratedCart";
 import { formatPrice } from "@/lib/utils";
 import { Order } from "@/types/database";
+import {
+  RazorpayOptions,
+  RazorpaySuccessResponse,
+  RazorpayFailureResponse,
+} from "@/types/razorpay";
 
 interface GuestCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+// Dynamically load Razorpay checkout script
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") return resolve(false);
+    if (window.Razorpay) return resolve(true);
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
 }
 
 export default function GuestCheckoutModal({
@@ -34,7 +54,7 @@ export default function GuestCheckoutModal({
   const [formData, setFormData] = useState({
     name: "Ananya Sharma",
     email: "ananya.sharma@example.com",
-    phone: "+91 98765 43210",
+    phone: "9876543210",
     street: "Flat 402, Royal Palms Estate, Juhu Tara Road",
     city: "Mumbai",
     state: "Maharashtra",
@@ -42,60 +62,232 @@ export default function GuestCheckoutModal({
   });
 
   const [loading, setLoading] = useState(false);
+  const [paymentStatusText, setPaymentStatusText] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [dispatchStatus, setDispatchStatus] = useState<string | null>(null);
   const [dispatchLoading, setDispatchLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Preload Razorpay checkout script when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      loadRazorpayScript();
+      setErrorMessage(null);
+    }
+  }, [isOpen]);
+
+  // Form Validation
+  const validateForm = (): string | null => {
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      return "Please enter a valid full name (minimum 2 characters).";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      return "Please enter a valid email address for your invoice and courier tracking.";
+    }
+
+    // Clean phone number (strip spaces, dashes, +91)
+    const cleanPhone = formData.phone.replace(/[\s\-+]/g, "").replace(/^91/, "");
+    if (!/^\d{10}$/.test(cleanPhone)) {
+      return "Please enter a valid 10-digit mobile number for courier delivery.";
+    }
+
+    if (!formData.street.trim() || formData.street.trim().length < 5) {
+      return "Please provide a complete street address with building / apartment details.";
+    }
+
+    if (!formData.city.trim()) {
+      return "Please enter your city.";
+    }
+
+    if (!formData.state.trim()) {
+      return "Please enter your state.";
+    }
+
+    if (!/^\d{6}$/.test(formData.postalCode.trim())) {
+      return "Please enter a valid 6-digit Indian PIN code.";
+    }
+
+    return null;
+  };
+
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+
+    if (items.length === 0) {
+      setErrorMessage("Your bag is empty. Please add items before checking out.");
+      return;
+    }
+
+    const validationError = validateForm();
+    if (validationError) {
+      setErrorMessage(validationError);
+      return;
+    }
+
     setLoading(true);
+    setPaymentStatusText("Verifying bag & initializing Razorpay...");
 
     try {
-      const response = await fetch("/api/orders/create", {
+      // 1. Ensure Razorpay client SDK is loaded
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        throw new Error(
+          "Could not load Razorpay gateway. Please check your internet connection and try again."
+        );
+      }
+
+      // 2. Call server-side order initialization (/api/razorpay/create-order)
+      const initRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          customer_name: formData.name,
-          customer_email: formData.email,
-          customer_phone: formData.phone,
-          shipping_address: {
-            street: formData.street,
-            city: formData.city,
-            state: formData.state,
-            postal_code: formData.postalCode,
-          },
-          line_items: items.map((i) => ({
-            product_id: i.product.id,
-            title: i.product.title,
-            price: i.product.sale_price ?? i.product.price,
+          items: items.map((i) => ({
+            productId: i.product.id,
             quantity: i.quantity,
-            image: i.product.images[0],
           })),
-          total_amount: finalTotal,
         }),
       });
 
-      const data = await response.json();
-      if (data.success && data.order) {
-        setCompletedOrder(data.order);
-        clearCart();
+      const initData = await initRes.json();
 
-        // Trigger celebratory gold confetti
-        try {
-          confetti({
-            particleCount: 80,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ["#D4AF37", "#C5A059", "#E8D7D0", "#1C1917"],
-          });
-        } catch {
-          // ignore if canvas not supported
-        }
+      if (!initRes.ok || !initData.success) {
+        throw new Error(
+          initData.error ||
+            initData.instructions ||
+            "Failed to initialize payment gateway order."
+        );
       }
-    } catch (err) {
-      console.error("Payment submission failed:", err);
-    } finally {
+
+      const {
+        razorpayOrderId,
+        amount,
+        currency,
+        orderNumber,
+        verifiedItems,
+        totalAmount,
+      } = initData;
+
+      setPaymentStatusText("Awaiting Razorpay payment completion...");
+
+      // 3. Configure and launch Razorpay checkout modal
+      const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "";
+
+      const options: RazorpayOptions = {
+        key: razorpayKey,
+        amount,
+        currency: currency || "INR",
+        name: "Anayas Jewels",
+        description: `Order #${orderNumber}`,
+        image: "/5.svg",
+        order_id: razorpayOrderId,
+        handler: async (response: RazorpaySuccessResponse) => {
+          setPaymentStatusText("Cryptographically verifying payment & creating order...");
+          try {
+            const confirmRes = await fetch("/api/orders/create", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                orderNumber,
+                customerDetails: {
+                  name: formData.name,
+                  email: formData.email,
+                  phone: formData.phone,
+                  shipping_address: {
+                    street: formData.street,
+                    city: formData.city,
+                    state: formData.state,
+                    postal_code: formData.postalCode,
+                  },
+                },
+                lineItems: verifiedItems,
+                totalAmount,
+              }),
+            });
+
+            const confirmData = await confirmRes.json();
+
+            if (!confirmRes.ok || !confirmData.success) {
+              throw new Error(
+                confirmData.error || "Payment signature verification failed."
+              );
+            }
+
+            // Order success!
+            setCompletedOrder(confirmData.order);
+            clearCart();
+
+            // Trigger celebratory gold confetti
+            try {
+              confetti({
+                particleCount: 90,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ["#D4AF37", "#C5A059", "#E8D7D0", "#1C1917"],
+              });
+            } catch {
+              // ignore canvas errors
+            }
+          } catch (err: unknown) {
+            console.error("Order verification error:", err);
+            setErrorMessage(
+              err instanceof Error
+                ? err.message
+                : "Failed to confirm order after payment. Please contact our support team."
+            );
+          } finally {
+            setLoading(false);
+            setPaymentStatusText(null);
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: "#1C1917",
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            setPaymentStatusText(null);
+            setErrorMessage(
+              "Payment window was closed. Your shipping details are saved — you can click 'Proceed to Pay' when you're ready."
+            );
+          },
+        },
+      };
+
+      if (!window.Razorpay) {
+        throw new Error("Razorpay SDK not loaded.");
+      }
+
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", (resp: RazorpayFailureResponse) => {
+        setLoading(false);
+        setPaymentStatusText(null);
+        setErrorMessage(
+          resp.error?.description ||
+            "Payment failed with your bank or UPI provider. Please try again."
+        );
+      });
+
+      rzp.open();
+    } catch (err: unknown) {
+      console.error("Checkout submission failed:", err);
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred during checkout."
+      );
       setLoading(false);
+      setPaymentStatusText(null);
     }
   };
 
@@ -113,7 +305,8 @@ export default function GuestCheckoutModal({
           order: {
             ...completedOrder,
             tracking_number: "BLUEDART-EXP-98218",
-            tracking_url: "https://www.bluedart.com/tracking?track=BLUEDART-EXP-98218",
+            tracking_url:
+              "https://www.bluedart.com/tracking?track=BLUEDART-EXP-98218",
           },
         }),
       });
@@ -163,14 +356,15 @@ export default function GuestCheckoutModal({
                   <p className="text-xs text-[#78716C]">
                     {completedOrder
                       ? `Heirloom Reference: ${completedOrder.order_number}`
-                      : "No account required • 256-bit Razorpay Encrypted"}
+                      : "Instant 256-bit Razorpay Encrypted • No Account Needed"}
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:ring-2 focus:ring-[#C5A059]"
+                disabled={loading}
+                className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:ring-2 focus:ring-[#C5A059] disabled:opacity-40"
                 aria-label="Close checkout"
               >
                 <X className="w-5 h-5" />
@@ -186,7 +380,7 @@ export default function GuestCheckoutModal({
                     <CheckCircle2 className="w-8 h-8 text-[#2D4F3E]" />
                   </div>
                   <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold block mb-1">
-                    Payment Verified via Razorpay
+                    Payment Verified via Razorpay & Saved to Sanity
                   </span>
                   <h2 className="font-serif text-3xl font-semibold text-[#1C1917] mb-3">
                     Order #{completedOrder.order_number}
@@ -201,6 +395,12 @@ export default function GuestCheckoutModal({
                       <span className="text-[#78716C]">Recipient</span>
                       <span className="font-semibold text-[#1C1917]">
                         {completedOrder.customer_name} ({completedOrder.customer_phone})
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
+                      <span className="text-[#78716C]">Payment Reference</span>
+                      <span className="font-mono text-[11px] text-[#1C1917]">
+                        {completedOrder.razorpay_payment_id}
                       </span>
                     </div>
                     <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
@@ -233,7 +433,7 @@ export default function GuestCheckoutModal({
                         type="button"
                         onClick={handleSimulateDirectusDispatch}
                         disabled={dispatchLoading}
-                        className="px-4 py-2 rounded-full bg-[#F3EFEA] hover:bg-[#E8D7D0] border border-[#E9E3DB] text-xs font-semibold text-[#1C1917] transition-all min-h-[40px] flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-full bg-[#F3EFEA] hover:bg-[#E8D7D0] border border-[#E9E3DB] text-xs font-semibold text-[#1C1917] transition-all min-h-[40px] flex items-center gap-1.5 cursor-pointer"
                       >
                         <PackageCheck className="w-4 h-4 text-[#C5A059]" />
                         <span>{dispatchLoading ? "Triggering..." : "Simulate Dispatch"}</span>
@@ -249,7 +449,7 @@ export default function GuestCheckoutModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-8 py-3.5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors shadow-md min-h-[44px]"
+                    className="px-8 py-3.5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors shadow-md min-h-[44px] cursor-pointer"
                   >
                     Continue Exploring Heirlooms
                   </button>
@@ -258,10 +458,21 @@ export default function GuestCheckoutModal({
                 /* CHECKOUT FORM VIEW */
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Left: Guest & Address Form */}
-                  <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-4">
+                  <form onSubmit={handleCheckoutSubmit} className="lg:col-span-7 space-y-4">
                     <h4 className="text-xs uppercase tracking-widest font-semibold text-[#C5A059] mb-1">
                       1. Guest Contact & Courier Destination
                     </h4>
+
+                    {/* Error Notice */}
+                    {errorMessage && (
+                      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3 text-amber-900 text-xs leading-relaxed">
+                        <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="font-semibold text-amber-950">Notice</p>
+                          <p className="mt-0.5">{errorMessage}</p>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
@@ -275,12 +486,13 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
+                          placeholder="e.g. Ananya Sharma"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#1C1917] mb-1">
-                          Email (for Invoice & Courier Link) *
+                          Email (Invoice & Tracking) *
                         </label>
                         <input
                           type="email"
@@ -289,6 +501,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
                           }
+                          placeholder="ananya@example.com"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -296,17 +509,27 @@ export default function GuestCheckoutModal({
 
                     <div>
                       <label className="block text-xs font-medium text-[#1C1917] mb-1">
-                        Mobile Phone (for BlueDart Courier OTP) *
+                        10-Digit Mobile Phone (for BlueDart OTP) *
                       </label>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) =>
-                          setFormData({ ...formData, phone: e.target.value })
-                        }
-                        className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
-                      />
+                      <div className="flex items-center">
+                        <span className="px-3.5 py-2.5 bg-[#F3EFEA] border border-r-0 border-[#E9E3DB] rounded-l-xl text-xs font-semibold text-[#78716C] min-h-[44px] flex items-center">
+                          +91
+                        </span>
+                        <input
+                          type="tel"
+                          required
+                          maxLength={10}
+                          value={formData.phone}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              phone: e.target.value.replace(/\D/g, ""),
+                            })
+                          }
+                          placeholder="9876543210"
+                          className="w-full bg-white border border-[#E9E3DB] rounded-r-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
+                        />
+                      </div>
                     </div>
 
                     <div>
@@ -320,6 +543,7 @@ export default function GuestCheckoutModal({
                         onChange={(e) =>
                           setFormData({ ...formData, street: e.target.value })
                         }
+                        placeholder="Apartment, building, street, landmark"
                         className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                       />
                     </div>
@@ -336,6 +560,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, city: e.target.value })
                           }
+                          placeholder="Mumbai"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -350,6 +575,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, state: e.target.value })
                           }
+                          placeholder="Maharashtra"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -360,13 +586,15 @@ export default function GuestCheckoutModal({
                         <input
                           type="text"
                           required
+                          maxLength={6}
                           value={formData.postalCode}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              postalCode: e.target.value,
+                              postalCode: e.target.value.replace(/\D/g, ""),
                             })
                           }
+                          placeholder="400049"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -377,15 +605,26 @@ export default function GuestCheckoutModal({
                       <button
                         type="submit"
                         disabled={loading || items.length === 0}
-                        className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-xl flex items-center justify-center gap-2 min-h-[48px] disabled:opacity-50"
+                        className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-xl flex items-center justify-center gap-2 min-h-[48px] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                       >
-                        <CreditCard className="w-4 h-4 text-[#C5A059]" />
-                        <span>
-                          {loading
-                            ? "Connecting to Razorpay..."
-                            : `Pay ${formatPrice(finalTotal)} via Razorpay`}
-                        </span>
+                        {loading ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 text-[#C5A059] animate-spin" />
+                            <span>{paymentStatusText || "Processing Payment..."}</span>
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="w-4 h-4 text-[#C5A059]" />
+                            <span>Pay {formatPrice(finalTotal)} via Razorpay</span>
+                          </>
+                        )}
                       </button>
+
+                      {loading && paymentStatusText && (
+                        <p className="text-[11px] text-[#78716C] text-center mt-2 animate-pulse">
+                          {paymentStatusText}
+                        </p>
+                      )}
                     </div>
                   </form>
 
@@ -404,7 +643,7 @@ export default function GuestCheckoutModal({
                           >
                             <div className="relative w-14 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-[#F3EFEA]">
                               <Image
-                                src={product.images[0]}
+                                src={product.images[0] || "/products/necklace/necklace-01.jpg"}
                                 alt={product.title}
                                 fill
                                 sizes="56px"

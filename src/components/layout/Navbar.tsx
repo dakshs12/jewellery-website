@@ -9,7 +9,6 @@ import { Menu, ShoppingBag, Search, X, ChevronDown, ArrowRight, Sparkles } from 
 import { useHydratedCart } from "@/hooks/useHydratedCart";
 import MobileMenu from "./MobileMenu";
 import CartDrawer from "@/components/cart/CartDrawer";
-import AnnouncementBar from "./AnnouncementBar";
 import { COLLECTIONS, CollectionCategory } from "@/data/collections";
 
 interface NavbarProps {
@@ -39,9 +38,6 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
   return (
     <>
       <header className="sticky top-0 z-40 w-full">
-        {/* Top Announcement Bar */}
-        <AnnouncementBar />
-
         {/* Main Navbar */}
         <nav className="w-full bg-[#EAD5BE] backdrop-blur-md border-b border-[#D8C2AA] transition-all duration-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
