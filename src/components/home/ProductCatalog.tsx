@@ -43,7 +43,7 @@ export default function ProductCatalog({ products }: ProductCatalogProps) {
   }, [products, selectedCategory, sortBy]);
 
   return (
-    <section id="products" className="py-16 sm:py-24 bg-[#FAF8F5]">
+    <section id="products" className="py-16 sm:py-24 bg-[#FFF6EA]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">

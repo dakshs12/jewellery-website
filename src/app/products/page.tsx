@@ -158,7 +158,7 @@ function ProductsContent() {
   );
 
   return (
-    <div ref={containerRef} className="min-h-screen flex flex-col bg-[#FAF8F5]">
+    <div ref={containerRef} className="min-h-screen flex flex-col bg-[#FFF6EA]">
       <Navbar onProceedCheckout={() => { closeCart(); setCheckoutOpen(true); }} />
 
       <main className="flex-1 py-10 sm:py-16">
@@ -215,7 +215,7 @@ function ProductsContent() {
 
               {/* Category Dropdown */}
               {openDropdown === "category" && (
-                <div className="absolute left-0 top-full mt-2 w-full min-w-[240px] bg-[#FAF8F5] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
+                <div className="absolute left-0 top-full mt-2 w-full min-w-[240px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
                   {CATEGORIES.map((cat) => {
                     const isSelected = selectedCategory === cat.value;
                     return (
@@ -264,7 +264,7 @@ function ProductsContent() {
 
               {/* Price Range Manual Slider Popover */}
               {openDropdown === "price" && (
-                <div className="absolute left-0 top-full mt-2 w-full sm:w-[320px] bg-[#FAF8F5] border border-[#E9E3DB] rounded-2xl shadow-xl p-5 z-40">
+                <div className="absolute left-0 top-full mt-2 w-full sm:w-[320px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-5 z-40">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
@@ -376,7 +376,7 @@ function ProductsContent() {
 
               {/* Sort Dropdown */}
               {openDropdown === "sort" && (
-                <div className="absolute right-0 top-full mt-2 w-full min-w-[220px] bg-[#FAF8F5] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
+                <div className="absolute right-0 top-full mt-2 w-full min-w-[220px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
                   {SORT_OPTIONS.map((opt) => {
                     const isSelected = sortBy === opt.value;
                     return (
@@ -496,7 +496,7 @@ export default function ProductsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">
+        <div className="min-h-screen bg-[#FFF6EA] flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#C5A059]" />
         </div>
       }

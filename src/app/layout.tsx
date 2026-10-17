@@ -26,7 +26,7 @@ const playfair = Playfair_Display({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#FAF8F5",
+  themeColor: "#FFF6EA",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -71,7 +71,7 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${plusJakarta.variable} ${playfair.variable} scroll-smooth antialiased`}
     >
-      <body className="min-h-screen bg-[#FAF8F5] text-[#1C1917] font-sans flex flex-col selection:bg-[#E8D7D0] selection:text-[#1C1917]">
+      <body className="min-h-screen bg-[#FFF6EA] text-[#1C1917] font-sans flex flex-col selection:bg-[#E8D7D0] selection:text-[#1C1917]">
         {children}
         <AgentationDev />
       </body>

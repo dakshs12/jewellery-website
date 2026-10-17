@@ -194,7 +194,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-3xl bg-[#FAF8F5] border border-[#E9E3DB] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col md:flex-row"
+              className="relative w-full max-w-3xl bg-[#FFF6EA] border border-[#E9E3DB] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col md:flex-row"
             >
               <button
                 type="button"

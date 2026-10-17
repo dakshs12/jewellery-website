@@ -46,7 +46,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 280 }}
-            className="fixed inset-y-0 left-0 w-full max-w-sm bg-[#FAF8F5] border-r border-[#E9E3DB] shadow-2xl flex flex-col justify-between overflow-y-auto"
+            className="fixed inset-y-0 left-0 w-full max-w-sm bg-[#FFF6EA] border-r border-[#E9E3DB] shadow-2xl flex flex-col justify-between overflow-y-auto"
           >
             {/* Header */}
             <div>

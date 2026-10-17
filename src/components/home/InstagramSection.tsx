@@ -33,23 +33,20 @@ function InstagramIcon({ className = "w-7 h-7" }: { className?: string }) {
 const INSTAGRAM_CARDS = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-    alt: "Couple with wedding rings and bridal flower bouquet",
-    tag: "Royal Wedding Trousseau",
+    image: "/products/necklace/necklace-08.jpg",
+    alt: "Imperial Heritage Jadau Choker Necklace",
+    tag: "Royal Heritage Chokers",
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1481980235850-66e47651e431?q=80&w=800&auto=format&fit=crop",
-    alt: "Bride hands adorned with stacking heirloom rings on white silk gown",
-    tag: "Artisanal Rings & Bands",
+    image: "/products/bracelets/bracelets-03.jpg",
+    alt: "Handcrafted 22K Gold Plated Kadas",
+    tag: "Artisanal Kadas & Bangles",
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1634149136549-47350a401065?q=80&w=800&auto=format&fit=crop",
-    alt: "Model adorned with statement gold earrings",
+    image: "/products/earrings/earrings-01.jpg",
+    alt: "Kundan & Pearl Statement Chandbalis",
     tag: "Festive Chandbalis",
   },
 ];
@@ -80,7 +77,7 @@ export default function InstagramSection() {
   );
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-[#FAF8F5]">
+    <section ref={sectionRef} className="relative w-full bg-[#FFF6EA]">
       {/* 1. Header Text in the warm cream upper section */}
       <div className="pt-16 sm:pt-24 pb-10 sm:pb-14 text-center max-w-xl mx-auto px-4">
         <span className="text-[11px] uppercase tracking-[0.25em] font-medium text-[#78716C] block mb-2">
@@ -96,9 +93,9 @@ export default function InstagramSection() {
 
       {/* 2. Horizon Split Row: The cards row itself is bisected exactly 50/50 by the horizon */}
       <div className="relative w-full">
-        {/* Background split: Top 50% cream (#FAF8F5), Bottom 50% dark (#1C1917) */}
+        {/* Background split: Top 50% cream (#FFF6EA), Bottom 50% dark (#1C1917) */}
         <div className="absolute inset-0 flex flex-col pointer-events-none" aria-hidden="true">
-          <div className="h-1/2 w-full bg-[#FAF8F5]" />
+          <div className="h-1/2 w-full bg-[#FFF6EA]" />
           <div className="h-1/2 w-full bg-[#1C1917]" />
         </div>
 

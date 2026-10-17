@@ -87,7 +87,7 @@ export default function ReviewsSection() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#FAF8F5] py-20 sm:py-28 border-t border-[#E9E3DB] overflow-hidden select-none"
+      className="bg-[#FFF6EA] py-20 sm:py-28 border-t border-[#E9E3DB] overflow-hidden select-none"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
         {/* Section Header */}
@@ -108,8 +108,8 @@ export default function ReviewsSection() {
         onMouseLeave={handleMouseLeave}
       >
         {/* Subtle Edge Vignettes for seamless fading edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#FAF8F5] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#FAF8F5] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#FFF6EA] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#FFF6EA] to-transparent z-10 pointer-events-none" />
 
         <div
           ref={trackRef}

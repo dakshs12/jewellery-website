@@ -148,10 +148,10 @@ export default function GuestCheckoutModal({
             initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 20 }}
-            className="relative w-full max-w-4xl bg-[#FAF8F5] border border-[#E9E3DB] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[92vh] flex flex-col"
+            className="relative w-full max-w-4xl bg-[#FFF6EA] border border-[#E9E3DB] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[92vh] flex flex-col"
           >
             {/* Modal Header */}
-            <div className="p-5 sm:p-6 border-b border-[#E9E3DB] flex items-center justify-between bg-[#FAF8F5]">
+            <div className="p-5 sm:p-6 border-b border-[#E9E3DB] flex items-center justify-between bg-[#FFF6EA]">
               <div className="flex items-center gap-3">
                 <Sparkles className="w-5 h-5 text-[#C5A059]" />
                 <div>

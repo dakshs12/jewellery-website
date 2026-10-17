@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-alabaster: #FAF8F5;
+  --color-alabaster: #FFF6EA;
   --color-warm-oat: #F3EFEA;
   --color-champagne: #D4AF37;
   --color-champagne-dark: #C5A059;
@@ -22,7 +22,7 @@
 }
 
 :root {
-  --bg-base: #FAF8F5;
+  --bg-base: #FFF6EA;
   --card-base: #F3EFEA;
   --gold-accent: #D4AF37;
   --gold-dark: #C5A059;
@@ -70,7 +70,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #FAF8F5;
+  background: #FFF6EA;
 }
 
 ::-webkit-scrollbar-thumb {

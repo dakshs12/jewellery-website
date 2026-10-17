@@ -21,7 +21,7 @@ export default function CollectionSection() {
   return (
     <section
       id="collections"
-      className="py-20 sm:py-28 bg-[#FAF8F5] relative border-b border-[#E9E3DB]/60"
+      className="py-20 sm:py-28 bg-[#FFF6EA] relative border-b border-[#E9E3DB]/60"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

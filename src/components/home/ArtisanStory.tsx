@@ -12,7 +12,7 @@ export default function ArtisanStory() {
           <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6 relative">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border-2 border-white/60">
               <Image
-                src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop"
+                src="/products/necklace/necklace-15.jpg"
                 alt="Intricate Kundan Stone Setting"
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
@@ -21,7 +21,7 @@ export default function ArtisanStory() {
             </div>
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border-2 border-white/60 mt-8">
               <Image
-                src="https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop"
+                src="/products/necklace/necklace-22.jpg"
                 alt="Handcrafted Gold Micron Finishing"
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
@@ -29,7 +29,7 @@ export default function ArtisanStory() {
               />
             </div>
 
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF8F5]/95 backdrop-blur-md p-4 rounded-2xl border border-[#E9E3DB] shadow-xl text-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FFF6EA]/95 backdrop-blur-md p-4 rounded-2xl border border-[#E9E3DB] shadow-xl text-center">
               <span className="font-serif text-2xl font-bold text-[#1C1917] block">
                 70+ Hours
               </span>
@@ -61,7 +61,7 @@ export default function ArtisanStory() {
 
             <div className="space-y-4">
               <div className="flex items-start gap-4 p-4 rounded-xl bg-white/70 border border-[#E9E3DB]">
-                <div className="w-10 h-10 rounded-lg bg-[#FAF8F5] flex items-center justify-center text-[#C5A059] flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[#FFF6EA] flex items-center justify-center text-[#C5A059] flex-shrink-0">
                   <Award className="w-5 h-5 stroke-1" />
                 </div>
                 <div>
@@ -75,7 +75,7 @@ export default function ArtisanStory() {
               </div>
 
               <div className="flex items-start gap-4 p-4 rounded-xl bg-white/70 border border-[#E9E3DB]">
-                <div className="w-10 h-10 rounded-lg bg-[#FAF8F5] flex items-center justify-center text-[#C5A059] flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[#FFF6EA] flex items-center justify-center text-[#C5A059] flex-shrink-0">
                   <ShieldCheck className="w-5 h-5 stroke-1" />
                 </div>
                 <div>
@@ -89,7 +89,7 @@ export default function ArtisanStory() {
               </div>
 
               <div className="flex items-start gap-4 p-4 rounded-xl bg-white/70 border border-[#E9E3DB]">
-                <div className="w-10 h-10 rounded-lg bg-[#FAF8F5] flex items-center justify-center text-[#C5A059] flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[#FFF6EA] flex items-center justify-center text-[#C5A059] flex-shrink-0">
                   <HeartHandshake className="w-5 h-5 stroke-1" />
                 </div>
                 <div>

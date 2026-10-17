@@ -43,9 +43,9 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
         <AnnouncementBar />
 
         {/* Main Navbar */}
-        <nav className="w-full bg-[#FAF8F5]/90 backdrop-blur-md border-b border-[#E9E3DB] transition-all duration-200">
+        <nav className="w-full bg-[#EAD5BE] backdrop-blur-md border-b border-[#D8C2AA] transition-all duration-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-20">
+            <div className="flex items-center justify-between h-20 sm:h-24 lg:h-[100px]">
               {/* Left Side: Mobile Hamburger OR Desktop HOME & COLLECTION */}
               <div className="flex items-center lg:w-1/3">
                 {/* Mobile Menu Trigger (44x44px target) */}
@@ -79,7 +79,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
 
                     {/* Luxury Grand Mega-Menu */}
                     <div className="absolute top-full left-0 pt-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 transform origin-top-left -translate-y-2 group-hover:translate-y-0">
-                      <div className="w-[960px] xl:w-[1020px] max-w-[calc(100vw-48px)] bg-[#FAF8F5] border border-[#E2D9CC] shadow-[0_30px_70px_rgba(28,25,23,0.22)] rounded-3xl p-6 sm:p-7">
+                      <div className="w-[960px] xl:w-[1020px] max-w-[calc(100vw-48px)] bg-[#FFF6EA] border border-[#E2D9CC] shadow-[0_30px_70px_rgba(28,25,23,0.22)] rounded-3xl p-6 sm:p-7">
                         {/* Dual Column Layout: Categories Grid + Interactive Visual Spotlight */}
                         <div className="grid grid-cols-12 gap-6 items-stretch">
                           {/* Left Column: 7 Categories + 1 Complete Collection Card */}
@@ -217,10 +217,10 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                   <Image
                     src="/2.svg"
                     alt="Anayas"
-                    width={280}
-                    height={142}
+                    width={360}
+                    height={183}
                     priority
-                    className="h-14 sm:h-16 md:h-[70px] w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
+                    className="h-16 sm:h-20 md:h-[84px] lg:h-[92px] w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
                   />
                 </Link>
               </div>
@@ -250,7 +250,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 bg-[#1C1917] text-[#FAF8F5] text-[10px] font-bold rounded-full flex items-center justify-center shadow-md border border-[#FAF8F5]"
+                      className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 bg-[#1C1917] text-[#FAF8F5] text-[10px] font-bold rounded-full flex items-center justify-center shadow-md border border-[#EAD5BE]"
                     >
                       {totalCount}
                     </motion.span>
@@ -286,7 +286,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
               initial={{ opacity: 0, scale: 0.95, y: -20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              className="relative w-full max-w-2xl bg-[#FAF8F5] border border-[#E9E3DB] shadow-2xl rounded-2xl p-6 z-10"
+              className="relative w-full max-w-2xl bg-[#FFF6EA] border border-[#E9E3DB] shadow-2xl rounded-2xl p-6 z-10"
             >
               <form
                 onSubmit={(e) => {

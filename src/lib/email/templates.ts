@@ -3,7 +3,7 @@ import { formatPrice } from "@/lib/utils";
 
 /**
  * Clean responsive inline HTML luxury email templates styled with Anayas aesthetic:
- * #FAF8F5 (Alabaster Cream), #F3EFEA (Warm Oat), #D4AF37 (Champagne Gold), #1C1917 (Deep Espresso)
+ * #FFF6EA (Alabaster Cream), #F3EFEA (Warm Oat), #D4AF37 (Champagne Gold), #1C1917 (Deep Espresso)
  */
 
 export function renderCustomerOrderConfirmationEmail(order: Order): string {
@@ -39,8 +39,8 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
   <meta charset="utf-8">
   <title>Order Confirmed — Anayas</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #FAF8F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FAF8F5; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; background-color: #FFF6EA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFF6EA; padding: 40px 16px;">
     <tr>
       <td align="center">
         <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E9E3DB; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
@@ -63,7 +63,7 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
               </p>
 
               <!-- Order Summary Box -->
-              <div style="background-color: #FAF8F5; border-radius: 12px; border: 1px solid #E9E3DB; padding: 20px 24px; margin-bottom: 28px;">
+              <div style="background-color: #FFF6EA; border-radius: 12px; border: 1px solid #E9E3DB; padding: 20px 24px; margin-bottom: 28px;">
                 <p style="margin: 0 0 12px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #78716C; font-weight: 600;">Delivery Address</p>
                 <p style="margin: 0; font-size: 14px; color: #1C1917; font-weight: 600;">${order.customer_name}</p>
                 <p style="margin: 4px 0 0; font-size: 13px; color: #78716C; line-height: 1.5;">
@@ -98,7 +98,7 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
 
           <!-- Footer -->
           <tr>
-            <td style="padding: 24px 40px; background-color: #FAF8F5; border-top: 1px solid #E9E3DB; text-align: center;">
+            <td style="padding: 24px 40px; background-color: #FFF6EA; border-top: 1px solid #E9E3DB; text-align: center;">
               <p style="margin: 0; font-size: 12px; color: #78716C;">Need assistance with your jewellery? Contact our Bridal Concierge on WhatsApp or reply directly to this email.</p>
               <p style="margin: 8px 0 0; font-size: 11px; color: #A8A29E;">© ${new Date().getFullYear()} Anayas Artisanal Heirlooms. All rights reserved.</p>
             </td>
@@ -138,14 +138,14 @@ export function renderAdminNewOrderAlertEmail(
                 Total: <strong>${formatPrice(order.total_amount)}</strong>. Action required: Pack items and generate courier slip.
               </p>
 
-              <div style="background-color: #FAF8F5; border: 1px solid #E9E3DB; border-radius: 8px; padding: 16px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; color: #78716C;">
+              <div style="background-color: #FFF6EA; border: 1px solid #E9E3DB; border-radius: 8px; padding: 16px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; color: #78716C;">
                 <p style="margin: 0;"><strong>Customer:</strong> ${order.customer_name} (${order.customer_email}, ${order.customer_phone})</p>
                 <p style="margin: 4px 0;"><strong>Destination:</strong> ${order.shipping_address.city}, ${order.shipping_address.state} (${order.shipping_address.postal_code})</p>
                 <p style="margin: 4px 0;"><strong>Razorpay Payment ID:</strong> ${order.razorpay_payment_id}</p>
                 <p style="margin: 4px 0 0;"><strong>Items Count:</strong> ${order.line_items.length} line item(s)</p>
               </div>
 
-              <a href="${orderAdminLink}" target="_blank" style="display: inline-block; background-color: #1C1917; color: #FAF8F5; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; text-decoration: none; padding: 14px 28px; border-radius: 50px;">
+              <a href="${orderAdminLink}" target="_blank" style="display: inline-block; background-color: #1C1917; color: #FFF6EA; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; text-decoration: none; padding: 14px 28px; border-radius: 50px;">
                 Open in Directus Admin →
               </a>
             </td>
@@ -171,8 +171,8 @@ export function renderCustomerOrderDispatchedEmail(order: Order): string {
   <meta charset="utf-8">
   <title>Your Anayas Parcel Has Dispatched!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #FAF8F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FAF8F5; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; background-color: #FFF6EA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFF6EA; padding: 40px 16px;">
     <tr>
       <td align="center">
         <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E9E3DB; overflow: hidden;">
@@ -191,7 +191,7 @@ export function renderCustomerOrderDispatchedEmail(order: Order): string {
                 Track your package here: <a href="${trackingUrl}" style="color: #C5A059; font-weight: 600; text-decoration: underline;">${trackingUrl}</a> (Waybill: <strong>${order.tracking_number || "BLUEDART-EXP-9821"}</strong>).
               </p>
 
-              <div style="background-color: #FAF8F5; border: 1px solid #E9E3DB; border-radius: 12px; padding: 20px; margin-bottom: 28px;">
+              <div style="background-color: #FFF6EA; border: 1px solid #E9E3DB; border-radius: 12px; padding: 20px; margin-bottom: 28px;">
                 <p style="margin: 0 0 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; color: #78716C; letter-spacing: 0.1em;">Shipment Details</p>
                 <p style="margin: 0; font-size: 14px; color: #1C1917;"><strong>Order Number:</strong> ${order.order_number}</p>
                 <p style="margin: 4px 0; font-size: 14px; color: #1C1917;"><strong>Carrier:</strong> ${order.courier_name} Express Insured</p>
@@ -207,7 +207,7 @@ export function renderCustomerOrderDispatchedEmail(order: Order): string {
           </tr>
 
           <tr>
-            <td style="padding: 20px 40px; background-color: #FAF8F5; border-top: 1px solid #E9E3DB; text-align: center; font-size: 12px; color: #78716C;">
+            <td style="padding: 20px 40px; background-color: #FFF6EA; border-top: 1px solid #E9E3DB; text-align: center; font-size: 12px; color: #78716C;">
               Please ensure an adult is present to receive the insured parcel upon OTP confirmation.
             </td>
           </tr>

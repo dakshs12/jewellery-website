@@ -89,10 +89,10 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 w-full max-w-md bg-[#FAF8F5] border-l border-[#E9E3DB] shadow-2xl flex flex-col justify-between"
+            className="fixed inset-y-0 right-0 w-full max-w-md bg-[#FFF6EA] border-l border-[#E9E3DB] shadow-2xl flex flex-col justify-between"
           >
             {/* Header */}
-            <div className="p-5 border-b border-[#E9E3DB] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-10">
+            <div className="p-5 border-b border-[#E9E3DB] bg-[#FFF6EA]/90 backdrop-blur-md sticky top-0 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <ShoppingBag className="w-5 h-5 text-[#C5A059]" />
@@ -210,7 +210,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
 
                         {/* Stepper & Delete */}
                         <div className="mt-3 flex items-center justify-between">
-                          <div className="flex items-center border border-[#E9E3DB] rounded-lg bg-[#FAF8F5]">
+                          <div className="flex items-center border border-[#E9E3DB] rounded-lg bg-[#FFF6EA]">
                             <button
                               type="button"
                               onClick={() =>

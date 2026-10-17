@@ -34,7 +34,7 @@ export const COLLECTIONS: CollectionCategory[] = [
     subtitle: "Anti-Tarnish Minimalist Luxury",
     description: "Lightweight, hypoallergenic 18K yellow gold plated pieces crafted for modern daily elegance.",
     pieceCount: 42,
-    image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1200&auto=format&fit=crop",
+    image: "/products/everyday-wear/everyday-wear-01.jpg",
   },
   {
     id: "earrings",
@@ -70,6 +70,6 @@ export const COLLECTIONS: CollectionCategory[] = [
     subtitle: "Sacred & Contemporary Heirlooms",
     description: "Auspicious black onyx beads united with diamond pendants and traditional temple gold motifs.",
     pieceCount: 19,
-    image: "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=1200&auto=format&fit=crop",
+    image: "/products/mangalsutra/mangalsutra-01.jpg",
   },
 ];

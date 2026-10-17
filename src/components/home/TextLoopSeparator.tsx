@@ -16,7 +16,7 @@ export default function TextLoopSeparator() {
   return (
     <section
       aria-label="Brand Signature Loop"
-      className="relative w-full overflow-hidden bg-[#FAF8F5] border-y border-[#E9E3DB] py-3.5 sm:py-4 md:py-4.5 select-none pointer-events-none"
+      className="relative w-full overflow-hidden bg-[#FFF6EA] border-y border-[#E9E3DB] py-3.5 sm:py-4 md:py-4.5 select-none pointer-events-none"
     >
       <div className="flex animate-marquee items-center whitespace-nowrap">
         {/* Track 1 */}

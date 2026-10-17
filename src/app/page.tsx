@@ -21,7 +21,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] selection:bg-[#E8D7D0] selection:text-[#1C1917]">
+    <div className="min-h-screen flex flex-col bg-[#FFF6EA] selection:bg-[#E8D7D0] selection:text-[#1C1917]">
       {/* 1. Navbar: HOME | COLLECTION | LOGO | SEARCH | CART */}
       <Navbar onProceedCheckout={handleOpenCheckout} />
 
