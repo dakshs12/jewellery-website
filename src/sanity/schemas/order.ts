@@ -1,10 +1,10 @@
 import { defineType, defineField } from "sanity";
+import { DispatchOrderField } from "../components/DispatchOrderField";
 
 export const order = defineType({
   name: "order",
   title: "Customer Orders & Dispatch",
   type: "document",
-  liveEdit: true, // Saves immediately without Draft/Publish flow
   groups: [
     {
       name: "fulfillment",
@@ -66,6 +66,32 @@ export const order = defineType({
       group: "fulfillment",
       initialValue: "https://www.bluedart.com/tracking",
       description: "Courier tracking page URL sent to client in dispatch notification.",
+    }),
+    defineField({
+      name: "dispatchAction",
+      title: "Dispatch Action",
+      type: "string",
+      group: "fulfillment",
+      components: {
+        field: DispatchOrderField,
+      },
+    }),
+    defineField({
+      name: "trackingEmailSent",
+      title: "Tracking Email Dispatched?",
+      type: "boolean",
+      group: "fulfillment",
+      initialValue: false,
+      readOnly: true,
+      description: "Automatically marked true when the dispatch notification email is sent to the customer.",
+    }),
+    defineField({
+      name: "dispatchedAt",
+      title: "Dispatched Timestamp",
+      type: "datetime",
+      group: "fulfillment",
+      readOnly: true,
+      description: "Date and time when the package was dispatched and customer was notified.",
     }),
 
     // --- 2. ORDER & CUSTOMER DETAILS (READ-ONLY CAPTURE) ---

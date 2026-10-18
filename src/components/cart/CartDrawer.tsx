@@ -292,7 +292,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                   }}
                   className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] flex items-center justify-center gap-2 uppercase tracking-widest text-xs font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-lg group focus:ring-2 focus:ring-[#C5A059] focus:outline-none"
                 >
-                  <span>Proceed to Guest Checkout</span>
+                  <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
 

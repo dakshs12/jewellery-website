@@ -8,8 +8,7 @@ import {
   X,
   ShieldCheck,
   CreditCard,
-  Sparkles,
-  Truck,
+  ShoppingBag,
   CheckCircle2,
   PackageCheck,
   AlertCircle,
@@ -156,8 +155,8 @@ export default function GuestCheckoutModal({
       if (!initRes.ok || !initData.success) {
         throw new Error(
           initData.error ||
-            initData.instructions ||
-            "Failed to initialize payment gateway order."
+          initData.instructions ||
+          "Failed to initialize payment gateway order."
         );
       }
 
@@ -274,7 +273,7 @@ export default function GuestCheckoutModal({
         setPaymentStatusText(null);
         setErrorMessage(
           resp.error?.description ||
-            "Payment failed with your bank or UPI provider. Please try again."
+          "Payment failed with your bank or UPI provider. Please try again."
         );
       });
 
@@ -291,28 +290,35 @@ export default function GuestCheckoutModal({
     }
   };
 
-  const handleSimulateDirectusDispatch = async () => {
+  const handleSimulateSanityDispatch = async () => {
     if (!completedOrder) return;
     setDispatchLoading(true);
     try {
-      const res = await fetch("/api/webhooks/directus-dispatch", {
+      const res = await fetch("/api/webhooks/sanity-dispatch", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-directus-webhook-secret": "anayas_directus_secret_demo",
         },
         body: JSON.stringify({
-          order: {
-            ...completedOrder,
-            tracking_number: "BLUEDART-EXP-98218",
-            tracking_url:
-              "https://www.bluedart.com/tracking?track=BLUEDART-EXP-98218",
-          },
+          orderId: completedOrder.id,
+          orderNumber: completedOrder.order_number,
+          customerName: completedOrder.customer_name,
+          customerEmail: completedOrder.customer_email,
+          customerPhone: completedOrder.customer_phone,
+          courierName: "BlueDart",
+          trackingNumber: "BLUEDART-EXP-98218",
+          trackingUrl:
+            "https://www.bluedart.com/tracking?track=BLUEDART-EXP-98218",
+          shippingAddress: completedOrder.shipping_address,
+          lineItems: completedOrder.line_items,
+          totalAmount: completedOrder.total_amount,
         }),
       });
       const data = await res.json();
       if (data.success) {
-        setDispatchStatus("Parcel dispatched via BlueDart! Tracking email delivered.");
+        setDispatchStatus("Parcel dispatched via BlueDart! Tracking email delivered & Sanity order patched.");
+      } else {
+        setDispatchStatus(`Dispatch notice: ${data.error || "Completed"}`);
       }
     } catch {
       setDispatchStatus("Dispatch webhook simulated.");
@@ -346,18 +352,20 @@ export default function GuestCheckoutModal({
             {/* Modal Header */}
             <div className="p-5 sm:p-6 border-b border-[#E9E3DB] flex items-center justify-between bg-[#FFF6EA]">
               <div className="flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-[#C5A059]" />
+                {completedOrder ? (
+                  <CheckCircle2 className="w-5 h-5 text-[#2D4F3E]" />
+                ) : (
+                  <ShoppingBag className="w-5 h-5 text-[#C5A059]" />
+                )}
                 <div>
                   <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1C1917]">
-                    {completedOrder
-                      ? "Artisanal Order Confirmed"
-                      : "Guest Express Checkout"}
+                    {completedOrder ? "Order Confirmed" : "Checkout"}
                   </h3>
-                  <p className="text-xs text-[#78716C]">
-                    {completedOrder
-                      ? `Heirloom Reference: ${completedOrder.order_number}`
-                      : "Instant 256-bit Razorpay Encrypted • No Account Needed"}
-                  </p>
+                  {completedOrder && (
+                    <p className="text-xs text-[#78716C]">
+                      Order Reference: {completedOrder.order_number}
+                    </p>
+                  )}
                 </div>
               </div>
               <button
@@ -380,13 +388,13 @@ export default function GuestCheckoutModal({
                     <CheckCircle2 className="w-8 h-8 text-[#2D4F3E]" />
                   </div>
                   <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold block mb-1">
-                    Payment Verified via Razorpay & Saved to Sanity
+                    Payment Verified via Razorpay
                   </span>
                   <h2 className="font-serif text-3xl font-semibold text-[#1C1917] mb-3">
-                    Order #{completedOrder.order_number}
+                    Order <span className="font-sans font-semibold tracking-wide">#{completedOrder.order_number}</span>
                   </h2>
                   <p className="text-sm sm:text-base text-[#78716C] leading-relaxed mb-6 bg-white p-4 rounded-2xl border border-[#E9E3DB]">
-                    &ldquo;Thank you for shopping with Anayas. Your order is confirmed and our artisans are preparing it. We will email your courier tracking link as soon as it is dispatched.&rdquo;
+                    Thank you for shopping with Anayas. Your order is confirmed and our artisans are preparing it. We will email your courier tracking link as soon as it is dispatched.
                   </p>
 
                   {/* Summary card */}
@@ -403,35 +411,28 @@ export default function GuestCheckoutModal({
                         {completedOrder.razorpay_payment_id}
                       </span>
                     </div>
-                    <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
-                      <span className="text-[#78716C]">Courier Allocation</span>
-                      <span className="font-semibold text-[#2D4F3E] flex items-center gap-1">
-                        <Truck className="w-3.5 h-3.5" />
-                        {completedOrder.courier_name} Insured Express
-                      </span>
-                    </div>
                     <div className="flex justify-between text-sm pt-1">
                       <span className="font-serif font-bold text-[#1C1917]">Total Paid</span>
-                      <span className="font-serif font-bold text-[#1C1917]">
+                      <span className="font-sans font-bold text-[#1C1917]">
                         {formatPrice(completedOrder.total_amount)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Directus Dispatch Simulator Button for testing */}
+                  {/* Sanity BlueDart Dispatch Simulator Button for testing */}
                   <div className="p-4 rounded-xl bg-white border border-[#E9E3DB] text-left mb-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs font-semibold text-[#1C1917]">
-                          Admin Test: Simulate Directus Dispatch Trigger
+                          Admin Test: Simulate Sanity BlueDart Dispatch
                         </p>
                         <p className="text-[11px] text-[#78716C]">
-                          Fires <code className="text-[#C5A059]">/api/webhooks/directus-dispatch</code> with BlueDart Waybill
+                          Fires <code className="text-[#C5A059]">/api/webhooks/sanity-dispatch</code> with BlueDart AWB
                         </p>
                       </div>
                       <button
                         type="button"
-                        onClick={handleSimulateDirectusDispatch}
+                        onClick={handleSimulateSanityDispatch}
                         disabled={dispatchLoading}
                         className="px-4 py-2 rounded-full bg-[#F3EFEA] hover:bg-[#E8D7D0] border border-[#E9E3DB] text-xs font-semibold text-[#1C1917] transition-all min-h-[40px] flex items-center gap-1.5 cursor-pointer"
                       >
@@ -451,7 +452,7 @@ export default function GuestCheckoutModal({
                     onClick={onClose}
                     className="px-8 py-3.5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors shadow-md min-h-[44px] cursor-pointer"
                   >
-                    Continue Exploring Heirlooms
+                    Continue Shopping
                   </button>
                 </div>
               ) : (
@@ -460,7 +461,7 @@ export default function GuestCheckoutModal({
                   {/* Left: Guest & Address Form */}
                   <form onSubmit={handleCheckoutSubmit} className="lg:col-span-7 space-y-4">
                     <h4 className="text-xs uppercase tracking-widest font-semibold text-[#C5A059] mb-1">
-                      1. Guest Contact & Courier Destination
+                      CONTACT & ADDRESS DETAILS
                     </h4>
 
                     {/* Error Notice */}
@@ -509,7 +510,7 @@ export default function GuestCheckoutModal({
 
                     <div>
                       <label className="block text-xs font-medium text-[#1C1917] mb-1">
-                        10-Digit Mobile Phone (for BlueDart OTP) *
+                        Phone Number
                       </label>
                       <div className="flex items-center">
                         <span className="px-3.5 py-2.5 bg-[#F3EFEA] border border-r-0 border-[#E9E3DB] rounded-l-xl text-xs font-semibold text-[#78716C] min-h-[44px] flex items-center">
@@ -658,9 +659,6 @@ export default function GuestCheckoutModal({
                                 Qty: {quantity} × {formatPrice(product.sale_price ?? product.price)}
                               </p>
                             </div>
-                            <span className="font-serif font-bold text-xs text-[#1C1917]">
-                              {formatPrice((product.sale_price ?? product.price) * quantity)}
-                            </span>
                           </div>
                         ))}
                       </div>
@@ -673,7 +671,7 @@ export default function GuestCheckoutModal({
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Insured Shipping (BlueDart)</span>
+                          <span>Shipping</span>
                           <span className="text-[#2D4F3E] font-semibold">
                             {shippingFee === 0 ? "FREE" : formatPrice(shippingFee)}
                           </span>

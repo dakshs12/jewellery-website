@@ -106,8 +106,6 @@ export default function Footer() {
               <li>Free Express Delivery &gt; ₹2,000</li>
               <li>Tamper-proof Velvet Box Packaging</li>
               <li>Razorpay Standard 256-bit SSL</li>
-              <li>Guest Checkout Supported</li>
-              <li>Directus CMS Order Dispatch Tracking</li>
             </ul>
           </div>
         </div>

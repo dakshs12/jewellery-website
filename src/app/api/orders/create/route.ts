@@ -166,7 +166,11 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Trigger Transactional Emails (Customer Confirmation & Store Alert)
-    const emailResult = await sendOrderConfirmationEmails(newOrder);
+    const origin =
+      req.headers.get("origin") ||
+      req.nextUrl?.origin ||
+      "https://anayasjewels.com";
+    const emailResult = await sendOrderConfirmationEmails(newOrder, origin);
 
     return NextResponse.json({
       success: true,
