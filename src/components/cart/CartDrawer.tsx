@@ -268,9 +268,9 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                       )}
                     </span>
                   </div>
-                  <div className="flex justify-between text-base font-serif font-bold text-[#1C1917] pt-2 border-t border-[#E9E3DB]">
-                    <span>Total Amount</span>
-                    <span>{formatPrice(finalTotal)}</span>
+                  <div className="flex justify-between items-baseline text-base pt-2 border-t border-[#E9E3DB]">
+                    <span className="font-serif font-semibold text-[#1C1917]">Total Amount</span>
+                    <span className="font-sans font-bold text-lg text-[#1C1917] tracking-tight">{formatPrice(finalTotal)}</span>
                   </div>
                 </div>
 
