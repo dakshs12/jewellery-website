@@ -50,17 +50,6 @@ export default function HeroBanner() {
                 <span>Explore The Collection</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-
-              <button
-                type="button"
-                onClick={() => {
-                  const el = document.getElementById("collections");
-                  el?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="px-8 py-4 rounded-full bg-[#F3EFEA] border border-[#E9E3DB] text-[#1C1917] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#E8D7D0] transition-all duration-300 flex items-center justify-center min-h-[48px]"
-              >
-                EXPLORE CATEGORIES
-              </button>
             </div>
 
             {/* Value Highlights */}
