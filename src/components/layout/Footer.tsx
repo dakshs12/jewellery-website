@@ -28,7 +28,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3 text-xs text-[#C5A059]">
               <ShieldCheck className="w-4 h-4 flex-shrink-0" />
-              <span>Insured BlueDart Express Delivery Across India</span>
+              <span>Delivery Across India</span>
             </div>
           </div>
 

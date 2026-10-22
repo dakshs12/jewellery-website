@@ -30,7 +30,6 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
     closeCart,
     updateQuantity,
     removeItem,
-    totalCount,
     subtotal,
     shippingFee,
     finalTotal,
@@ -99,11 +98,6 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                   <span className="font-serif text-2xl tracking-wide font-semibold text-[#1C1917]">
                     Your Jewellery Bag
                   </span>
-                  {isHydrated && totalCount > 0 && (
-                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#E8D7D0] text-[#1C1917]">
-                      {totalCount} {totalCount === 1 ? "piece" : "pieces"}
-                    </span>
-                  )}
                 </div>
                 <button
                   type="button"
@@ -126,7 +120,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                         <strong className="text-[#1C1917]">
                           {formatPrice(amountNeededForFreeShipping)}
                         </strong>{" "}
-                        more to unlock complimentary insured shipping.
+                        more to unlock complimentary shipping.
                       </span>
                     </div>
                   ) : (
@@ -263,7 +257,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Insured Express Courier</span>
+                    <span>Shipping</span>
                     <span>
                       {shippingFee === 0 ? (
                         <span className="text-[#2D4F3E] font-semibold">
