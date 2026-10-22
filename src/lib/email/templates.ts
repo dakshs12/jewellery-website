@@ -11,21 +11,34 @@ import { formatPrice } from "@/lib/utils";
  */
 
 export function renderCustomerOrderConfirmationEmail(order: Order): string {
+  const itemsTotal = order.line_items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+  const shippingCost = Math.max(0, order.total_amount - itemsTotal);
+
   const itemsHtml = order.line_items
     .map(
-      (item) => `
+      (item, idx) => `
       <tr>
-        <td style="padding: 14px 0; border-bottom: 1px solid #E9E3DB;">
+        <td style="padding: 12px 0; border-bottom: 1px solid #F0ECE6; vertical-align: top;">
           <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
             <tr>
+              <td width="24" style="vertical-align: top; font-size: 14px; font-weight: 700; color: #1C1917; padding-top: 2px;">
+                ${idx + 1}.
+              </td>
               <td width="60" style="vertical-align: top; padding-right: 14px;">
-                <img src="${item.image}" alt="${item.title}" width="60" height="75" style="border-radius: 8px; object-fit: cover; display: block; border: 1px solid #E9E3DB;" />
+                <img src="${item.image}" alt="${item.title}" width="56" height="70" style="border-radius: 6px; object-fit: cover; display: block; border: 1px solid #E9E3DB;" />
               </td>
               <td style="vertical-align: top;">
-                <p style="margin: 0; font-family: 'Times New Roman', Georgia, serif; font-size: 16px; color: #1C1917; font-weight: 600;">${item.title}</p>
-                <p style="margin: 4px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #78716C;">Qty: ${item.quantity} × ${formatPrice(item.price)}</p>
+                <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #1C1917; font-weight: 700;">
+                  ${item.title}
+                </p>
+                <p style="margin: 4px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #57534E;">
+                  ${item.quantity > 1 ? `Qty: ${item.quantity} × ` : ""}${formatPrice(item.price)}
+                </p>
               </td>
-              <td style="vertical-align: top; text-align: right; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 600; color: #1C1917;">
+              <td style="vertical-align: top; text-align: right; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 700; color: #1C1917;">
                 ${formatPrice(item.price * item.quantity)}
               </td>
             </tr>
@@ -41,88 +54,91 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Order Confirmed — Anayas Jewels</title>
+  <title>ANAYAS - Order ${order.order_number} Confirmed!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #FFF6EA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFF6EA; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; background-color: #FFF6EA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1C1917;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFF6EA; padding: 36px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E9E3DB; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E9E3DB; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
           
           <!-- Header -->
           <tr>
-            <td style="padding: 36px 40px 24px; text-align: center; background-color: #EAD5BE; border-bottom: 1px solid #D8C2AA;">
-              <p style="margin: 0; font-family: 'Times New Roman', Georgia, serif; font-size: 28px; letter-spacing: 0.28em; color: #1C1917; font-weight: 600;">ANAYAS</p>
-              <p style="margin: 4px 0 0; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #1C1917;">Artisanal Heirlooms & Fine Imitation Jewellery</p>
+            <td style="padding: 32px 36px 20px; text-align: center; background-color: #FFF6EA; border-bottom: 1px solid #E9E3DB;">
+              <p style="margin: 0; font-family: 'Times New Roman', Georgia, serif; font-size: 28px; letter-spacing: 0.28em; color: #1C1917; font-weight: 700;">ANAYAS</p>
+              <p style="margin: 8px 0 0; font-family: 'Times New Roman', Georgia, serif; font-size: 19px; color: #1C1917; font-weight: 600;">Thank You for Shopping with Anayas!</p>
             </td>
           </tr>
 
-          <!-- Confirmation Copy -->
+          <!-- Body Content -->
           <tr>
-            <td style="padding: 36px 40px 20px; background-color: #FFFFFF;">
-              <p style="margin: 0 0 8px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #C5A059; font-weight: 600;">Payment Confirmed • #${order.order_number}</p>
-              <h1 style="margin: 0 0 16px; font-family: 'Times New Roman', Georgia, serif; font-size: 26px; font-weight: 500; color: #1C1917; line-height: 1.3;">Thank you for shopping with Anayas Jewels.</h1>
-              <p style="margin: 0 0 24px; font-size: 15px; color: #57534E; line-height: 1.6;">
-                Thank you for shopping with Anayas Jewels. Your order has been placed successfully and our artisans are preparing your pieces. We will shortly share your tracking link with you as soon as your package is dispatched.
+            <td style="padding: 28px 36px; font-size: 14px; line-height: 1.6; color: #1C1917;">
+              <p style="margin: 0 0 10px; font-size: 15px;">Dear <strong>${order.customer_name}</strong>,</p>
+              <p style="margin: 0 0 16px; font-size: 14px; color: #57534E;">Greetings from Anayas!</p>
+              <p style="margin: 0 0 14px; color: #1C1917;">
+                We're delighted to confirm that your order has been placed successfully and your payment has been received.
+              </p>
+              <p style="margin: 0 0 24px; color: #57534E;">
+                Our team is preparing your order. We will notify you as soon as your order is dispatched, along with the tracking details so you can follow its journey to you.
               </p>
 
-              <!-- Order & Payment Reference Box -->
-              <div style="background-color: #FFF6EA; border-radius: 12px; border: 1px solid #E9E3DB; padding: 18px 20px; margin-bottom: 24px;">
-                <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
-                  <tr>
-                    <td style="font-size: 12px; color: #78716C; padding-bottom: 6px;">Order Number:</td>
-                    <td style="font-size: 13px; font-weight: 700; color: #1C1917; text-align: right; padding-bottom: 6px;">${order.order_number}</td>
-                  </tr>
-                  <tr>
-                    <td style="font-size: 12px; color: #78716C; padding-bottom: 6px;">Razorpay Payment ID:</td>
-                    <td style="font-size: 12px; font-family: monospace; color: #1C1917; text-align: right; padding-bottom: 6px;">${order.razorpay_payment_id || "Paid Online"}</td>
-                  </tr>
-                  <tr>
-                    <td style="font-size: 12px; color: #78716C;">Status:</td>
-                    <td style="font-size: 12px; font-weight: 700; color: #2D4F3E; text-align: right; text-transform: uppercase;">Confirmed & Paid</td>
-                  </tr>
-                </table>
+              <!-- ORDER DETAILS -->
+              <div style="background-color: #FAF8F5; border: 1px solid #E9E3DB; border-radius: 10px; padding: 16px 20px; margin-bottom: 22px;">
+                <p style="margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #C5A059;">ORDER DETAILS</p>
+                <p style="margin: 0 0 4px; font-size: 13px;"><strong>Order Number:</strong> ${order.order_number}</p>
+                <p style="margin: 0; font-size: 13px;"><strong>Payment ID:</strong> <span style="font-family: monospace;">${order.razorpay_payment_id || "Paid Online"}</span></p>
               </div>
 
-              <!-- Shipping Address Box -->
-              <div style="background-color: #F8F6F2; border-radius: 12px; border: 1px solid #E9E3DB; padding: 18px 20px; margin-bottom: 28px;">
-                <p style="margin: 0 0 8px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #78716C; font-weight: 700;">Delivery Destination</p>
-                <p style="margin: 0; font-size: 14px; color: #1C1917; font-weight: 600;">${order.customer_name}</p>
+              <!-- DELIVERY DESTINATION -->
+              <div style="background-color: #FAF8F5; border: 1px solid #E9E3DB; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px;">
+                <p style="margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #C5A059;">DELIVERY DESTINATION</p>
+                <p style="margin: 0; font-weight: 700; font-size: 14px; color: #1C1917;">${order.customer_name}</p>
                 <p style="margin: 4px 0 0; font-size: 13px; color: #57534E; line-height: 1.5;">
                   ${order.shipping_address.street}<br/>
-                  ${order.shipping_address.city}, ${order.shipping_address.state} - ${order.shipping_address.postal_code}<br/>
-                  Mobile: <strong>${order.customer_phone}</strong>
+                  ${order.shipping_address.city}, ${order.shipping_address.state} – ${order.shipping_address.postal_code}
+                </p>
+                <p style="margin: 6px 0 0; font-size: 13px; color: #1C1917;">
+                  <strong>Mobile:</strong> ${order.customer_phone}
                 </p>
               </div>
 
-              <!-- Line Items -->
-              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
+              <!-- YOUR ORDER -->
+              <p style="margin: 0 0 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #1C1917;">YOUR ORDER</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
                 ${itemsHtml}
               </table>
 
-              <!-- Total Breakdown -->
-              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #E9E3DB; padding-top: 16px;">
+              <!-- Cost Breakdown -->
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font-size: 13px; color: #57534E; margin-bottom: 24px;">
                 <tr>
-                  <td style="padding: 6px 0; font-size: 14px; color: #78716C;">Total Items</td>
-                  <td style="padding: 6px 0; font-size: 14px; color: #1C1917; text-align: right; font-weight: 600;">${order.line_items.length} item(s)</td>
+                  <td style="padding: 4px 0;"><strong>Total Cost:</strong></td>
+                  <td style="padding: 4px 0; text-align: right; color: #1C1917;">${formatPrice(itemsTotal)}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 6px 0; font-size: 14px; color: #78716C;">Insured Courier Delivery (${order.courier_name})</td>
-                  <td style="padding: 6px 0; font-size: 14px; color: #2D4F3E; text-align: right; font-weight: 600;">INCLUDED</td>
+                  <td style="padding: 4px 0;"><strong>Shipping Cost:</strong></td>
+                  <td style="padding: 4px 0; text-align: right; color: #2D4F3E; font-weight: 600;">
+                    ${shippingCost === 0 ? "FREE" : formatPrice(shippingCost)}
+                  </td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px 0 0; font-family: 'Times New Roman', Georgia, serif; font-size: 18px; color: #1C1917; font-weight: 700; border-top: 1px solid #E9E3DB;">Total Paid (INR)</td>
-                  <td style="padding: 12px 0 0; font-family: 'Times New Roman', Georgia, serif; font-size: 20px; color: #1C1917; text-align: right; font-weight: 700; border-top: 1px solid #E9E3DB;">${formatPrice(order.total_amount)}</td>
+                  <td style="padding: 10px 0 0; font-size: 15px; font-weight: 700; color: #1C1917; border-top: 1px solid #E9E3DB;"><strong>Total Paid:</strong></td>
+                  <td style="padding: 10px 0 0; font-size: 16px; font-weight: 700; color: #1C1917; text-align: right; border-top: 1px solid #E9E3DB;">${formatPrice(order.total_amount)}</td>
                 </tr>
               </table>
-            </td>
-          </tr>
 
-          <!-- Footer -->
-          <tr>
-            <td style="padding: 24px 40px; background-color: #FFF6EA; border-top: 1px solid #E9E3DB; text-align: center;">
-              <p style="margin: 0; font-size: 12px; color: #78716C;">Have questions about your order? Reply directly to this email or message our Bridal Concierge on WhatsApp.</p>
-              <p style="margin: 8px 0 0; font-size: 11px; color: #A8A29E;">© ${new Date().getFullYear()} Anayas Jewels. All rights reserved.</p>
+              <!-- Divider -->
+              <div style="border-top: 1px solid #E9E3DB; margin: 24px 0 20px;"></div>
+
+              <!-- Sign-off & Support -->
+              <p style="margin: 0 0 14px; font-size: 14px;">Thank you for choosing Anayas.</p>
+              <p style="margin: 0 0 20px; font-size: 14px;">
+                <strong>With love,</strong><br/>
+                Team Anayas
+              </p>
+
+              <div style="background-color: #FFF6EA; border-radius: 8px; padding: 14px 16px; font-size: 12px; color: #78716C; line-height: 1.5;">
+                Have questions about your order? Reply directly to this email or reach out to us on WhatsApp at <a href="https://wa.me/919893020204" style="color: #1C1917; font-weight: 700; text-decoration: underline;">+91 98930 20204</a>.
+              </div>
             </td>
           </tr>
         </table>
@@ -207,7 +223,7 @@ export function renderCustomerOrderDispatchedEmail(order: Order): string {
   const trackingNumber = order.tracking_number || "BLUEDART-EXP-98218";
   const trackingUrl =
     order.tracking_url ||
-    `https://www.bluedart.com/tracking?track=${trackingNumber}`;
+    `https://www.bluedart.com/tracking?track=${encodeURIComponent(trackingNumber)}`;
   const courierName = order.courier_name || "BlueDart";
 
   return `
@@ -215,57 +231,75 @@ export function renderCustomerOrderDispatchedEmail(order: Order): string {
 <html>
 <head>
   <meta charset="utf-8">
-  <title>✨ Your Anayas Jewels Order #${order.order_number} has been Dispatched!</title>
+  <title>✨ Your Anayas order ${order.order_number} has been Dispatched!</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #FFF6EA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFF6EA; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; background-color: #FFF6EA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1C1917;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFF6EA; padding: 36px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E9E3DB; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #E9E3DB; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
           
           <!-- Header -->
           <tr>
-            <td style="padding: 32px 40px; background-color: #EAD5BE; border-bottom: 1px solid #D8C2AA; text-align: center;">
-              <p style="margin: 0; font-family: 'Times New Roman', Georgia, serif; font-size: 26px; letter-spacing: 0.28em; color: #1C1917; font-weight: 600;">ANAYAS</p>
-              <p style="margin: 4px 0 0; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #1C1917;">Artisanal Heirlooms Dispatched</p>
+            <td style="padding: 32px 36px 20px; text-align: center; background-color: #FFF6EA; border-bottom: 1px solid #E9E3DB;">
+              <p style="margin: 0; font-family: 'Times New Roman', Georgia, serif; font-size: 28px; letter-spacing: 0.28em; color: #1C1917; font-weight: 700;">ANAYAS</p>
+              <p style="margin: 6px 0 0; font-family: 'Times New Roman', Georgia, serif; font-size: 15px; color: #78716C; font-style: italic; letter-spacing: 0.05em;">An everyday luxury</p>
             </td>
           </tr>
 
           <!-- Content -->
           <tr>
-            <td style="padding: 36px 40px;">
-              <span style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #2D4F3E; font-weight: 700; display: block; margin-bottom: 8px;">Shipped via ${courierName} Insured</span>
-              <h1 style="margin: 0 0 16px; font-family: 'Times New Roman', Georgia, serif; font-size: 24px; color: #1C1917;">Your jewellery package is on its way!</h1>
-              <p style="margin: 0 0 24px; font-size: 15px; color: #57534E; line-height: 1.6;">
-                Dear ${order.customer_name}, your handcrafted jewellery pieces for Order <strong>#${order.order_number}</strong> have been packaged in our luxury vault box and handed over to <strong>${courierName}</strong> for insured express delivery.
+            <td style="padding: 28px 36px; font-size: 14px; line-height: 1.6; color: #1C1917;">
+              <p style="margin: 0 0 10px; font-size: 15px;">Dear <strong>${order.customer_name}</strong>,</p>
+              <p style="margin: 0 0 16px; font-size: 14px; color: #57534E;">Greetings from Anayas</p>
+              <p style="margin: 0 0 24px; color: #1C1917;">
+                Your order <strong>${order.order_number}</strong> has been shipped from the dispatch center today and is on its way to you.
               </p>
 
-              <!-- Copy-Friendly Waybill Box -->
-              <div style="background-color: #FFF6EA; border: 2px dashed #C5A059; border-radius: 12px; padding: 22px; margin-bottom: 28px; text-align: center;">
-                <p style="margin: 0 0 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #78716C; letter-spacing: 0.15em;">Courier Tracking AWB / Waybill</p>
-                <p style="margin: 0; font-family: monospace; font-size: 22px; font-weight: bold; letter-spacing: 0.1em; color: #1C1917; user-select: all;">
-                  ${trackingNumber}
+              <!-- Tracking Details Box -->
+              <p style="margin: 0 0 10px; font-size: 14px; font-weight: 700; color: #1C1917;">
+                To Track your order kindly find the details below:
+              </p>
+              <div style="background-color: #FAF8F5; border: 1px solid #E9E3DB; border-radius: 10px; padding: 18px 20px; margin-bottom: 24px;">
+                <p style="margin: 0 0 8px; font-size: 13px;">
+                  <strong>Courier Partner:</strong> ${courierName}
                 </p>
-                <p style="margin: 8px 0 0; font-size: 12px; color: #78716C;">Carrier: <strong>${courierName} Express</strong></p>
+                <p style="margin: 0; font-size: 13px;">
+                  <strong>Tracking / AWB Number:</strong> <span style="font-family: monospace; font-size: 15px; font-weight: 700; background-color: #FFF6EA; padding: 3px 8px; border-radius: 4px; border: 1px solid #EAD5BE; user-select: all;">${trackingNumber}</span>
+                </p>
               </div>
 
-              <!-- Primary CTA Button -->
-              <div style="text-align: center; margin-bottom: 28px;">
+              <!-- CTA Button -->
+              <div style="text-align: center; margin: 24px 0 8px;">
                 <a href="${trackingUrl}" target="_blank" style="display: inline-block; background-color: #1C1917; color: #FAF8F5; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; text-decoration: none; padding: 16px 36px; border-radius: 50px;">
-                  Track Your Order →
+                  TRACK YOUR ORDER
                 </a>
               </div>
+              <p style="text-align: center; margin: 0 0 28px; font-size: 12px; color: #78716C; font-style: italic;">
+                Click the button above to follow your shipment.
+              </p>
 
-              <div style="background-color: #F8F6F2; border-radius: 10px; padding: 14px 18px; font-size: 12px; color: #78716C; line-height: 1.5;">
-                <strong style="color: #1C1917;">Destination:</strong> ${order.shipping_address.street}, ${order.shipping_address.city}, ${order.shipping_address.state} (${order.shipping_address.postal_code})
+              <!-- Sign-off -->
+              <p style="margin: 0 0 10px; font-size: 14px; font-weight: 700;">
+                Thank you for choosing us :)
+              </p>
+              <p style="margin: 0 0 24px; font-size: 14px;">
+                Best Regards,<br/>
+                <strong>Team Anayas</strong>
+              </p>
+
+              <!-- Divider -->
+              <div style="border-top: 1px solid #E9E3DB; margin: 24px 0 20px;"></div>
+
+              <!-- Important Notes & Support -->
+              <div style="font-size: 12px; color: #78716C; line-height: 1.6;">
+                <p style="margin: 0 0 8px;">
+                  Please ensure an adult is available to receive the parcel upon OTP confirmation if required.
+                </p>
+                <p style="margin: 0;">
+                  For any assistance with your order, please contact us at <a href="mailto:anayasjewels9@gmail.com" style="color: #1C1917; text-decoration: underline;">anayasjewels9@gmail.com</a> or <a href="tel:+919893020204" style="color: #1C1917; font-weight: 700; text-decoration: underline;">+91 98930 20204</a>.
+                </p>
               </div>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding: 20px 40px; background-color: #FFF6EA; border-top: 1px solid #E9E3DB; text-align: center; font-size: 12px; color: #78716C;">
-              Please ensure an adult is available to receive the insured parcel upon OTP confirmation.
             </td>
           </tr>
         </table>

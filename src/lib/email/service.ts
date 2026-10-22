@@ -46,7 +46,7 @@ export async function sendOrderConfirmationEmails(
         from: SENDER_EMAIL,
         to: order.customer_email,
         replyTo: CLIENT_REPLY_TO,
-        subject: `Order #${order.order_number} Confirmed — Anayas Jewels`,
+        subject: `ANAYAS - Order ${order.order_number} Confirmed!`,
         html: customerHtml,
       }),
       resend.emails.send({
@@ -115,7 +115,7 @@ export async function sendOrderDispatchedEmail(order: Order) {
       from: SENDER_EMAIL,
       to: order.customer_email,
       replyTo: CLIENT_REPLY_TO,
-      subject: `✨ Your Anayas Jewels Order #${order.order_number} has been Dispatched!`,
+      subject: `✨ Your Anayas order ${order.order_number} has been Dispatched!`,
       html: dispatchedHtml,
     });
 
