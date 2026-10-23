@@ -77,13 +77,13 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   onClick={onClose}
                   className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
                 >
-                  <span className="font-serif text-lg tracking-wide group-hover:text-[#C5A059] transition-colors font-medium">
+                  <span className="font-serif text-xl tracking-wide group-hover:text-[#C5A059] transition-colors font-medium">
                     HOME
                   </span>
                   <ArrowRight className="w-4 h-4 text-[#C5A059] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                 </Link>
 
-                <p className="text-[11px] font-semibold tracking-widest uppercase text-[#78716C] px-3 pt-3 pb-1">
+                <p className="text-xs font-semibold tracking-widest uppercase text-[#78716C] px-3 pt-3 pb-1">
                   Shop by Collection
                 </p>
                 {COLLECTIONS.map((cat) => (
@@ -91,9 +91,9 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     key={cat.id}
                     href={`/products?category=${encodeURIComponent(cat.name)}`}
                     onClick={onClose}
-                    className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
+                    className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
                   >
-                    <span className="font-serif text-base tracking-wide group-hover:text-[#C5A059] transition-colors">
+                    <span className="font-serif text-lg tracking-wide group-hover:text-[#C5A059] transition-colors">
                       {cat.name}
                     </span>
                     <ArrowRight className="w-4 h-4 text-[#C5A059] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
@@ -103,7 +103,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 <Link
                   href="/products"
                   onClick={onClose}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-lg text-[#C5A059] font-medium text-xs tracking-wider uppercase hover:bg-[#F3EFEA] transition-colors"
+                  className="flex items-center justify-between px-3 py-3 rounded-lg text-[#C5A059] font-medium text-sm tracking-wider uppercase hover:bg-[#F3EFEA] transition-colors mt-2"
                 >
                   <span>View All Products</span>
                   <ArrowRight className="w-4 h-4 text-[#C5A059]" />
