@@ -127,7 +127,7 @@ export default function CollectionSection({
 
                 {/* Bottom Editorial Content */}
                 <div className="relative z-10 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-                  <h3 className="font-serif text-[11px] sm:text-xs font-medium tracking-tight text-white leading-tight break-words">
+                  <h3 className="font-serif text-sm sm:text-base font-medium tracking-tight text-white leading-tight break-words">
                     {col.name}
                   </h3>
                   <div className="my-1 h-[1px] w-4 bg-[#C5A059]" />

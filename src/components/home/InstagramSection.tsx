@@ -144,14 +144,14 @@ export default function InstagramSection() {
               rel="noopener noreferrer"
               className="group relative aspect-square overflow-hidden shadow-xl bg-[#A86E3C] hover:bg-[#976033] transition-colors duration-300 flex flex-col items-center justify-center p-2 sm:p-4 md:p-6 text-center text-white rounded-sm cursor-pointer"
             >
-              <div className="flex flex-col items-center justify-center space-y-1 sm:space-y-2 md:space-y-3.5">
+              <div className="flex flex-col items-center justify-center space-y-1.5 sm:space-y-2 md:space-y-3.5">
                 {/* Outline Instagram Icon */}
-                <div className="w-6 h-6 sm:w-10 sm:h-10 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                  <InstagramIcon className="w-4 h-4 sm:w-7 sm:h-7 md:w-9 md:h-9 stroke-[1.8] text-white" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                  <InstagramIcon className="w-6 h-6 sm:w-7 sm:h-7 md:w-9 md:h-9 stroke-[1.8] text-white" />
                 </div>
 
                 {/* Headline matching reference */}
-                <span className="font-serif text-[11px] sm:text-base md:text-xl lg:text-2xl font-medium tracking-tight leading-tight">
+                <span className="font-serif text-sm sm:text-base md:text-xl lg:text-2xl font-medium tracking-tight leading-tight">
                   Join our <br />
                   Instagram
                 </span>
