@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, PhoneCall, ShieldCheck, ArrowRight } from "lucide-react";
+import { X, PhoneCall, ShieldCheck, ArrowRight } from "lucide-react";
 
 import { COLLECTIONS } from "@/data/collections";
 
@@ -117,20 +117,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </div>
 
             {/* Bottom Concierge & Guarantees */}
-            <div className="p-5 border-t border-[#E9E3DB] bg-[#F3EFEA]/60 space-y-4">
-              <div className="p-3.5 rounded-xl bg-white/80 border border-[#E9E3DB] shadow-sm">
-                <div className="flex items-center gap-2.5 text-[#1C1917]">
-                  <Sparkles className="w-4 h-4 text-[#C5A059]" />
-                  <span className="font-serif text-sm font-semibold">
-                    The Anayas Heritage Promise
-                  </span>
-                </div>
-                <p className="text-xs text-[#78716C] mt-1 leading-relaxed">
-                  22K antique gold micron plating, skin-safe hypoallergenic brass alloys, and anti-tarnish protective lacquer.
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-[#78716C] pt-2">
+            <div className="p-5 border-t border-[#E9E3DB] bg-[#F3EFEA]/60">
+              <div className="flex items-center justify-between text-xs text-[#78716C]">
                 <div className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#C5A059]" />
                   <span>Insured Pan-India Courier</span>
