@@ -5,7 +5,19 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-export default function HeroBanner() {
+interface HeroBannerProps {
+  heroImage?: string;
+  heroImageAlt?: string;
+  heroBadgeText?: string;
+  heroTitleText?: string;
+}
+
+export default function HeroBanner({
+  heroImage,
+  heroImageAlt,
+  heroBadgeText,
+  heroTitleText,
+}: HeroBannerProps = {}) {
   return (
     <section className="relative overflow-hidden bg-[#FFF6EA] pt-8 pb-16 lg:pt-16 lg:pb-24">
       {/* Subtle gold decorative gradient orbs */}
@@ -85,8 +97,8 @@ export default function HeroBanner() {
             {/* Primary Hero Portrait */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#FFF6EA] bg-[#F3EFEA]">
               <Image
-                src="/5000Rs.png"
-                alt="Royal Anayas Artisanal Bridal Collection"
+                src={heroImage || "/5000Rs.png"}
+                alt={heroImageAlt || "Royal Anayas Artisanal Bridal Collection"}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -95,10 +107,10 @@ export default function HeroBanner() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-white">
                 <span className="text-[10px] uppercase tracking-[0.25em] text-[#E8D7D0] font-semibold block">
-                  Imperial Edition
+                  {heroBadgeText || "Imperial Edition"}
                 </span>
                 <h2 className="font-serif text-xl sm:text-2xl font-light tracking-wide mt-1">
-                  The Gulmohar Crystal
+                  {heroTitleText || "The Gulmohar Crystal"}
                 </h2>
               </div>
             </div>

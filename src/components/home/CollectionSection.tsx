@@ -1,5 +1,4 @@
-"use client";
-
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -10,11 +9,28 @@ import { COLLECTIONS } from "@/data/collections";
 // Tier 2: Pendant Sets, Everyday Wear, Bracelets, Mangalsutra
 const TIER_ONE_KEYS = ["necklace", "earrings", "rings"];
 
-export default function CollectionSection() {
-  const tierOneCollections = COLLECTIONS.filter((c) =>
+interface CollectionSectionProps {
+  categoryImages?: Record<string, string | undefined>;
+}
+
+export default function CollectionSection({
+  categoryImages,
+}: CollectionSectionProps = {}) {
+  const collections = useMemo(() => {
+    if (!categoryImages) return COLLECTIONS;
+    return COLLECTIONS.map((c) => {
+      const override =
+        categoryImages[c.id] ||
+        categoryImages[c.slug] ||
+        categoryImages[c.name.toLowerCase()];
+      return override ? { ...c, image: override } : c;
+    });
+  }, [categoryImages]);
+
+  const tierOneCollections = collections.filter((c) =>
     TIER_ONE_KEYS.includes(c.id)
   );
-  const tierTwoCollections = COLLECTIONS.filter(
+  const tierTwoCollections = collections.filter(
     (c) => !TIER_ONE_KEYS.includes(c.id)
   );
 

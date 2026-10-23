@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import HeroBanner from "@/components/home/HeroBanner";
 import TextLoopSeparator from "@/components/home/TextLoopSeparator";
@@ -10,10 +10,24 @@ import InstagramSection from "@/components/home/InstagramSection";
 import Footer from "@/components/layout/Footer";
 import GuestCheckoutModal from "@/components/checkout/GuestCheckoutModal";
 import { useCartStore } from "@/store/useCartStore";
+import { getWebsitePhotos, WebsitePhotosData } from "@/lib/sanity/queries";
 
 export default function Home() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [websitePhotos, setWebsitePhotos] = useState<WebsitePhotosData | null>(null);
   const closeCart = useCartStore((state) => state.closeCart);
+
+  useEffect(() => {
+    let isMounted = true;
+    getWebsitePhotos().then((photos) => {
+      if (isMounted && photos) {
+        setWebsitePhotos(photos);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOpenCheckout = () => {
     closeCart();
@@ -28,13 +42,18 @@ export default function Home() {
       {/* Main Luxury Storefront Flow */}
       <main className="flex-1">
         {/* 2. Hero Section */}
-        <HeroBanner />
+        <HeroBanner
+          heroImage={websitePhotos?.heroImage}
+          heroImageAlt={websitePhotos?.heroImageAlt}
+          heroBadgeText={websitePhotos?.heroBadgeText}
+          heroTitleText={websitePhotos?.heroTitleText}
+        />
 
         {/* Text Loop Separator Ribbon */}
         <TextLoopSeparator />
 
         {/* 3. Shop by Collection (7 Category Cards linking to filtered product page) */}
-        <CollectionSection />
+        <CollectionSection categoryImages={websitePhotos?.categoryImages} />
 
         {/* 4. Reviews Section (Patron Comments & Stories - No Star/Metric clutter) */}
         <ReviewsSection />

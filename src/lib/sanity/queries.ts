@@ -196,3 +196,115 @@ export async function getProductsByCategory(category: string): Promise<Product[]
     );
   }
 }
+
+export const WEBSITE_PHOTOS_QUERY = groq`
+  *[_type == "websitePhotos"][0] {
+    heroImage {
+      ...,
+      asset->
+    },
+    heroImageAlt,
+    heroBadgeText,
+    heroTitleText,
+    categoryNecklaceImage {
+      ...,
+      asset->
+    },
+    categoryPendantSetsImage {
+      ...,
+      asset->
+    },
+    categoryEverydayWearImage {
+      ...,
+      asset->
+    },
+    categoryEarringsImage {
+      ...,
+      asset->
+    },
+    categoryRingsImage {
+      ...,
+      asset->
+    },
+    categoryBraceletsImage {
+      ...,
+      asset->
+    },
+    categoryMangalsutraImage {
+      ...,
+      asset->
+    }
+  }
+`;
+
+export interface WebsitePhotosData {
+  heroImage?: string;
+  heroImageAlt?: string;
+  heroBadgeText?: string;
+  heroTitleText?: string;
+  categoryImages: Record<string, string | undefined>;
+}
+
+/**
+ * Fetch published Website Photos & Banners with graceful fallback
+ */
+export async function getWebsitePhotos(): Promise<WebsitePhotosData | null> {
+  if (!isSanityConfigured) {
+    return null;
+  }
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw: any = await client.fetch(
+      WEBSITE_PHOTOS_QUERY,
+      {},
+      { next: { revalidate: 30 } }
+    );
+    if (!raw) return null;
+
+    const heroUrl = raw.heroImage ? urlForImage(raw.heroImage) : undefined;
+    const necklaceUrl = raw.categoryNecklaceImage
+      ? urlForImage(raw.categoryNecklaceImage)
+      : undefined;
+    const pendantSetsUrl = raw.categoryPendantSetsImage
+      ? urlForImage(raw.categoryPendantSetsImage)
+      : undefined;
+    const everydayWearUrl = raw.categoryEverydayWearImage
+      ? urlForImage(raw.categoryEverydayWearImage)
+      : undefined;
+    const earringsUrl = raw.categoryEarringsImage
+      ? urlForImage(raw.categoryEarringsImage)
+      : undefined;
+    const ringsUrl = raw.categoryRingsImage
+      ? urlForImage(raw.categoryRingsImage)
+      : undefined;
+    const braceletsUrl = raw.categoryBraceletsImage
+      ? urlForImage(raw.categoryBraceletsImage)
+      : undefined;
+    const mangalsutraUrl = raw.categoryMangalsutraImage
+      ? urlForImage(raw.categoryMangalsutraImage)
+      : undefined;
+
+    return {
+      heroImage: heroUrl || undefined,
+      heroImageAlt: raw.heroImageAlt || undefined,
+      heroBadgeText: raw.heroBadgeText || undefined,
+      heroTitleText: raw.heroTitleText || undefined,
+      categoryImages: {
+        necklace: necklaceUrl,
+        "pendant-sets": pendantSetsUrl,
+        pendantSets: pendantSetsUrl,
+        "everyday-wear": everydayWearUrl,
+        everydayWear: everydayWearUrl,
+        earrings: earringsUrl,
+        rings: ringsUrl,
+        bracelets: braceletsUrl,
+        mangalsutra: mangalsutraUrl,
+      },
+    };
+  } catch (error) {
+    console.warn("[Sanity getWebsitePhotos] Falling back to default assets:", error);
+    return null;
+  }
+}
+
