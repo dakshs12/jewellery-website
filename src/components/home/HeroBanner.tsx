@@ -25,23 +25,23 @@ export default function HeroBanner({
       <div className="absolute bottom-10 right-1/4 w-96 h-96 rounded-full bg-[#E8D7D0]/20 blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left Editorial Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
+          {/* Editorial Content (Desktop: Left Column | Mobile: Shifted Below Photo) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="lg:col-span-7 flex flex-col justify-center text-left"
+            className="order-2 lg:order-1 lg:col-span-7 flex flex-col justify-center text-left"
           >
             {/* Editorial Kicker */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <span className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-medium text-[#78716C] block">
                 Everyday luxury, thoughtfully made
               </span>
             </div>
 
             {/* High-Impact Editorial Bold Headline */}
-            <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.15rem] font-bold text-[#1C1917] tracking-tight leading-[1.18] mb-6">
+            <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.15rem] font-bold text-[#1C1917] tracking-tight leading-[1.18] mb-4 sm:mb-6">
               <span className="block">Jewellery that feels like you,</span>
               <span className="italic font-bold text-[#712B31] block">
                 <span className="not-italic">J</span>ewellery that feels like real
@@ -49,12 +49,12 @@ export default function HeroBanner({
             </h1>
 
             {/* Subheading */}
-            <p className="font-sans text-base sm:text-lg text-[#78716C] max-w-xl leading-relaxed mb-8">
+            <p className="font-sans text-base sm:text-lg text-[#78716C] max-w-xl leading-relaxed mb-6 sm:mb-8">
               From everyday elegance to moments worth dressing up for, discover jewellery that makes every look feel a little more special.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8 sm:mb-10">
               <Link
                 href="/products"
                 className="px-8 py-4 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#C5A059] transition-all duration-300 flex items-center justify-center gap-3 shadow-lg group min-h-[48px]"
@@ -87,15 +87,15 @@ export default function HeroBanner({
             </div>
           </motion.div>
 
-          {/* Right Editorial Showcase Images */}
+          {/* Right Editorial Showcase Image (Desktop: Right Column | Mobile: Appears First at Top) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="lg:col-span-5 relative"
+            className="order-1 lg:order-2 lg:col-span-5 relative w-full"
           >
             {/* Primary Hero Portrait */}
-            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#FFF6EA] bg-[#F3EFEA]">
+            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#FFF6EA] bg-[#F3EFEA] max-w-md mx-auto lg:max-w-none w-full">
               <Image
                 src={heroImage || "/5000Rs.png"}
                 alt={heroImageAlt || "Royal Anayas Artisanal Bridal Collection"}
