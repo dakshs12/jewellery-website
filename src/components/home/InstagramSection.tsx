@@ -103,65 +103,67 @@ export default function InstagramSection() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
             ref={cardsRef}
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 items-stretch"
+            className="grid grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-5 lg:gap-6 items-stretch"
           >
-            {/* Photography Cards 1, 2, 3 */}
-            {INSTAGRAM_CARDS.map((card) => (
+            {/* Photography Cards (Card 1 & 2 visible on mobile, all 3 on desktop) */}
+            {INSTAGRAM_CARDS.map((card, index) => (
               <a
                 key={card.id}
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative aspect-square overflow-hidden shadow-xl bg-[#EAE5DF] block rounded-sm cursor-pointer"
+                className={`group relative aspect-square overflow-hidden shadow-xl bg-[#EAE5DF] rounded-sm cursor-pointer ${
+                  index === 2 ? "hidden md:block" : "block"
+                }`}
               >
                 <Image
                   src={card.image}
                   alt={card.alt}
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="(max-width: 768px) 33vw, 25vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
 
                 {/* Subtle luxury hover overlay with Instagram handle */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center text-white">
-                  <InstagramIcon className="w-6 h-6 stroke-[1.6] mb-2 text-white" />
-                  <span className="text-xs font-medium tracking-wide">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-2 sm:p-4 text-center text-white">
+                  <InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.6] mb-1 sm:mb-2 text-white" />
+                  <span className="text-[11px] sm:text-xs font-medium tracking-wide">
                     @_anayasjewels
                   </span>
-                  <span className="text-[10px] text-white/80 mt-1 uppercase tracking-wider">
+                  <span className="hidden sm:block text-[10px] text-white/80 mt-1 uppercase tracking-wider">
                     {card.tag}
                   </span>
                 </div>
               </a>
             ))}
 
-            {/* 4th Card: Terracotta "Join our Instagram" Card */}
+            {/* 4th Card: Terracotta "Join our Instagram" Card (3rd card on mobile) */}
             <a
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative aspect-square overflow-hidden shadow-xl bg-[#A86E3C] hover:bg-[#976033] transition-colors duration-300 flex flex-col items-center justify-center p-6 text-center text-white rounded-sm cursor-pointer"
+              className="group relative aspect-square overflow-hidden shadow-xl bg-[#A86E3C] hover:bg-[#976033] transition-colors duration-300 flex flex-col items-center justify-center p-2 sm:p-4 md:p-6 text-center text-white rounded-sm cursor-pointer"
             >
-              <div className="flex flex-col items-center justify-center space-y-3.5 sm:space-y-4">
+              <div className="flex flex-col items-center justify-center space-y-1 sm:space-y-2 md:space-y-3.5">
                 {/* Outline Instagram Icon */}
-                <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                  <InstagramIcon className="w-8 h-8 sm:w-9 sm:h-9 stroke-[1.8] text-white" />
+                <div className="w-6 h-6 sm:w-10 sm:h-10 md:w-14 md:h-14 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                  <InstagramIcon className="w-4 h-4 sm:w-7 sm:h-7 md:w-9 md:h-9 stroke-[1.8] text-white" />
                 </div>
 
                 {/* Headline matching reference */}
-                <span className="font-serif text-lg sm:text-xl md:text-2xl font-medium tracking-tight leading-snug">
+                <span className="font-serif text-[11px] sm:text-base md:text-xl lg:text-2xl font-medium tracking-tight leading-tight">
                   Join our <br />
                   Instagram
                 </span>
 
                 {/* Horizontal Arrow */}
-                <div className="pt-1">
-                  <ArrowRight className="w-6 h-6 text-white stroke-[2] transition-transform duration-300 group-hover:translate-x-2" />
+                <div className="pt-0.5 sm:pt-1">
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-6 md:h-6 text-white stroke-[2] transition-transform duration-300 group-hover:translate-x-1.5" />
                 </div>
               </div>
 
-              {/* Discreet handle tag at bottom */}
-              <span className="absolute bottom-3 text-[10px] uppercase tracking-widest text-white/70">
+              {/* Discreet handle tag at bottom (desktop/tablet only) */}
+              <span className="hidden sm:block absolute bottom-2 sm:bottom-3 text-[9px] sm:text-[10px] uppercase tracking-widest text-white/70">
                 @_anayasjewels
               </span>
             </a>
