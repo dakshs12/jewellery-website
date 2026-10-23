@@ -91,16 +91,11 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     key={cat.id}
                     href={`/products?category=${encodeURIComponent(cat.name)}`}
                     onClick={onClose}
-                    className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
+                    className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#F3EFEA] text-[#1C1917] transition-colors group min-h-[44px]"
                   >
-                    <div>
-                      <span className="font-serif text-base tracking-wide group-hover:text-[#C5A059] transition-colors">
-                        {cat.name}
-                      </span>
-                      <p className="text-[11px] text-[#78716C]">
-                        {cat.subtitle}
-                      </p>
-                    </div>
+                    <span className="font-serif text-base tracking-wide group-hover:text-[#C5A059] transition-colors">
+                      {cat.name}
+                    </span>
                     <ArrowRight className="w-4 h-4 text-[#C5A059] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                   </Link>
                 ))}
