@@ -78,7 +78,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 bg-black/45 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
             onClick={closeCart}
           />
 
@@ -88,10 +88,10 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 h-full w-full sm:max-w-md bg-[#FFF6EA] border-l border-[#E9E3DB] shadow-2xl flex flex-col overflow-y-auto sm:overflow-hidden overscroll-contain z-50"
+            className="fixed inset-y-0 right-0 z-50 flex flex-col w-full max-w-md h-dvh max-h-dvh h-[100dvh] max-h-[100dvh] bg-[#FFF6EA] overflow-hidden shadow-2xl border-l border-[#E6D5C3]/70"
           >
-            {/* Header */}
-            <div className="p-4 sm:p-5 border-b border-[#E9E3DB] bg-[#FFF6EA] sticky top-0 z-20 shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+            {/* 1. Header & Shipping Bar (shrink-0) */}
+            <div className="p-4 sm:p-5 border-b border-[#E6D5C3]/70 bg-[#FFF6EA] shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <ShoppingBag className="w-5 h-5 text-[#C5A059]" />
@@ -111,7 +111,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
 
               {/* Free Shipping Progress Indicator */}
               {isHydrated && subtotal > 0 && (
-                <div className="mt-4 p-3 rounded-lg bg-[#F3EFEA] border border-[#E9E3DB]/80 text-xs">
+                <div className="mt-3.5 p-3 rounded-lg bg-[#F3EFEA] border border-[#E9E3DB]/80 text-xs">
                   {amountNeededForFreeShipping > 0 ? (
                     <div className="flex items-center gap-2 text-[#78716C] mb-1.5">
                       <Truck className="w-4 h-4 text-[#C5A059] flex-shrink-0" />
@@ -139,10 +139,13 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
               )}
             </div>
 
-            {/* Line Items List */}
-            <div className="p-4 sm:p-5 space-y-3.5 sm:flex-1 sm:min-h-0 sm:overflow-y-auto sm:overscroll-contain">
+            {/* 2. Scrollable Product List (flex-1 min-h-0 overflow-y-auto) */}
+            <div
+              className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 py-4 space-y-4 touch-pan-y"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
               {!isHydrated || items.length === 0 ? (
-                <div className="py-16 text-center flex flex-col items-center justify-center">
+                <div className="py-16 text-center flex flex-col items-center justify-center my-auto">
                   <div className="w-20 h-20 rounded-full bg-[#F3EFEA] flex items-center justify-center mb-4 text-[#C5A059]">
                     <ShoppingBag className="w-9 h-9 stroke-1" />
                   </div>
@@ -246,13 +249,13 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
               )}
             </div>
 
-            {/* Footer Summary & Checkout */}
+            {/* 3. Bottom-Anchored Checkout Footer (shrink-0 mt-auto) */}
             {isHydrated && items.length > 0 && (
-              <div className="p-4 sm:p-5 border-t border-[#E9E3DB] bg-[#F3EFEA] space-y-3 sm:shrink-0 pb-28 sm:pb-6">
-                <div className="space-y-1.5 text-xs text-[#78716C]">
+              <div className="shrink-0 mt-auto border-t border-[#E6D5C3]/70 bg-[#F7EFE4] pt-4 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-3">
+                <div className="space-y-1 text-xs text-[#78716C]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-[#1C1917]">
+                    <span className="font-sans font-semibold text-[#1C1917] tracking-tight">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
@@ -264,11 +267,11 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                           FREE
                         </span>
                       ) : (
-                        formatPrice(shippingFee)
+                        <span className="font-sans">{formatPrice(shippingFee)}</span>
                       )}
                     </span>
                   </div>
-                  <div className="flex justify-between items-baseline text-base pt-2 border-t border-[#E9E3DB]">
+                  <div className="flex justify-between items-baseline text-base pt-2 border-t border-[#E6D5C3]/70">
                     <span className="font-serif font-semibold text-[#1C1917]">Total Amount</span>
                     <span className="font-sans font-bold text-lg text-[#1C1917] tracking-tight">{formatPrice(finalTotal)}</span>
                   </div>
@@ -291,7 +294,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                 </button>
 
                 {/* Guarantees */}
-                <div className="flex items-center justify-center gap-2.5 sm:gap-4 text-[10px] sm:text-[11px] text-[#78716C] pt-0.5 flex-wrap">
+                <div className="flex items-center justify-center gap-2.5 sm:gap-4 text-[10.5px] text-[#78716C] pt-0.5 flex-wrap">
                   <span className="flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#C5A059]" />
                     Razorpay Verified
