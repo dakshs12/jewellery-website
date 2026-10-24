@@ -52,7 +52,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[0]}
             alt={product.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className={`object-cover object-center transition-all duration-700 ease-out ${
               isHovered && product.images[1] ? "opacity-0 scale-105" : "opacity-100 scale-100"
             }`}
@@ -64,7 +64,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={product.images[1]}
               alt={`${product.title} alternate angle`}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className={`object-cover object-center transition-all duration-700 ease-out ${
                 isHovered ? "opacity-100 scale-105" : "opacity-0 scale-100"
               }`}
@@ -72,20 +72,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
 
           {/* Luxury Floating Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col gap-1 sm:gap-1.5 z-10">
             {isOutOfStock ? (
-              <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-stone-800/90 text-white shadow-sm backdrop-blur-xs">
+              <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] uppercase font-semibold tracking-widest bg-stone-800/90 text-white shadow-sm backdrop-blur-xs">
                 Out of Stock
               </span>
             ) : (
               <>
                 {product.is_bestseller && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-[#1C1917] text-[#FAF8F5] shadow-sm">
+                  <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] uppercase font-semibold tracking-widest bg-[#1C1917] text-[#FAF8F5] shadow-sm">
                     Bestseller
                   </span>
                 )}
                 {hasDiscount && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-semibold tracking-widest bg-[#E8D7D0] text-[#1C1917] shadow-sm">
+                  <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] uppercase font-semibold tracking-widest bg-[#E8D7D0] text-[#1C1917] shadow-sm">
                     Save {discountPercent}%
                   </span>
                 )}
@@ -100,37 +100,37 @@ export default function ProductCard({ product }: ProductCardProps) {
               e.stopPropagation();
               setQuickViewOpen(true);
             }}
-            className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm text-[#1C1917] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:bg-white hover:text-[#C5A059]"
+            className="absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-sm text-[#1C1917] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:bg-white hover:text-[#C5A059]"
             aria-label="Quick view product specifications"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
 
         {/* Product Meta & Typography */}
-        <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between bg-white/50">
+        <div className="p-3 sm:p-5 flex flex-col flex-1 justify-between bg-white/50">
           <div>
             <div className="text-xs text-[#78716C] mb-1">
-              <span className="uppercase tracking-widest text-[10px] font-semibold text-[#C5A059]">
+              <span className="uppercase tracking-widest text-[9px] sm:text-[10px] font-semibold text-[#C5A059]">
                 {product.category}
               </span>
             </div>
 
             <h3
               onClick={() => setQuickViewOpen(true)}
-              className="font-serif text-lg sm:text-xl font-medium text-[#1C1917] leading-snug line-clamp-2 hover:text-[#C5A059] transition-colors cursor-pointer"
+              className="font-serif text-[13px] sm:text-lg lg:text-xl font-medium text-[#1C1917] leading-snug line-clamp-2 hover:text-[#C5A059] transition-colors cursor-pointer min-h-[2rem] sm:min-h-0"
             >
               {product.title}
             </h3>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#E9E3DB] flex items-center justify-between gap-2">
+          <div className="mt-2.5 sm:mt-4 pt-2.5 sm:pt-3 border-t border-[#E9E3DB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-baseline gap-1.5 sm:gap-2">
-              <span className="font-serif text-lg sm:text-xl font-bold text-[#1C1917]">
+              <span className="font-serif text-sm sm:text-lg lg:text-xl font-bold text-[#1C1917]">
                 {formatPrice(activePrice)}
               </span>
               {hasDiscount && (
-                <span className="text-xs line-through text-[#78716C]">
+                <span className="text-[10px] sm:text-xs line-through text-[#78716C]">
                   {formatPrice(product.price)}
                 </span>
               )}
@@ -138,7 +138,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
             {/* Animated Add to Bag Button / Out of Stock Button */}
             {isOutOfStock ? (
-              <span className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[11px] uppercase tracking-wider flex items-center gap-1 bg-[#78716C]/15 text-[#78716C] border border-[#78716C]/20 cursor-not-allowed select-none shrink-0">
+              <span className="w-full sm:w-auto px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[10px] sm:text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 bg-[#78716C]/15 text-[#78716C] border border-[#78716C]/20 cursor-not-allowed select-none shrink-0">
                 Out of Stock
               </span>
             ) : (
@@ -150,7 +150,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 onMouseEnter={() => setIsBtnHovered(true)}
                 onMouseLeave={() => setIsBtnHovered(false)}
                 onClick={handleAddToCart}
-                className={`add-to-bag-btn group/btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[11px] uppercase tracking-wider flex items-center gap-1.5 transition-colors duration-300 shadow-sm cursor-pointer select-none shrink-0 ${
+                className={`add-to-bag-btn group/btn w-full sm:w-auto px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[10px] sm:text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors duration-300 shadow-sm cursor-pointer select-none shrink-0 ${
                   addedAnimation
                     ? "bg-[#2D4F3E] text-white ring-2 ring-[#2D4F3E]/40"
                     : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059]"
