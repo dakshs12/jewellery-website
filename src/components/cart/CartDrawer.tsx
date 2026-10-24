@@ -88,7 +88,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 z-50 flex flex-col w-full max-w-md h-dvh max-h-dvh h-[100dvh] max-h-[100dvh] bg-[#FFF6EA] overflow-hidden shadow-2xl border-l border-[#E6D5C3]/70"
+            className="fixed inset-y-0 right-0 z-50 flex flex-col w-full max-w-md h-dvh max-h-dvh bg-[#FFF6EA] overflow-hidden shadow-2xl border-l border-[#E6D5C3]/70"
           >
             {/* 1. Header & Shipping Bar (shrink-0) */}
             <div className="p-4 sm:p-5 border-b border-[#E6D5C3]/70 bg-[#FFF6EA] shrink-0">
