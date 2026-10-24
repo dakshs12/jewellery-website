@@ -64,23 +64,23 @@ export default function HeroBanner({
               </Link>
             </div>
 
-            {/* Value Highlights */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 sm:gap-6 lg:gap-8 pt-6 border-t border-[#E9E3DB] w-full max-w-xl">
-              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
+            {/* Value Highlights - Strictly single row across all mobile and desktop screen sizes */}
+            <div className="flex flex-nowrap items-center justify-between sm:justify-start gap-1.5 xs:gap-2.5 sm:gap-6 lg:gap-8 pt-6 border-t border-[#E9E3DB] w-full max-w-xl">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[8px] min-[360px]:text-[9px] min-[400px]:text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.06em] sm:tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
                   FOR ALL OCCASIONS
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[8px] min-[360px]:text-[9px] min-[400px]:text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.06em] sm:tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
                   PREMIUM FINISH
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <span className="w-1.5 h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
-                <span className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rotate-45 bg-[#C5A059] shrink-0" aria-hidden="true" />
+                <span className="text-[8px] min-[360px]:text-[9px] min-[400px]:text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.06em] sm:tracking-[0.14em] font-medium text-[#1C1917] whitespace-nowrap">
                   CLOSE TO REAL
                 </span>
               </div>

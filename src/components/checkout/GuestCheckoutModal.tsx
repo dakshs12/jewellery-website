@@ -51,13 +51,13 @@ export default function GuestCheckoutModal({
     useHydratedCart();
 
   const [formData, setFormData] = useState({
-    name: "Ananya Sharma",
-    email: "ananya.sharma@example.com",
-    phone: "9876543210",
-    street: "Flat 402, Royal Palms Estate, Juhu Tara Road",
-    city: "Mumbai",
-    state: "Maharashtra",
-    postalCode: "400049",
+    name: "",
+    email: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -487,7 +487,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
-                          placeholder="e.g. Ananya Sharma"
+                          placeholder="Enter your full name"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -502,7 +502,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
                           }
-                          placeholder="ananya@example.com"
+                          placeholder="yourname@gmail.com"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -527,7 +527,7 @@ export default function GuestCheckoutModal({
                               phone: e.target.value.replace(/\D/g, ""),
                             })
                           }
-                          placeholder="9876543210"
+                          placeholder="10-digit mobile number"
                           className="w-full bg-white border border-[#E9E3DB] rounded-r-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -544,7 +544,7 @@ export default function GuestCheckoutModal({
                         onChange={(e) =>
                           setFormData({ ...formData, street: e.target.value })
                         }
-                        placeholder="Apartment, building, street, landmark"
+                        placeholder="House / flat number, street name, area"
                         className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                       />
                     </div>
@@ -561,7 +561,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, city: e.target.value })
                           }
-                          placeholder="Mumbai"
+                          placeholder="City"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -576,7 +576,7 @@ export default function GuestCheckoutModal({
                           onChange={(e) =>
                             setFormData({ ...formData, state: e.target.value })
                           }
-                          placeholder="Maharashtra"
+                          placeholder="State"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
@@ -595,7 +595,7 @@ export default function GuestCheckoutModal({
                               postalCode: e.target.value.replace(/\D/g, ""),
                             })
                           }
-                          placeholder="400049"
+                          placeholder="PIN Code"
                           className="w-full bg-white border border-[#E9E3DB] rounded-xl px-3.5 py-2.5 text-sm text-[#1C1917] focus:outline-none focus:ring-1 focus:ring-[#C5A059] min-h-[44px]"
                         />
                       </div>
