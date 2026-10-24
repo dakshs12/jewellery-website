@@ -126,11 +126,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <div className="mt-2.5 sm:mt-4 pt-2.5 sm:pt-3 border-t border-[#E9E3DB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-baseline gap-1.5 sm:gap-2">
-              <span className="font-serif text-sm sm:text-lg lg:text-xl font-bold text-[#1C1917]">
+              <span className="font-sans font-bold text-sm sm:text-lg lg:text-xl text-[#1C1917] tracking-tight">
                 {formatPrice(activePrice)}
               </span>
               {hasDiscount && (
-                <span className="text-[10px] sm:text-xs line-through text-[#78716C]">
+                <span className="font-sans text-[10px] sm:text-xs line-through text-[#78716C]">
                   {formatPrice(product.price)}
                 </span>
               )}
@@ -243,11 +243,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                   </h2>
 
                   <div className="flex items-baseline gap-3 mb-4">
-                    <span className="font-serif text-2xl font-bold text-[#1C1917]">
+                    <span className="font-sans font-bold text-2xl text-[#1C1917] tracking-tight">
                       {formatPrice(activePrice)}
                     </span>
                     {hasDiscount && (
-                      <span className="text-sm line-through text-[#78716C]">
+                      <span className="font-sans text-sm line-through text-[#78716C]">
                         {formatPrice(product.price)}
                       </span>
                     )}

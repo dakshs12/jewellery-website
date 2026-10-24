@@ -285,7 +285,7 @@ function ProductsContent() {
                       <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
                         Price Filter
                       </span>
-                      <span className="font-serif text-sm font-bold text-[#1C1917]">
+                      <span className="font-sans font-bold text-sm text-[#1C1917] tracking-tight">
                         {maxPrice >= 10000 ? "All Prices" : `Up to ₹${maxPrice.toLocaleString("en-IN")}`}
                       </span>
                     </div>

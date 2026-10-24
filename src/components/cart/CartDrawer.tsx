@@ -192,11 +192,11 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                           {product.title}
                         </h4>
                         <div className="mt-1 flex items-baseline gap-2">
-                          <span className="text-sm font-semibold text-[#1C1917]">
+                          <span className="font-sans text-sm font-semibold text-[#1C1917] tracking-tight">
                             {formatPrice(unitPrice)}
                           </span>
                           {product.sale_price && (
-                            <span className="text-xs line-through text-[#78716C]">
+                            <span className="font-sans text-xs line-through text-[#78716C]">
                               {formatPrice(product.price)}
                             </span>
                           )}

@@ -666,7 +666,7 @@ export default function GuestCheckoutModal({
                       <div className="border-t border-[#E9E3DB] mt-4 pt-4 space-y-2 text-xs text-[#78716C]">
                         <div className="flex justify-between">
                           <span>Items Subtotal</span>
-                          <span className="font-semibold text-[#1C1917]">
+                          <span className="font-sans font-semibold text-[#1C1917] tracking-tight">
                             {formatPrice(subtotal)}
                           </span>
                         </div>
