@@ -84,7 +84,7 @@ export default function InstagramSection() {
           Adorned By You
         </span>
         <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium text-[#1C1917] tracking-tight">
-          Follow Our Heirloom Journey
+          Follow Our Journey
         </h2>
         <p className="font-sans text-xs sm:text-sm text-[#78716C] mt-2">
           Tag <span className="font-medium text-[#C5A059]">@_anayasjewels</span> to be featured in our royal gallery
@@ -112,9 +112,8 @@ export default function InstagramSection() {
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group relative aspect-square overflow-hidden shadow-xl bg-[#EAE5DF] rounded-sm cursor-pointer ${
-                  index === 2 ? "hidden md:block" : "block"
-                }`}
+                className={`group relative aspect-square overflow-hidden shadow-xl bg-[#EAE5DF] rounded-sm cursor-pointer ${index === 2 ? "hidden md:block" : "block"
+                  }`}
               >
                 <Image
                   src={card.image}

@@ -97,7 +97,7 @@ export default function HeroBanner({
             {/* Primary Hero Portrait */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#FFF6EA] bg-[#F3EFEA] max-w-md mx-auto lg:max-w-none w-full">
               <Image
-                src={heroImage || "/5000Rs.png"}
+                src={heroImage || "/5000RS.png"}
                 alt={heroImageAlt || "Royal Anayas Artisanal Bridal Collection"}
                 fill
                 priority

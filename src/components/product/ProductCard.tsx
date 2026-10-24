@@ -11,9 +11,10 @@ import ProductFeatures from "./ProductFeatures";
 
 interface ProductCardProps {
   product: Product;
+  priority?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -52,22 +53,22 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[0]}
             alt={product.title}
             fill
+            priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className={`object-cover object-center transition-all duration-700 ease-out ${
               isHovered && product.images[1] ? "opacity-0 scale-105" : "opacity-100 scale-100"
             }`}
           />
 
-          {/* Secondary Hover Image */}
-          {product.images[1] && (
+          {/* Secondary Hover Image (Only loaded when hovered to save 50% bandwidth and avoid mobile lag) */}
+          {product.images[1] && isHovered && (
             <Image
               src={product.images[1]}
               alt={`${product.title} alternate angle`}
               fill
+              loading="lazy"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className={`object-cover object-center transition-all duration-700 ease-out ${
-                isHovered ? "opacity-100 scale-105" : "opacity-0 scale-100"
-              }`}
+              className="object-cover object-center transition-all duration-700 ease-out opacity-100 scale-105"
             />
           )}
 
