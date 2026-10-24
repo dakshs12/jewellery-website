@@ -12,6 +12,8 @@ const Agentation = dynamic(
 );
 
 export default function AgentationDev() {
+  if (process.env.NODE_ENV === "production") return null;
+
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const isCartOpen = useCartStore((state) => state.isOpen);

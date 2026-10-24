@@ -9,9 +9,12 @@ import {
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-// Default to Resend sandbox sender so out-of-the-box test sends succeed before custom domain verification
-const SENDER_EMAIL =
+// Formats display name cleanly (e.g. orders@anayasjewels.com -> Anayas Jewels <orders@anayasjewels.com>)
+const rawSender =
   process.env.RESEND_FROM_EMAIL || "Anayas Jewels <onboarding@resend.dev>";
+const SENDER_EMAIL = rawSender.includes("<")
+  ? rawSender
+  : `Anayas Jewels <${rawSender}>`;
 const ADMIN_EMAIL =
   process.env.ADMIN_NOTIFICATION_EMAIL ||
   process.env.ADMIN_ALERT_EMAIL ||

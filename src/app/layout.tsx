@@ -33,9 +33,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
+  metadataBase: new URL("https://anayasjewels.com"),
+  title: {
+    default: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
+    template: "%s | Anayas Jewels",
+  },
   description:
     "Discover handcrafted Kundan, Polki, Meenakari, and 18K gold-plated heirloom imitation jewellery designed for weddings, festivities, and timeless everyday elegance.",
+  alternates: {
+    canonical: "https://anayasjewels.com",
+  },
   keywords: [
     "imitation jewellery",
     "polki choker",
@@ -44,6 +51,7 @@ export const metadata: Metadata = {
     "gold plated bangles",
     "Anayas jewellery",
     "handcrafted Indian jewellery",
+    "Anayas Jewels",
   ],
   icons: {
     icon: [
@@ -56,8 +64,16 @@ export const metadata: Metadata = {
     title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
     description:
       "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and 18K gold-plated artisanal collections.",
-    type: "website",
+    url: "https://anayasjewels.com",
+    siteName: "Anayas Jewels",
     locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
+    description:
+      "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and 18K gold-plated artisanal collections.",
   },
 };
 
