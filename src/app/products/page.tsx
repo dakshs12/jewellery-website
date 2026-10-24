@@ -205,24 +205,24 @@ function ProductsContent() {
             </p>
           </div>
 
-          {/* 3 Underlined Tools Matching Screenshot */}
-          <div ref={toolsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 mb-8">
+          {/* 3 Underlined Tools in 1 Line/Row */}
+          <div ref={toolsRef} className="grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 lg:gap-12 mb-8">
             {/* 1. CATEGORY */}
             <div className="relative">
-              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+              <span className="block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-1.5 sm:mb-2 truncate">
                 CATEGORY
               </span>
               <button
                 type="button"
                 onClick={() => setOpenDropdown(openDropdown === "category" ? null : "category")}
-                className="w-full flex items-center justify-between pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
+                className="w-full flex items-center justify-between pb-1.5 sm:pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
                 aria-expanded={openDropdown === "category"}
               >
-                <span className="font-sans font-semibold text-base sm:text-[17px] text-[#1C1917] truncate">
+                <span className="font-sans font-semibold text-xs sm:text-base lg:text-[17px] text-[#1C1917] truncate">
                   {selectedCategoryLabel}
                 </span>
                 <ChevronDown
-                  className={`w-4 h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-2 ${
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-1 sm:ml-2 ${
                     openDropdown === "category" ? "rotate-180" : ""
                   }`}
                 />
@@ -230,7 +230,7 @@ function ProductsContent() {
 
               {/* Category Dropdown */}
               {openDropdown === "category" && (
-                <div className="absolute left-0 top-full mt-2 w-full min-w-[240px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
+                <div className="absolute left-0 top-full mt-2 w-[min(260px,calc(100vw-32px))] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
                   {CATEGORIES.map((cat) => {
                     const isSelected = selectedCategory === cat.value;
                     return (
@@ -258,20 +258,20 @@ function ProductsContent() {
 
             {/* 2. PRICE RANGE */}
             <div className="relative">
-              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+              <span className="block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-1.5 sm:mb-2 truncate">
                 PRICE RANGE
               </span>
               <button
                 type="button"
                 onClick={() => setOpenDropdown(openDropdown === "price" ? null : "price")}
-                className="w-full flex items-center justify-between pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
+                className="w-full flex items-center justify-between pb-1.5 sm:pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
                 aria-expanded={openDropdown === "price"}
               >
-                <span className="font-sans font-semibold text-base sm:text-[17px] text-[#1C1917] truncate">
+                <span className="font-sans font-semibold text-xs sm:text-base lg:text-[17px] text-[#1C1917] truncate">
                   {maxPrice >= 10000 ? "All prices" : `Under ₹${maxPrice.toLocaleString("en-IN")}`}
                 </span>
                 <ChevronDown
-                  className={`w-4 h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-2 ${
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-1 sm:ml-2 ${
                     openDropdown === "price" ? "rotate-180" : ""
                   }`}
                 />
@@ -279,7 +279,7 @@ function ProductsContent() {
 
               {/* Price Range Manual Slider Popover */}
               {openDropdown === "price" && (
-                <div className="absolute left-0 top-full mt-2 w-full sm:w-[320px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-5 z-40">
+                <div className="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-0 top-full mt-2 w-[calc(100vw-32px)] sm:w-[320px] max-w-[320px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-4 sm:p-5 z-40">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
@@ -370,20 +370,20 @@ function ProductsContent() {
 
             {/* 3. SORT BY */}
             <div className="relative">
-              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+              <span className="block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[#78716C] mb-1.5 sm:mb-2 truncate">
                 SORT BY
               </span>
               <button
                 type="button"
                 onClick={() => setOpenDropdown(openDropdown === "sort" ? null : "sort")}
-                className="w-full flex items-center justify-between pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
+                className="w-full flex items-center justify-between pb-1.5 sm:pb-2 border-b border-[#1C1917] text-left cursor-pointer focus:outline-none group"
                 aria-expanded={openDropdown === "sort"}
               >
-                <span className="font-sans font-semibold text-base sm:text-[17px] text-[#1C1917] truncate">
+                <span className="font-sans font-semibold text-xs sm:text-base lg:text-[17px] text-[#1C1917] truncate">
                   {selectedSortLabel}
                 </span>
                 <ChevronDown
-                  className={`w-4 h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-2 ${
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1C1917] transition-transform duration-200 shrink-0 ml-1 sm:ml-2 ${
                     openDropdown === "sort" ? "rotate-180" : ""
                   }`}
                 />
@@ -391,7 +391,7 @@ function ProductsContent() {
 
               {/* Sort Dropdown */}
               {openDropdown === "sort" && (
-                <div className="absolute right-0 top-full mt-2 w-full min-w-[220px] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
+                <div className="absolute right-0 top-full mt-2 w-[min(240px,calc(100vw-32px))] bg-[#FFF6EA] border border-[#E9E3DB] rounded-2xl shadow-xl p-2 z-40">
                   {SORT_OPTIONS.map((opt) => {
                     const isSelected = sortBy === opt.value;
                     return (
