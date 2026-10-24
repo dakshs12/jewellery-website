@@ -88,10 +88,10 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 h-full h-[100dvh] max-h-[100dvh] w-full max-w-md bg-[#FFF6EA] border-l border-[#E9E3DB] shadow-2xl flex flex-col justify-between overflow-hidden"
+            className="fixed inset-y-0 right-0 h-full w-full sm:max-w-md bg-[#FFF6EA] border-l border-[#E9E3DB] shadow-2xl flex flex-col overflow-y-auto sm:overflow-hidden overscroll-contain z-50"
           >
             {/* Header */}
-            <div className="p-4 sm:p-5 border-b border-[#E9E3DB] bg-[#FFF6EA] shrink-0 z-10">
+            <div className="p-4 sm:p-5 border-b border-[#E9E3DB] bg-[#FFF6EA] sticky top-0 z-20 shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <ShoppingBag className="w-5 h-5 text-[#C5A059]" />
@@ -140,7 +140,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             </div>
 
             {/* Line Items List */}
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-4 sm:p-5 space-y-3.5">
+            <div className="p-4 sm:p-5 space-y-3.5 sm:flex-1 sm:min-h-0 sm:overflow-y-auto sm:overscroll-contain">
               {!isHydrated || items.length === 0 ? (
                 <div className="py-16 text-center flex flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-[#F3EFEA] flex items-center justify-center mb-4 text-[#C5A059]">
@@ -248,7 +248,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
 
             {/* Footer Summary & Checkout */}
             {isHydrated && items.length > 0 && (
-              <div className="p-4 sm:p-5 border-t border-[#E9E3DB] bg-[#F3EFEA] shrink-0 space-y-3 pb-[max(1.25rem,calc(env(safe-area-inset-bottom)+0.75rem))]">
+              <div className="p-4 sm:p-5 border-t border-[#E9E3DB] bg-[#F3EFEA] space-y-3 sm:shrink-0 pb-28 sm:pb-6">
                 <div className="space-y-1.5 text-xs text-[#78716C]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
