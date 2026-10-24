@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Logo from "@/components/common/Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, PhoneCall, ShieldCheck, ArrowRight } from "lucide-react";
 
@@ -52,13 +52,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div>
               <div className="flex items-center justify-between p-5 border-b border-[#E9E3DB]">
                 <div>
-                  <Image
-                    src="/2.svg"
-                    alt="Anayas"
-                    width={180}
-                    height={91}
-                    className="h-10 w-auto object-contain"
-                  />
+                  <Logo className="h-10 w-auto" />
                 </div>
                 <button
                   type="button"

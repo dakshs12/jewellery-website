@@ -10,6 +10,7 @@ import { useHydratedCart } from "@/hooks/useHydratedCart";
 import MobileMenu from "./MobileMenu";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { COLLECTIONS, CollectionCategory } from "@/data/collections";
+import Logo from "@/components/common/Logo";
 
 interface NavbarProps {
   onProceedCheckout?: () => void;
@@ -210,14 +211,7 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                   href="/"
                   className="group focus:outline-none focus:ring-1 focus:ring-[#C5A059] rounded-sm px-2 flex items-center justify-center py-0.5"
                 >
-                  <Image
-                    src="/2.svg"
-                    alt="Anayas"
-                    width={360}
-                    height={183}
-                    priority
-                    className="h-16 sm:h-20 md:h-[84px] lg:h-[92px] w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
-                  />
+                  <Logo className="h-16 sm:h-20 md:h-[84px] lg:h-[92px] w-auto transition-transform duration-200 group-hover:scale-[1.03]" />
                 </Link>
               </div>
 
