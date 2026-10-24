@@ -88,10 +88,10 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 w-full max-w-md bg-[#FFF6EA] border-l border-[#E9E3DB] shadow-2xl flex flex-col justify-between"
+            className="fixed inset-y-0 right-0 h-full h-[100dvh] max-h-[100dvh] w-full max-w-md bg-[#FFF6EA] border-l border-[#E9E3DB] shadow-2xl flex flex-col justify-between overflow-hidden"
           >
             {/* Header */}
-            <div className="p-5 border-b border-[#E9E3DB] bg-[#FFF6EA]/90 backdrop-blur-md sticky top-0 z-10">
+            <div className="p-4 sm:p-5 border-b border-[#E9E3DB] bg-[#FFF6EA] shrink-0 z-10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <ShoppingBag className="w-5 h-5 text-[#C5A059]" />
@@ -126,7 +126,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                   ) : (
                     <div className="flex items-center gap-2 text-[#2D4F3E] font-medium mb-1.5">
                       <Sparkles className="w-4 h-4 text-[#C5A059] flex-shrink-0" />
-                      <span>You have unlocked complimentary express shipping!</span>
+                      <span>You have unlocked complimentary shipping!</span>
                     </div>
                   )}
                   <div className="w-full bg-[#E9E3DB] h-1.5 rounded-full overflow-hidden">
@@ -140,7 +140,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
             </div>
 
             {/* Line Items List */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-4 sm:p-5 space-y-3.5">
               {!isHydrated || items.length === 0 ? (
                 <div className="py-16 text-center flex flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-[#F3EFEA] flex items-center justify-center mb-4 text-[#C5A059]">
@@ -150,7 +150,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                     Your bag is empty
                   </h3>
                   <p className="text-sm text-[#78716C] max-w-xs mb-6">
-                    Indulge in handcrafted Polki chokers, heritage Chandbalis, and 18K gold-plated heirloom bangles.
+                    Explore our beautiful collection of jewelleries made for all occasions.
                   </p>
                   <button
                     type="button"
@@ -248,7 +248,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
 
             {/* Footer Summary & Checkout */}
             {isHydrated && items.length > 0 && (
-              <div className="p-5 border-t border-[#E9E3DB] bg-[#F3EFEA]/80 backdrop-blur-sm space-y-3">
+              <div className="p-4 sm:p-5 border-t border-[#E9E3DB] bg-[#F3EFEA] shrink-0 space-y-3 pb-[max(1.25rem,calc(env(safe-area-inset-bottom)+0.75rem))]">
                 <div className="space-y-1.5 text-xs text-[#78716C]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
@@ -284,14 +284,14 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                       window.location.href = "/checkout";
                     }
                   }}
-                  className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] flex items-center justify-center gap-2 uppercase tracking-widest text-xs font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-lg group focus:ring-2 focus:ring-[#C5A059] focus:outline-none"
+                  className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] flex items-center justify-center gap-2 uppercase tracking-widest text-xs font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-lg group focus:ring-2 focus:ring-[#C5A059] focus:outline-none cursor-pointer"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
 
                 {/* Guarantees */}
-                <div className="flex items-center justify-center gap-4 text-[11px] text-[#78716C] pt-1">
+                <div className="flex items-center justify-center gap-2.5 sm:gap-4 text-[10px] sm:text-[11px] text-[#78716C] pt-0.5 flex-wrap">
                   <span className="flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#C5A059]" />
                     Razorpay Verified
