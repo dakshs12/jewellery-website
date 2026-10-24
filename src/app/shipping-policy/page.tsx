@@ -160,7 +160,7 @@ export default function ShippingPolicyPage() {
               If your parcel has not arrived within the estimated delivery window or you need to update an address before dispatch, contact our concierge:
             </p>
             <div className="mt-3 text-sm space-y-1 text-[#57534E]">
-              <p>• <strong>Email:</strong> <a href="mailto:anayasjewels9@gmail.com" className="text-[#1C1917] underline font-medium">anayasjewels9@gmail.com</a> / <a href="mailto:info@anayasjewels.com" className="text-[#1C1917] underline font-medium">info@anayasjewels.com</a></p>
+              <p>• <strong>Email:</strong> <a href="mailto:anayasjewels9@gmail.com" className="text-[#1C1917] underline font-medium">anayasjewels9@gmail.com</a> / <a href="mailto:anayasjewels9@gmail.com" className="text-[#1C1917] underline font-medium">anayasjewels9@gmail.com</a></p>
               <p>• <strong>WhatsApp / Call:</strong> <a href="tel:+919893020204" className="text-[#1C1917] underline font-medium">+91 98930 20204</a> (Mon–Sat, 10 AM – 7 PM IST)</p>
               <p>• <strong>Location:</strong> Indore, Madhya Pradesh, India</p>
             </div>

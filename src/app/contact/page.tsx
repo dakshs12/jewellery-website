@@ -30,10 +30,6 @@ export default function ContactPage() {
 
         {/* Header */}
         <div className="border-b border-[#E6D5C3] pb-8 mb-10 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAD5BE]/50 border border-[#D8C2AA] text-[11px] uppercase tracking-widest text-[#1C1917] font-semibold mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
-            Patron Concierge & Assistance
-          </div>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#1C1917]">
             We’d Love to Hear From You
           </h1>
@@ -83,7 +79,6 @@ export default function ContactPage() {
               </p>
               <div className="space-y-1 text-xs sm:text-sm">
                 <p className="font-semibold text-[#1C1917]">anayasjewels9@gmail.com</p>
-                <p className="text-[#78716C]">info@anayasjewels.com</p>
               </div>
             </div>
             <div className="mt-6">

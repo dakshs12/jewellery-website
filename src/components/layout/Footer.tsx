@@ -28,11 +28,7 @@ export default function Footer() {
             <div className="space-y-2 pt-1 text-xs text-[#C5A059]">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 flex-shrink-0" />
-                <span>Insured Delivery Across India</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 flex-shrink-0" />
-                <span>RBI Authorized Razorpay Checkout</span>
+                <span>Delivery Across India</span>
               </div>
             </div>
           </div>
@@ -81,44 +77,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Customer Care & Mandatory Legal Policies (Razorpay Compliance) */}
-          <div>
-            <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
-              Care & Policies
-            </h4>
-            <ul className="space-y-2.5 text-xs text-[#A8A29E]">
-              <li>
-                <Link href="/shipping-policy" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <Truck className="w-3.5 h-3.5 text-[#C5A059]" />
-                  Shipping & Delivery
-                </Link>
-              </li>
-              <li>
-                <Link href="/refund-policy" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <RotateCcw className="w-3.5 h-3.5 text-[#C5A059]" />
-                  Returns & Refunds
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-[#C5A059]" />
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#C5A059]" />
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
-                  Help & FAQs
-                </Link>
-              </li>
-            </ul>
-          </div>
-
           {/* Column 4: Contact & Concierge */}
           <div>
             <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
@@ -140,9 +98,6 @@ export default function Footer() {
                 <div>
                   <a href="mailto:anayasjewels9@gmail.com" className="hover:text-white transition-colors block">
                     anayasjewels9@gmail.com
-                  </a>
-                  <a href="mailto:info@anayasjewels.com" className="text-[#78716C] hover:text-white transition-colors block text-[11px]">
-                    info@anayasjewels.com
                   </a>
                 </div>
               </div>
