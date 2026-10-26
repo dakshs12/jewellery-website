@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | Anayas Jewels",
   },
   description:
-    "Discover handcrafted Kundan, Polki, Meenakari, and 18K gold-plated heirloom imitation jewellery designed for weddings, festivities, and timeless everyday elegance.",
+    "Discover handcrafted Kundan, Polki, Meenakari, and heirloom imitation jewellery designed for weddings, festivities, and timeless everyday elegance.",
   alternates: {
     canonical: "https://anayasjewels.com",
   },
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
     description:
-      "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and 18K gold-plated artisanal collections.",
+      "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and artisanal collections.",
     url: "https://anayasjewels.com",
     siteName: "Anayas Jewels",
     locale: "en_IN",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
     description:
-      "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and 18K gold-plated artisanal collections.",
+      "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and artisanal collections.",
   },
 };
 

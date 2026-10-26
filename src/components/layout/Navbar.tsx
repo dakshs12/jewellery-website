@@ -95,11 +95,10 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                       href: `/products?category=${encodeURIComponent(col.name)}`,
                                     })
                                   }
-                                  className={`group/item flex items-center gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200 border ${
-                                    isSelected
+                                  className={`group/item flex items-center gap-3 px-3.5 py-3 rounded-2xl transition-all duration-200 border ${isSelected
                                       ? "bg-[#F3ECE0] border-[#C5A059]/40 text-[#1C1917] shadow-sm"
                                       : "bg-transparent border-transparent hover:bg-[#F5EFE6] text-[#1C1917]"
-                                  }`}
+                                    }`}
                                 >
                                   <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#E5DDD2] bg-[#F3EFEA]">
                                     <Image
@@ -112,20 +111,18 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                                   </div>
                                   <div className="flex-1 min-w-0 pr-1 flex items-center justify-between">
                                     <span
-                                      className={`font-serif text-[14px] sm:text-[14.5px] font-semibold tracking-wider uppercase transition-colors whitespace-nowrap ${
-                                        isSelected
+                                      className={`font-serif text-[14px] sm:text-[14.5px] font-semibold tracking-wider uppercase transition-colors whitespace-nowrap ${isSelected
                                           ? "text-[#C5A059]"
                                           : "text-[#1C1917] group-hover/item:text-[#C5A059]"
-                                      }`}
+                                        }`}
                                     >
                                       {col.name}
                                     </span>
                                     <ArrowRight
-                                      className={`w-3.5 h-3.5 text-[#C5A059] transition-all duration-200 shrink-0 ml-1.5 ${
-                                        isSelected
+                                      className={`w-3.5 h-3.5 text-[#C5A059] transition-all duration-200 shrink-0 ml-1.5 ${isSelected
                                           ? "opacity-100 translate-x-0"
                                           : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                                      }`}
+                                        }`}
                                     />
                                   </div>
                                 </Link>
@@ -136,38 +133,34 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                             <Link
                               href="/products"
                               onMouseEnter={() => setActiveSpotlight(ALL_PRODUCTS_SPOTLIGHT)}
-                              className={`group/item flex items-center justify-between px-3.5 py-3 rounded-2xl transition-all duration-200 border ${
-                                activeSpotlight.id === "all-products"
+                              className={`group/item flex items-center justify-between px-3.5 py-3 rounded-2xl transition-all duration-200 border ${activeSpotlight.id === "all-products"
                                   ? "bg-[#F3ECE0] border-[#C5A059]/40 text-[#1C1917] shadow-sm"
                                   : "bg-transparent border-dashed border-[#C5A059]/40 hover:bg-[#F5EFE6] text-[#1C1917]"
-                              }`}
+                                }`}
                             >
                               <div className="flex items-center gap-3 min-w-0 flex-1">
                                 <div
-                                  className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                                    activeSpotlight.id === "all-products"
+                                  className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${activeSpotlight.id === "all-products"
                                       ? "bg-[#C5A059] text-white"
                                       : "bg-[#C5A059]/10 text-[#C5A059] group-hover/item:bg-[#C5A059] group-hover/item:text-white"
-                                  }`}
+                                    }`}
                                 >
                                   <Sparkles className="w-4 h-4" />
                                 </div>
                                 <span
-                                  className={`font-serif text-[14px] sm:text-[14.5px] font-semibold tracking-wider uppercase transition-colors block whitespace-nowrap ${
-                                    activeSpotlight.id === "all-products"
+                                  className={`font-serif text-[14px] sm:text-[14.5px] font-semibold tracking-wider uppercase transition-colors block whitespace-nowrap ${activeSpotlight.id === "all-products"
                                       ? "text-[#C5A059]"
                                       : "text-[#1C1917] group-hover/item:text-[#C5A059]"
-                                  }`}
+                                    }`}
                                 >
                                   All Products
                                 </span>
                               </div>
                               <ArrowRight
-                                className={`w-3.5 h-3.5 text-[#C5A059] shrink-0 transition-all duration-200 mr-1 ml-1.5 ${
-                                  activeSpotlight.id === "all-products"
+                                className={`w-3.5 h-3.5 text-[#C5A059] shrink-0 transition-all duration-200 mr-1 ml-1.5 ${activeSpotlight.id === "all-products"
                                     ? "opacity-100 translate-x-0"
                                     : "opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0"
-                                }`}
+                                  }`}
                               />
                             </Link>
                           </div>
@@ -315,10 +308,9 @@ export default function Navbar({ onProceedCheckout }: NavbarProps) {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    "Polki Choker",
-                    "Kundan Chandbali",
+                    "Necklace",
                     "Bridal Sets",
-                    "18K Gold Kada",
+                    "Kada",
                     "Meenakari Jhumkas",
                   ].map((tag) => (
                     <button

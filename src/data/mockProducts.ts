@@ -244,7 +244,7 @@ export const MOCK_PRODUCTS: Product[] = [
     is_bestseller: true,
     category: "Pendant Sets",
     description:
-      "A blooming floral silhouette featuring uncut Kundan petal settings suspended from an 18K gold chain, completed with dainty stud companions.",
+      "A blooming floral silhouette featuring uncut Kundan petal settings suspended from a chain, completed with dainty stud companions.",
     images: [
       "/products/pendant-sets/pendant-sets-04.jpg",
       "/products/pendant-sets/pendant-sets-06.jpg",
@@ -404,7 +404,7 @@ export const MOCK_PRODUCTS: Product[] = [
   // 6. Bracelets
   {
     id: "c39d421d-70ee-4594-c789-2a24d4e5f691",
-    title: "Aura Fluted 18K Gold Plated Kada Pair",
+    title: "Aura Fluted Kada Pair",
     slug: "aura-fluted-18k-gold-plated-kada-pair",
     price: 4299,
     in_stock: true,

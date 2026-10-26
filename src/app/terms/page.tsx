@@ -64,7 +64,7 @@ export default function TermsPage() {
               2. Product Craftsmanship & Depictions
             </h2>
             <p>
-              Anayas specializes in premium handcrafted imitation jewellery, including Kundan, Polki, Meenakari, and 18K gold-plated pieces:
+              Anayas specializes in premium handcrafted imitation jewellery, including Kundan, Polki, Meenakari pieces:
             </p>
             <ul className="mt-3 space-y-2 list-disc list-inside text-sm text-[#57534E]">
               <li>Because our pieces are handcrafted by seasoned artisans, minor natural variations in gemstone shade, texturing, or hand-painted Meenakari work are intrinsic hallmarks of artisanal craftsmanship rather than defects.</li>
