@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { Mail, Phone, MapPin, Clock, MessageSquare, ShieldCheck, Sparkles } from "lucide-react";
+import { Mail, Phone, MessageSquare, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact Us & Concierge",
@@ -33,13 +33,10 @@ export default function ContactPage() {
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#1C1917]">
             We’d Love to Hear From You
           </h1>
-          <p className="mt-3 text-sm sm:text-base text-[#78716C] max-w-2xl leading-relaxed">
-            Whether you have a question about an heirloom piece, need styling assistance for a wedding, or want an update on your order transit, our team is at your service.
-          </p>
         </div>
 
         {/* Contact Channels Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {/* WhatsApp / Phone */}
           <div className="p-6 sm:p-8 rounded-2xl bg-white/70 border border-[#E9E3DB] shadow-sm flex flex-col justify-between">
             <div>
@@ -47,9 +44,6 @@ export default function ContactPage() {
                 <Phone className="w-5 h-5" />
               </div>
               <h3 className="font-serif text-xl font-semibold text-[#1C1917] mb-2">WhatsApp & Call</h3>
-              <p className="text-xs sm:text-sm text-[#78716C] mb-4">
-                Instant styling recommendations, dispatch queries, and quick assistance.
-              </p>
               <p className="font-sans font-bold text-base text-[#1C1917] tracking-tight">
                 +91 98930 20204
               </p>
@@ -74,9 +68,6 @@ export default function ContactPage() {
                 <Mail className="w-5 h-5" />
               </div>
               <h3 className="font-serif text-xl font-semibold text-[#1C1917] mb-2">Email Support</h3>
-              <p className="text-xs sm:text-sm text-[#78716C] mb-4">
-                Invoices, bulk order queries, bridal styling, or order modifications.
-              </p>
               <div className="space-y-1 text-xs sm:text-sm">
                 <p className="font-semibold text-[#1C1917]">anayasjewels9@gmail.com</p>
               </div>
@@ -88,37 +79,6 @@ export default function ContactPage() {
               >
                 <Mail className="w-4 h-4" />
                 Write to Us
-              </a>
-            </div>
-          </div>
-
-          {/* Operational Hours & Location */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white/70 border border-[#E9E3DB] shadow-sm flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-full bg-[#FFF6EA] border border-[#EAD5BE] flex items-center justify-center text-[#C5A059] mb-4">
-                <Clock className="w-5 h-5" />
-              </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1C1917] mb-2">Studio Hours</h3>
-              <p className="text-xs sm:text-sm text-[#78716C] mb-4">
-                Our customer concierge is active during business hours:
-              </p>
-              <div className="space-y-1.5 text-xs sm:text-sm text-[#1C1917]">
-                <p><strong>Monday – Saturday:</strong> 10:00 AM – 7:00 PM IST</p>
-                <p className="text-[#78716C]">Sunday: Closed (Orders dispatched next business day)</p>
-                <div className="pt-2 flex items-center gap-1.5 text-xs text-[#78716C]">
-                  <MapPin className="w-4 h-4 text-[#C5A059] flex-shrink-0" />
-                  <span>Indore, Madhya Pradesh, India</span>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6">
-              <a
-                href="https://www.instagram.com/_anayasjewels/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-full bg-[#EAD5BE] text-[#1C1917] text-xs font-semibold uppercase tracking-wider hover:bg-[#C5A059] hover:text-white transition-colors"
-              >
-                Instagram @_anayasjewels
               </a>
             </div>
           </div>

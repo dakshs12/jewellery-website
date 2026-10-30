@@ -113,18 +113,6 @@ export const product = defineType({
       description: "Pre-optimized local image paths (e.g. /products/necklace/necklace-01.jpg). Used for initial seed & local asset serving.",
       of: [{ type: "string" }],
     }),
-    defineField({
-      name: "specifications",
-      title: "Artisanal Specifications",
-      type: "object",
-      fields: [
-        { name: "material", title: "Material Alloy Core", type: "string" },
-        { name: "plating", title: "Gold Micron Plating & Lacquer", type: "string" },
-        { name: "stones", title: "Gemstones / Kundan / Pearls", type: "string" },
-        { name: "weight", title: "Approximate Weight", type: "string" },
-        { name: "closure", title: "Closure Mechanism", type: "string" },
-      ],
-    }),
   ],
   preview: {
     select: {

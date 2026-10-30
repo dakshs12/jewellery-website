@@ -7,9 +7,9 @@ export default function Footer() {
     <footer className="bg-[#1C1917] text-[#FAF8F5] pt-14 pb-12 border-t border-[#2E2925]/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#2E2925]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 lg:gap-16 pb-12 border-b border-[#2E2925]">
           {/* Column 1: Brand Info */}
-          <div className="space-y-4">
+          <div className="space-y-4 max-w-sm">
             <Link
               href="/"
               className="inline-block focus:outline-none focus:ring-1 focus:ring-[#C5A059] rounded"
@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Collections */}
-          <div>
+          <div className="md:justify-self-center">
             <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
               Collections
             </h4>
@@ -77,10 +77,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Contact & Concierge */}
-          <div>
+          {/* Column 3: Contact & Concierge */}
+          <div className="md:justify-self-end">
             <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
-              Concierge
+              Contact Us
             </h4>
             <div className="space-y-3 text-xs text-[#A8A29E]">
               <div className="flex items-start gap-2">
@@ -89,7 +89,6 @@ export default function Footer() {
                   <a href="tel:+919893020204" className="hover:text-white transition-colors font-medium">
                     +91 98930 20204
                   </a>
-                  <p className="text-[11px] text-[#78716C]">Mon–Sat: 10 AM – 7 PM IST</p>
                 </div>
               </div>
 
@@ -112,7 +111,7 @@ export default function Footer() {
                   href="/contact"
                   className="inline-block py-2 px-4 rounded-full bg-[#2E2925] text-white text-[11px] uppercase tracking-wider font-semibold hover:bg-[#C5A059] hover:text-[#1C1917] transition-all"
                 >
-                  Contact Concierge →
+                  Contact →
                 </Link>
               </div>
             </div>
