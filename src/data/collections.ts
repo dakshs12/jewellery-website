@@ -34,7 +34,7 @@ export const COLLECTIONS: CollectionCategory[] = [
     subtitle: "Anti-Tarnish Minimalist Luxury",
     description: "Lightweight, hypoallergenic 18K yellow gold plated pieces crafted for modern daily elegance.",
     pieceCount: 42,
-    image: "/products/everyday-wear/everyday-wear-01.jpg",
+    image: "/collectioneverydaywear.png",
   },
   {
     id: "earrings",

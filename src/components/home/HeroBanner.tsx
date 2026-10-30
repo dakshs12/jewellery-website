@@ -33,12 +33,6 @@ export default function HeroBanner({
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="order-2 lg:order-1 lg:col-span-7 flex flex-col justify-center text-left"
           >
-            {/* Editorial Kicker */}
-            <div className="mb-4 sm:mb-6">
-              <span className="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-medium text-[#78716C] block">
-                Everyday luxury, thoughtfully made
-              </span>
-            </div>
 
             {/* High-Impact Editorial Bold Headline */}
             <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.15rem] font-bold text-[#1C1917] tracking-tight leading-[1.18] mb-4 sm:mb-6">
@@ -106,9 +100,6 @@ export default function HeroBanner({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-white">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#E8D7D0] font-semibold block">
-                  {heroBadgeText || "Imperial Edition"}
-                </span>
                 <h2 className="font-serif text-xl sm:text-2xl font-light tracking-wide mt-1">
                   {heroTitleText || "The Gulmohar Crystal"}
                 </h2>

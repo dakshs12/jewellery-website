@@ -79,15 +79,12 @@ export default function InstagramSection() {
   return (
     <section ref={sectionRef} className="relative w-full bg-[#FFF6EA]">
       {/* 1. Header Text in the warm cream upper section */}
-      <div className="pt-16 sm:pt-24 pb-10 sm:pb-14 text-center max-w-xl mx-auto px-4">
-        <span className="text-[11px] uppercase tracking-[0.25em] font-medium text-[#78716C] block mb-2">
-          Adorned By You
-        </span>
+      <div className="pt-8 sm:pt-12 pb-10 sm:pb-14 text-center max-w-xl mx-auto px-4">
         <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-medium text-[#1C1917] tracking-tight">
           Follow Our Journey
         </h2>
         <p className="font-sans text-xs sm:text-sm text-[#78716C] mt-2">
-          Tag <span className="font-medium text-[#C5A059]">@_anayasjewels</span> to be featured in our royal gallery
+          Tag <span className="font-medium text-[#C5A059]">@_anayasjewels</span> to be featured in our feed
         </p>
       </div>
 

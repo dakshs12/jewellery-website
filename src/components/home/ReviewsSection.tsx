@@ -14,31 +14,31 @@ const REVIEWS = [
   {
     id: 1,
     quote:
-      "I wore the Noor Mahal Choker for my wedding reception, and not a single guest could distinguish it from ancestral Polki diamond jewellery. The weight, reverse Meenakari, and velvet box presentation are museum quality.",
+      "The packaging was beautiful, and the jewellery was even better. Definitely a lovely experience!",
     author: "Meera Sengupta",
   },
   {
     id: 2,
     quote:
-      "The craftsmanship is extraordinarily fine. Hypoallergenic, comfortable even after eight hours of continuous celebrations, and delivered via insured BlueDart in just two days. Truly an everyday luxury.",
+      "I purchased this as a gift, and it was absolutely loved! The presentation was beautiful, and the jewellery looked stunning. Will definitely be shopping again.",
     author: "Ananya Singhal",
   },
   {
     id: 3,
     quote:
-      "The 22K antique plating has zero brassy glare — it has the exact muted warmth of 24K temple gold. My go-to atelier for all wedding gifts and festive trousseau pieces.",
+      "The quality and detailing are beautiful. The piece looks so much more exquisite in person. I am extremely happy with my purchase!",
     author: "Pooja Radhakrishnan",
   },
   {
     id: 4,
     quote:
-      "From the prompt WhatsApp bridal concierge answering my sizing questions to the anti-tarnish sealed packaging, Anayas delivers true bespoke high-jewellery luxury without compromise.",
+      "The jewellery is even more beautiful in person! The detailing is so intricate, and the finishing is absolutely lovely. Truly a beautiful addition to my collection.",
     author: "Dr. Tanvi Mehta",
   },
   {
     id: 5,
     quote:
-      "Coming from Jaipur, my standards for uncut Jadau are very high. The stone bezeling and pearl cluster drops are immaculate. Remarkably lightweight for such a grand piece.",
+      "Absolutely loved my Anayas purchase! The jewellery looks so elegant and feels special. It was exactly what I was looking for.",
     author: "Rhea Kapoor",
   },
 ];
@@ -87,7 +87,7 @@ export default function ReviewsSection() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#FFF6EA] py-20 sm:py-28 border-t border-[#E9E3DB] overflow-hidden select-none"
+      className="bg-[#FFF6EA] pt-20 sm:pt-28 pb-10 sm:pb-14 border-t border-[#E9E3DB] overflow-hidden select-none"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
         {/* Section Header */}
@@ -95,9 +95,6 @@ export default function ReviewsSection() {
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#1C1917] tracking-tight leading-tight">
             What Our Customers Say
           </h2>
-          <p className="font-sans text-sm sm:text-base text-[#78716C] mt-3 leading-relaxed">
-            Real stories and reviews from our customers.
-          </p>
         </div>
       </div>
 

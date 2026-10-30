@@ -23,7 +23,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-xs sm:text-sm text-[#A8A29E] leading-relaxed">
-              Artisanal imitation jewellery bridging ancestral royal Indian techniques with contemporary silhouettes. Designed for weddings, festivities, and heirloom keepsakes.
+              Demi-fine jewellery for all your occasions. Elegant designs that feel like you and feel real.
             </p>
             <div className="space-y-2 pt-1 text-xs text-[#C5A059]">
               <div className="flex items-center gap-2">
