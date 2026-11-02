@@ -56,10 +56,11 @@ export const metadata: Metadata = {
   ],
   icons: {
     icon: [
-      { url: "/5.svg", type: "image/svg+xml" },
+      { url: "/6.svg", type: "image/svg+xml" },
+      { url: "/6.png", type: "image/png" },
     ],
-    shortcut: "/5.svg",
-    apple: "/5.svg",
+    shortcut: "/6.png",
+    apple: "/6.png",
   },
   openGraph: {
     title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
@@ -69,13 +70,73 @@ export const metadata: Metadata = {
     siteName: "Anayas Jewels",
     locale: "en_IN",
     type: "website",
+    images: [
+      {
+        url: "/anayas.png",
+        width: 1280,
+        height: 650,
+        alt: "Anayas Jewels — Artisanal Imitation Jewellery & Royal Heirlooms",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
     description:
       "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and artisanal collections.",
+    images: ["/anayas.png"],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "JewelryStore",
+      "@id": "https://anayasjewels.com/#store",
+      "name": "Anayas Jewels",
+      "alternateName": "Anayas Luxury Jewellery",
+      "url": "https://anayasjewels.com",
+      "logo": "https://anayasjewels.com/anayas.png",
+      "image": "https://anayasjewels.com/anayas.png",
+      "description":
+        "Artisanal imitation jewellery bridging ancestral royal Indian techniques with contemporary silhouettes. Handcrafted Kundan, Polki, everyday anti-tarnish, and heirloom bridal jewellery.",
+      "telephone": "+919893151951",
+      "email": "anayasjewels9@gmail.com",
+      "priceRange": "₹300 - ₹7500",
+      "currenciesAccepted": "INR",
+      "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Net Banking",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Indore",
+        "addressRegion": "Madhya Pradesh",
+        "addressCountry": "IN",
+      },
+      "sameAs": ["https://www.instagram.com/_anayasjewels/"],
+      "areaServed": {
+        "@type": "Country",
+        "name": "India",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://anayasjewels.com/#website",
+      "url": "https://anayasjewels.com",
+      "name": "Anayas Jewels",
+      "publisher": {
+        "@id": "https://anayasjewels.com/#store",
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate":
+            "https://anayasjewels.com/products?search={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -91,6 +152,12 @@ export default function RootLayout({
       className={`${cormorant.variable} ${plusJakarta.variable} ${playfair.variable} scroll-smooth antialiased`}
     >
       <body className="min-h-screen bg-[#FFF6EA] text-[#1C1917] font-sans flex flex-col selection:bg-[#E8D7D0] selection:text-[#1C1917]">
+        {/* Schema.org Structured Data (JSON-LD) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+
         {/* Google Analytics (gtag.js) */}
         {gaId && (
           <>
