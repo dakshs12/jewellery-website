@@ -3,11 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Eye, X, Check } from "lucide-react";
+import { ShoppingBag, Eye, X, Check, ChevronRight, ChevronLeft } from "lucide-react";
 import { Product } from "@/types/database";
 import { useCartStore } from "@/store/useCartStore";
 import { formatPrice } from "@/lib/utils";
-import ProductFeatures from "./ProductFeatures";
 
 interface ProductCardProps {
   product: Product;
@@ -18,8 +17,24 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   const [isHovered, setIsHovered] = useState(false);
   const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [addedAnimation, setAddedAnimation] = useState(false);
+  const [quickViewAdded, setQuickViewAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+  const openCart = useCartStore((state) => state.openCart);
+
+  const hasMultipleImages = Boolean(product.images && product.images.length > 1);
+
+  const openQuickView = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setActiveImageIndex(0);
+    setQuickViewOpen(true);
+  };
+
+  const closeQuickView = () => {
+    setQuickViewOpen(false);
+    setActiveImageIndex(0);
+  };
 
   const isOutOfStock = product.in_stock === false;
   const activePrice = product.sale_price ?? product.price;
@@ -36,6 +51,14 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     setTimeout(() => setAddedAnimation(false), 1500);
   };
 
+  const handleQuickViewAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isOutOfStock) return;
+    addItem(product, 1);
+    setQuickViewAdded(true);
+    setTimeout(() => setQuickViewAdded(false), 1500);
+  };
+
   return (
     <>
       <div
@@ -46,7 +69,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         {/* Visual Container */}
         <div
           className="relative aspect-[4/5] w-full overflow-hidden bg-[#F3EFEA] cursor-pointer"
-          onClick={() => setQuickViewOpen(true)}
+          onClick={openQuickView}
         >
           {/* Primary Image */}
           <Image
@@ -97,11 +120,8 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           {/* Quick View Trigger on Image Hover */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setQuickViewOpen(true);
-            }}
-            className="absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-sm text-[#1C1917] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:bg-white hover:text-[#C5A059]"
+            onClick={openQuickView}
+            className="absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-sm text-[#1C1917] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:bg-white hover:text-[#C5A059] cursor-pointer"
             aria-label="Quick view product specifications"
           >
             <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -118,7 +138,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             </div>
 
             <h3
-              onClick={() => setQuickViewOpen(true)}
+              onClick={openQuickView}
               className="font-serif text-[13px] sm:text-lg lg:text-xl font-medium text-[#1C1917] leading-snug line-clamp-2 hover:text-[#C5A059] transition-colors cursor-pointer min-h-[2rem] sm:min-h-0"
             >
               {product.title}
@@ -204,7 +224,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setQuickViewOpen(false)}
+              onClick={closeQuickView}
             />
 
             <motion.div
@@ -215,66 +235,145 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             >
               <button
                 type="button"
-                onClick={() => setQuickViewOpen(false)}
-                className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/80 backdrop-blur-md text-[#1C1917] flex items-center justify-center hover:bg-[#F3EFEA] transition-colors focus:ring-2 focus:ring-[#C5A059]"
+                onClick={closeQuickView}
+                className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/80 backdrop-blur-md text-[#1C1917] flex items-center justify-center hover:bg-[#F3EFEA] transition-colors focus:ring-2 focus:ring-[#C5A059] cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {/* Modal Left: Image Showcase */}
-              <div className="md:w-1/2 relative min-h-[320px] md:min-h-[460px] bg-[#F3EFEA]">
-                <Image
-                  src={product.images[0]}
-                  alt={product.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                />
+              <div className="md:w-1/2 relative min-h-[320px] md:min-h-[460px] bg-[#F3EFEA] overflow-hidden group/modalImg">
+                {product.images.map((img, idx) => (
+                  <div
+                    key={img}
+                    className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+                      activeImageIndex === idx ? "opacity-100 z-1" : "opacity-0 pointer-events-none z-0"
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.title} - Photo ${idx + 1}`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
+                      priority={idx === 0}
+                    />
+                  </div>
+                ))}
+
+                {/* Multiple Images Navigation Controls */}
+                {hasMultipleImages && (
+                  <>
+                    {/* Left Arrow Button (Subtle & Petite) */}
+                    {activeImageIndex > 0 && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+                        }}
+                        className="absolute left-2 sm:left-2.5 top-1/2 -translate-y-1/2 z-10 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/75 hover:bg-white text-[#1C1917] hover:text-[#C5A059] border border-white/60 shadow-xs hover:shadow-sm backdrop-blur-xs flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-90"
+                        aria-label="Previous photo"
+                      >
+                        <ChevronLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.2]" />
+                      </button>
+                    )}
+
+                    {/* Right Arrow Button (Subtle & Petite) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveImageIndex((prev) => (prev + 1) % product.images.length);
+                      }}
+                      className="absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 z-10 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/75 hover:bg-white text-[#1C1917] hover:text-[#C5A059] border border-white/60 shadow-xs hover:shadow-sm backdrop-blur-xs flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-90"
+                      aria-label="Next photo"
+                    >
+                      <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.2]" />
+                    </button>
+
+                    {/* Subtle Dots Indicator */}
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/30 backdrop-blur-xs">
+                      {product.images.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveImageIndex(idx);
+                          }}
+                          className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                            activeImageIndex === idx ? "bg-white w-3.5" : "bg-white/40 w-1.5 hover:bg-white/70"
+                          }`}
+                          aria-label={`View photo ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
-              {/* Modal Right: Details & Specifications */}
-              <div className="md:w-1/2 p-6 sm:p-8 overflow-y-auto flex flex-col justify-between">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-[#C5A059] font-semibold">
+              {/* Modal Right: Details & Action */}
+              <div className="md:w-1/2 p-6 sm:p-8 md:p-10 pt-7 sm:pt-10 md:pt-14 pb-6 sm:pb-8 overflow-y-auto flex flex-col justify-between">
+                <div className="md:pt-2">
+                  <span className="text-xs uppercase tracking-widest text-[#C5A059] font-semibold block mb-1">
                     {product.category}
                   </span>
-                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1C1917] mt-1 mb-3">
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1C1917] mt-1 mb-3 leading-snug">
                     {product.title}
                   </h2>
 
-                  <div className="flex items-baseline gap-3 mb-4">
-                    <span className="font-sans font-bold text-2xl text-[#1C1917] tracking-tight">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-sans font-bold text-2xl sm:text-3xl text-[#1C1917] tracking-tight">
                       {formatPrice(activePrice)}
                     </span>
                     {hasDiscount && (
-                      <span className="font-sans text-sm line-through text-[#78716C]">
+                      <span className="font-sans text-sm sm:text-base line-through text-[#78716C]">
                         {formatPrice(product.price)}
                       </span>
                     )}
                   </div>
-
-                  {/* Four Core Features (Skin Safe, Anti-Tarnish, Premium Quality, Water Proof) */}
-                  <ProductFeatures />
                 </div>
 
-                <button
-                  type="button"
-                  disabled={isOutOfStock}
-                  onClick={(e) => {
-                    if (isOutOfStock) return;
-                    handleAddToCart(e);
-                    setQuickViewOpen(false);
-                  }}
-                  className={`w-full py-3.5 px-6 rounded-full text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg min-h-[48px] ${
-                    isOutOfStock
-                      ? "bg-stone-300 text-stone-500 cursor-not-allowed select-none"
-                      : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059] transition-colors cursor-pointer"
-                  }`}
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>{isOutOfStock ? "Out of Stock" : "Add to Bag & View Cart"}</span>
-                </button>
+                {/* Separate Buttons: ADD TO BAG and VIEW CART (Stacked) */}
+                <div className="space-y-3 pt-6 mt-auto">
+                  {/* Button 1: ADD TO BAG */}
+                  <button
+                    type="button"
+                    disabled={isOutOfStock}
+                    onClick={handleQuickViewAddToCart}
+                    className={`w-full py-3.5 px-6 rounded-full text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 shadow-md transition-all duration-200 min-h-[48px] ${
+                      isOutOfStock
+                        ? "bg-stone-300 text-stone-500 cursor-not-allowed select-none"
+                        : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059] cursor-pointer active:scale-[0.99]"
+                    }`}
+                  >
+                    {quickViewAdded ? (
+                      <>
+                        <Check className="w-4 h-4 text-[#C5A059]" />
+                        <span>Added to Bag</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="w-4 h-4" />
+                        <span>{isOutOfStock ? "Out of Stock" : "Add to Bag"}</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Button 2: VIEW CART */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeQuickView();
+                      openCart();
+                    }}
+                    className="w-full py-3.5 px-6 rounded-full text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 border border-[#1C1917] text-[#1C1917] hover:bg-[#C5A059] hover:border-[#C5A059] hover:text-[#FAF8F5] transition-all duration-200 cursor-pointer min-h-[48px] active:scale-[0.99]"
+                  >
+                    <span>View Cart</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
