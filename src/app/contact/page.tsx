@@ -45,12 +45,12 @@ export default function ContactPage() {
               </div>
               <h3 className="font-serif text-xl font-semibold text-[#1C1917] mb-2">WhatsApp & Call</h3>
               <p className="font-sans font-bold text-base text-[#1C1917] tracking-tight">
-                +91 98930 20204
+                +91 98931 51951
               </p>
             </div>
             <div className="mt-6">
               <a
-                href="https://wa.me/919893020204?text=Hi%20Anayas%20Jewels,%20I%20have%20an%20inquiry%20regarding%20jewellery"
+                href="https://wa.me/919893151951?text=Hi%20Anayas%20Jewels,%20I%20have%20an%20inquiry%20regarding%20jewellery"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-wider hover:bg-[#C5A059] transition-colors"

@@ -137,7 +137,7 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
               </p>
 
               <div style="background-color: #FFF6EA; border-radius: 8px; padding: 14px 16px; font-size: 12px; color: #78716C; line-height: 1.5;">
-                Have questions about your order? Reply directly to this email or reach out to us on WhatsApp at <a href="https://wa.me/919893020204" style="color: #1C1917; font-weight: 700; text-decoration: underline;">+91 98930 20204</a>.
+                Have questions about your order? Reply directly to this email or reach out to us on WhatsApp at <a href="https://wa.me/919893151951" style="color: #1C1917; font-weight: 700; text-decoration: underline;">+91 98931 51951</a>.
               </div>
             </td>
           </tr>
@@ -297,7 +297,7 @@ export function renderCustomerOrderDispatchedEmail(order: Order): string {
                   Please ensure an adult is available to receive the parcel upon OTP confirmation if required.
                 </p>
                 <p style="margin: 0;">
-                  For any assistance with your order, please contact us at <a href="mailto:anayasjewels9@gmail.com" style="color: #1C1917; text-decoration: underline;">anayasjewels9@gmail.com</a> or <a href="tel:+919893020204" style="color: #1C1917; font-weight: 700; text-decoration: underline;">+91 98930 20204</a>.
+                  For any assistance with your order, please contact us at <a href="mailto:anayasjewels9@gmail.com" style="color: #1C1917; text-decoration: underline;">anayasjewels9@gmail.com</a> or <a href="tel:+919893151951" style="color: #1C1917; font-weight: 700; text-decoration: underline;">+91 98931 51951</a>.
                 </p>
               </div>
             </td>

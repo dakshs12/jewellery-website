@@ -138,7 +138,7 @@ export default function PrivacyPolicyPage() {
             <div className="mt-3 text-sm space-y-1 text-[#57534E]">
               <p>• <strong>Grievance Contact:</strong> Anayas Customer Care</p>
               <p>• <strong>Email:</strong> <a href="mailto:anayasjewels9@gmail.com" className="text-[#1C1917] underline font-medium">anayasjewels9@gmail.com</a></p>
-              <p>• <strong>Phone:</strong> <a href="tel:+919893020204" className="text-[#1C1917] underline font-medium">+91 98930 20204</a></p>
+              <p>• <strong>Phone:</strong> <a href="tel:+919893151951" className="text-[#1C1917] underline font-medium">+91 98931 51951</a></p>
               <p>• <strong>Address:</strong> Indore, Madhya Pradesh, India</p>
             </div>
           </section>

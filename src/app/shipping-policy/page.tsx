@@ -144,7 +144,7 @@ export default function ShippingPolicyPage() {
                 ⚠️ Important Advisory upon Delivery:
               </p>
               <p>
-                If the outer courier bag appears visibly tampered with, cut, or damaged upon delivery, please <strong>refuse to accept the package</strong> and immediately inform us on WhatsApp at <a href="https://wa.me/919893020204" className="text-[#1C1917] font-semibold underline">+91 98930 20204</a>.
+                If the outer courier bag appears visibly tampered with, cut, or damaged upon delivery, please <strong>refuse to accept the package</strong> and immediately inform us on WhatsApp at <a href="https://wa.me/919893151951" className="text-[#1C1917] font-semibold underline">+91 98931 51951</a>.
               </p>
               <p>
                 We also kindly request customers to record a continuous, unedited video while unboxing the parcel for the rare event of transit damage or missing items.
@@ -161,7 +161,7 @@ export default function ShippingPolicyPage() {
             </p>
             <div className="mt-3 text-sm space-y-1 text-[#57534E]">
               <p>• <strong>Email:</strong> <a href="mailto:anayasjewels9@gmail.com" className="text-[#1C1917] underline font-medium">anayasjewels9@gmail.com</a> / <a href="mailto:anayasjewels9@gmail.com" className="text-[#1C1917] underline font-medium">anayasjewels9@gmail.com</a></p>
-              <p>• <strong>WhatsApp / Call:</strong> <a href="tel:+919893020204" className="text-[#1C1917] underline font-medium">+91 98930 20204</a> (Mon–Sat, 10 AM – 7 PM IST)</p>
+              <p>• <strong>WhatsApp / Call:</strong> <a href="tel:+919893151951" className="text-[#1C1917] underline font-medium">+91 98931 51951</a> (Mon–Sat, 10 AM – 7 PM IST)</p>
               <p>• <strong>Location:</strong> Indore, Madhya Pradesh, India</p>
             </div>
           </section>
