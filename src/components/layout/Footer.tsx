@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, Phone, Mail, MapPin, Truck, RotateCcw, Lock } from "lucide-react";
+import { ShieldCheck, Phone, Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
     <footer className="bg-[#1C1917] text-[#FAF8F5] pt-14 pb-12 border-t border-[#2E2925]/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 lg:gap-16 pb-12 border-b border-[#2E2925]">
+        {/* Main Footer Grid: 4 columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 pb-12 border-b border-[#2E2925]">
           {/* Column 1: Brand Info */}
           <div className="space-y-4 max-w-sm">
             <Link
@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Collections */}
-          <div className="md:justify-self-center">
+          <div className="lg:justify-self-center">
             <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
               Collections
             </h4>
@@ -77,8 +77,47 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Contact & Concierge */}
-          <div className="md:justify-self-end">
+          {/* Column 3: Policies & Legal */}
+          <div className="lg:justify-self-center">
+            <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
+              Policies & Legal
+            </h4>
+            <ul className="space-y-2.5 text-xs text-[#A8A29E]">
+              <li>
+                <Link href="/terms#terms" className="hover:text-white transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms#shipping" className="hover:text-white transition-colors">
+                  Shipping & Delivery
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms#returns" className="hover:text-white transition-colors">
+                  Final Sale Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms#cancellation" className="hover:text-white transition-colors">
+                  Cancellation Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms#privacy" className="hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms#care" className="hover:text-white transition-colors">
+                  Jewellery Care
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Concierge */}
+          <div className="lg:justify-self-end">
             <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A059] mb-4">
               Contact Us
             </h4>

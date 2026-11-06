@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
@@ -84,6 +85,10 @@ export default function GuestCheckoutModal({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email.trim())) {
       return "Please enter a valid email address for your invoice and courier tracking.";
+    }
+
+    if (!formData.phone.trim()) {
+      return "Please enter your mobile phone number for courier delivery.";
     }
 
     // Clean phone number (strip spaces, dashes, +91)
@@ -358,8 +363,8 @@ export default function GuestCheckoutModal({
                   <ShoppingBag className="w-5 h-5 text-[#C5A059]" />
                 )}
                 <div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1C1917]">
-                    {completedOrder ? "Order Confirmed" : "Checkout"}
+                  <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1C1917] tracking-wider uppercase">
+                    {completedOrder ? "ORDER CONFIRMED" : "CHECKOUT"}
                   </h3>
                   {completedOrder && (
                     <p className="text-xs text-[#78716C]">
@@ -372,7 +377,7 @@ export default function GuestCheckoutModal({
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:ring-2 focus:ring-[#C5A059] disabled:opacity-40"
+                className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:ring-2 focus:ring-[#C5A059] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
                 aria-label="Close checkout"
               >
                 <X className="w-5 h-5" />
@@ -460,9 +465,11 @@ export default function GuestCheckoutModal({
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Left: Guest & Address Form */}
                   <form onSubmit={handleCheckoutSubmit} className="lg:col-span-7 space-y-4">
-                    <h4 className="text-xs uppercase tracking-widest font-semibold text-[#C5A059] mb-1">
-                      CONTACT & ADDRESS DETAILS
-                    </h4>
+                    <div className="pt-1 pb-2.5 sm:pb-3 border-b border-[#EAD5BE]/60">
+                      <h4 className="text-xs uppercase tracking-widest font-semibold text-[#C5A059]">
+                        CONTACT & ADDRESS DETAILS
+                      </h4>
+                    </div>
 
                     {/* Error Notice */}
                     {errorMessage && (
@@ -510,7 +517,7 @@ export default function GuestCheckoutModal({
 
                     <div>
                       <label className="block text-xs font-medium text-[#1C1917] mb-1">
-                        Phone Number
+                        Phone Number *
                       </label>
                       <div className="flex items-center">
                         <span className="px-3.5 py-2.5 bg-[#F3EFEA] border border-r-0 border-[#E9E3DB] rounded-l-xl text-xs font-semibold text-[#78716C] min-h-[44px] flex items-center">
@@ -519,6 +526,7 @@ export default function GuestCheckoutModal({
                         <input
                           type="tel"
                           required
+                          aria-required="true"
                           maxLength={10}
                           value={formData.phone}
                           onChange={(e) =>
@@ -603,6 +611,38 @@ export default function GuestCheckoutModal({
 
                     {/* Razorpay Standard Payment Action */}
                     <div className="pt-4">
+                      {/* Electronic Acceptance Notice (Clauses 29 & 30) */}
+                      <p className="text-[11px] text-[#78716C] text-center leading-relaxed mb-3">
+                        By proceeding to payment, you acknowledge that you have read and agreed to our{" "}
+                        <Link
+                          href="/terms"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline hover:text-[#C5A059] transition-colors font-medium text-[#44403C]"
+                        >
+                          Terms &amp; Conditions
+                        </Link>
+                        ,{" "}
+                        <Link
+                          href="/terms#privacy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline hover:text-[#C5A059] transition-colors font-medium text-[#44403C]"
+                        >
+                          Privacy Policy
+                        </Link>
+                        , and{" "}
+                        <Link
+                          href="/terms#returns"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline hover:text-[#C5A059] transition-colors font-medium text-[#44403C]"
+                        >
+                          Final Sale Policy
+                        </Link>
+                        .
+                      </p>
+
                       <button
                         type="submit"
                         disabled={loading || items.length === 0}

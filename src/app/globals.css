@@ -36,6 +36,18 @@
   box-sizing: border-box;
 }
 
+/* Ensure interactive buttons show pointer hand cursor */
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+button[disabled],
+[role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;

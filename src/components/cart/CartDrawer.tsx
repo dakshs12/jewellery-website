@@ -102,7 +102,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                 <button
                   type="button"
                   onClick={closeCart}
-                  className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+                  className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:outline-none focus:ring-2 focus:ring-[#C5A059] cursor-pointer"
                   aria-label="Close bag"
                 >
                   <X className="w-5 h-5" />
@@ -158,7 +158,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                   <button
                     type="button"
                     onClick={closeCart}
-                    className="px-6 py-3 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-widest font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-md min-h-[44px]"
+                    className="px-6 py-3 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-widest font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-md min-h-[44px] cursor-pointer"
                   >
                     Explore Curated Pieces
                   </button>
@@ -213,7 +213,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                               onClick={() =>
                                 updateQuantity(product.id, quantity - 1)
                               }
-                              className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-[#1C1917] transition-colors"
+                              className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-[#1C1917] transition-colors cursor-pointer"
                               aria-label="Decrease quantity"
                             >
                               <Minus className="w-3.5 h-3.5" />
@@ -226,7 +226,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                               onClick={() =>
                                 updateQuantity(product.id, quantity + 1)
                               }
-                              className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-[#1C1917] transition-colors"
+                              className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-[#1C1917] transition-colors cursor-pointer"
                               aria-label="Increase quantity"
                             >
                               <Plus className="w-3.5 h-3.5" />
@@ -236,7 +236,7 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                           <button
                             type="button"
                             onClick={() => removeItem(product.id)}
-                            className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-red-700 transition-colors"
+                            className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-red-700 transition-colors cursor-pointer"
                             aria-label="Remove item"
                           >
                             <Trash2 className="w-4 h-4" />
