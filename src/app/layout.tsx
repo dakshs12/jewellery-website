@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://anayasjewels.com"),
   title: {
-    default: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
+    default: "Anayas Imitation Jewellery",
     template: "%s | Anayas Jewels",
   },
   description:
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     apple: "/6.png",
   },
   openGraph: {
-    title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
+    title: "Anayas Imitation Jewellery",
     description:
       "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and artisanal collections.",
     url: "https://anayasjewels.com",
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anayas — Artisanal Imitation Jewellery & Royal Heirlooms",
+    title: "Anayas Imitation Jewellery",
     description:
       "Curated heirloom craftsmanship with modern silhouettes. Handcrafted Polki, Kundan, and artisanal collections.",
     images: ["/anayas.png"],
