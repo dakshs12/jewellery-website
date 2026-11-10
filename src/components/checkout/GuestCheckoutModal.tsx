@@ -11,7 +11,6 @@ import {
   CreditCard,
   ShoppingBag,
   CheckCircle2,
-  PackageCheck,
   AlertCircle,
   RefreshCw,
 } from "lucide-react";
@@ -65,8 +64,6 @@ export default function GuestCheckoutModal({
   const [paymentStatusText, setPaymentStatusText] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
-  const [dispatchStatus, setDispatchStatus] = useState<string | null>(null);
-  const [dispatchLoading, setDispatchLoading] = useState(false);
 
   // Preload Razorpay checkout script when modal opens
   useEffect(() => {
@@ -295,43 +292,6 @@ export default function GuestCheckoutModal({
     }
   };
 
-  const handleSimulateSanityDispatch = async () => {
-    if (!completedOrder) return;
-    setDispatchLoading(true);
-    try {
-      const res = await fetch("/api/webhooks/sanity-dispatch", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderId: completedOrder.id,
-          orderNumber: completedOrder.order_number,
-          customerName: completedOrder.customer_name,
-          customerEmail: completedOrder.customer_email,
-          customerPhone: completedOrder.customer_phone,
-          courierName: "BlueDart",
-          trackingNumber: "BLUEDART-EXP-98218",
-          trackingUrl:
-            "https://www.bluedart.com/tracking?track=BLUEDART-EXP-98218",
-          shippingAddress: completedOrder.shipping_address,
-          lineItems: completedOrder.line_items,
-          totalAmount: completedOrder.total_amount,
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setDispatchStatus("Parcel dispatched via BlueDart! Tracking email delivered & Sanity order patched.");
-      } else {
-        setDispatchStatus(`Dispatch notice: ${data.error || "Completed"}`);
-      }
-    } catch {
-      setDispatchStatus("Dispatch webhook simulated.");
-    } finally {
-      setDispatchLoading(false);
-    }
-  };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -422,34 +382,6 @@ export default function GuestCheckoutModal({
                         {formatPrice(completedOrder.total_amount)}
                       </span>
                     </div>
-                  </div>
-
-                  {/* Sanity BlueDart Dispatch Simulator Button for testing */}
-                  <div className="p-4 rounded-xl bg-white border border-[#E9E3DB] text-left mb-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-semibold text-[#1C1917]">
-                          Admin Test: Simulate Sanity BlueDart Dispatch
-                        </p>
-                        <p className="text-[11px] text-[#78716C]">
-                          Fires <code className="text-[#C5A059]">/api/webhooks/sanity-dispatch</code> with BlueDart AWB
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleSimulateSanityDispatch}
-                        disabled={dispatchLoading}
-                        className="px-4 py-2 rounded-full bg-[#F3EFEA] hover:bg-[#E8D7D0] border border-[#E9E3DB] text-xs font-semibold text-[#1C1917] transition-all min-h-[40px] flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <PackageCheck className="w-4 h-4 text-[#C5A059]" />
-                        <span>{dispatchLoading ? "Triggering..." : "Simulate Dispatch"}</span>
-                      </button>
-                    </div>
-                    {dispatchStatus && (
-                      <p className="text-xs text-[#2D4F3E] font-medium mt-2">
-                        ✓ {dispatchStatus}
-                      </p>
-                    )}
                   </div>
 
                   <button
