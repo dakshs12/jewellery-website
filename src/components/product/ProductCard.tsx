@@ -5,7 +5,8 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Eye, X, Check, ChevronRight, ChevronLeft } from "lucide-react";
 import { Product } from "@/types/database";
-import { useCartStore } from "@/store/useCartStore";
+import { getAvailableStock, useCartStore } from "@/store/useCartStore";
+import { useHydratedCart } from "@/hooks/useHydratedCart";
 import { formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -18,10 +19,12 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [imageRatios, setImageRatios] = useState<Record<number, number>>({});
   const [addedAnimation, setAddedAnimation] = useState(false);
   const [quickViewAdded, setQuickViewAdded] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
+  const { items, isHydrated } = useHydratedCart();
 
   const hasMultipleImages = Boolean(product.images && product.images.length > 1);
 
@@ -36,7 +39,14 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     setActiveImageIndex(0);
   };
 
-  const isOutOfStock = product.in_stock === false;
+  const availableStock = getAvailableStock(product);
+  const currentQtyInCart = isHydrated
+    ? items.find((item) => item.product.id === product.id)?.quantity || 0
+    : 0;
+  const isOutOfStock = availableStock === 0;
+  const isMaxInCart =
+    !isOutOfStock && availableStock !== null && currentQtyInCart >= availableStock;
+
   const activePrice = product.sale_price ?? product.price;
   const hasDiscount = product.sale_price && product.sale_price < product.price;
   const discountPercent = hasDiscount
@@ -45,18 +55,22 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isOutOfStock) return;
-    addItem(product, 1);
-    setAddedAnimation(true);
-    setTimeout(() => setAddedAnimation(false), 1500);
+    if (isOutOfStock || isMaxInCart) return;
+    const res = addItem(product, 1);
+    if (res.added) {
+      setAddedAnimation(true);
+      setTimeout(() => setAddedAnimation(false), 1500);
+    }
   };
 
   const handleQuickViewAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isOutOfStock) return;
-    addItem(product, 1);
-    setQuickViewAdded(true);
-    setTimeout(() => setQuickViewAdded(false), 1500);
+    if (isOutOfStock || isMaxInCart) return;
+    const res = addItem(product, 1);
+    if (res.added) {
+      setQuickViewAdded(true);
+      setTimeout(() => setQuickViewAdded(false), 1500);
+    }
   };
 
   return (
@@ -157,10 +171,18 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               )}
             </div>
 
-            {/* Animated Add to Bag Button / Out of Stock Button */}
+            {/* Animated Add to Bag Button / Max in Bag / Out of Stock Button */}
             {isOutOfStock ? (
               <span className="w-full sm:w-auto px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[10px] sm:text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 bg-[#78716C]/15 text-[#78716C] border border-[#78716C]/20 cursor-not-allowed select-none shrink-0">
                 Out of Stock
+              </span>
+            ) : isMaxInCart && !addedAnimation ? (
+              <span
+                title={`Only ${availableStock} piece${availableStock === 1 ? "" : "s"} available — maximum in your bag`}
+                className="w-full sm:w-auto px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full font-medium text-[10px] sm:text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 bg-[#EAD5BE]/60 text-[#57534E] border border-[#D8C2AA] cursor-not-allowed select-none shrink-0"
+              >
+                <Check className="w-3 h-3 text-[#8C6D2B]" />
+                <span>In Bag (Max)</span>
               </span>
             ) : (
               <motion.button
@@ -231,7 +253,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-3xl bg-[#FFF6EA] border border-[#E9E3DB] rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col md:flex-row"
+              className="relative w-full max-w-3xl bg-[#FFF6EA] border border-[#E9E3DB] rounded-3xl shadow-2xl overflow-y-auto md:overflow-hidden z-10 max-h-[92vh] flex flex-col md:flex-row"
             >
               <button
                 type="button"
@@ -243,7 +265,18 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               </button>
 
               {/* Modal Left: Image Showcase */}
-              <div className="md:w-1/2 relative min-h-[320px] md:min-h-[460px] bg-[#F3EFEA] overflow-hidden group/modalImg">
+              <div
+                className="modal-mobile-image-frame w-full shrink-0 md:shrink md:w-1/2 relative max-h-[56vh] md:max-h-none md:min-h-[460px] bg-[#F3EFEA] overflow-hidden group/modalImg"
+                style={
+                  {
+                    "--mobile-img-aspect": String(
+                      imageRatios[activeImageIndex]
+                        ? Math.min(1.5, Math.max(0.67, imageRatios[activeImageIndex]))
+                        : 0.75
+                    ),
+                  } as React.CSSProperties
+                }
+              >
                 {product.images.map((img, idx) => (
                   <div
                     key={img}
@@ -256,8 +289,17 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                       alt={`${product.title} - Photo ${idx + 1}`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
+                      className="object-contain object-center md:object-cover"
                       priority={idx === 0}
+                      onLoad={(e) => {
+                        const imgEl = e.currentTarget;
+                        if (imgEl.naturalWidth && imgEl.naturalHeight) {
+                          const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+                          setImageRatios((prev) =>
+                            prev[idx] === ratio ? prev : { ...prev, [idx]: ratio }
+                          );
+                        }
+                      }}
                     />
                   </div>
                 ))}
@@ -315,7 +357,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               </div>
 
               {/* Modal Right: Details & Action */}
-              <div className="md:w-1/2 p-6 sm:p-8 md:p-10 pt-7 sm:pt-10 md:pt-14 pb-6 sm:pb-8 overflow-y-auto flex flex-col justify-between">
+              <div className="shrink-0 md:shrink md:w-1/2 p-5 sm:p-8 md:p-10 pt-5 sm:pt-10 md:pt-14 pb-5 sm:pb-8 md:overflow-y-auto flex flex-col justify-between">
                 <div className="md:pt-2">
                   <span className="text-xs uppercase tracking-widest text-[#C5A059] font-semibold block mb-1">
                     {product.category}
@@ -334,6 +376,18 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                       </span>
                     )}
                   </div>
+
+                  {isOutOfStock ? (
+                    <p className="mt-2.5 text-xs font-semibold uppercase tracking-wider text-stone-500">
+                      Currently Out of Stock
+                    </p>
+                  ) : availableStock !== null && availableStock <= 5 ? (
+                    <p className="mt-2.5 text-xs font-medium text-[#8C6D2B]">
+                      {availableStock === 1
+                        ? "Limited piece — only 1 available in stock"
+                        : `Limited stock — only ${availableStock} left`}
+                    </p>
+                  ) : null}
                 </div>
 
                 {/* Separate Buttons: ADD TO BAG and VIEW CART (Stacked) */}
@@ -341,12 +395,14 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                   {/* Button 1: ADD TO BAG */}
                   <button
                     type="button"
-                    disabled={isOutOfStock}
+                    disabled={isOutOfStock || (isMaxInCart && !quickViewAdded)}
                     onClick={handleQuickViewAddToCart}
                     className={`w-full py-3.5 px-6 rounded-full text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 shadow-md transition-all duration-200 min-h-[48px] ${
                       isOutOfStock
                         ? "bg-stone-300 text-stone-500 cursor-not-allowed select-none"
-                        : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059] cursor-pointer active:scale-[0.99]"
+                        : isMaxInCart && !quickViewAdded
+                          ? "bg-[#EAD5BE]/70 text-[#57534E] border border-[#D8C2AA] cursor-not-allowed select-none"
+                          : "bg-[#1C1917] text-[#FAF8F5] hover:bg-[#C5A059] cursor-pointer active:scale-[0.99]"
                     }`}
                   >
                     {quickViewAdded ? (
@@ -354,10 +410,20 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                         <Check className="w-4 h-4 text-[#C5A059]" />
                         <span>Added to Bag</span>
                       </>
+                    ) : isOutOfStock ? (
+                      <>
+                        <ShoppingBag className="w-4 h-4" />
+                        <span>Out of Stock</span>
+                      </>
+                    ) : isMaxInCart ? (
+                      <>
+                        <Check className="w-4 h-4 text-[#8C6D2B]" />
+                        <span>Max in Bag ({currentQtyInCart}/{availableStock})</span>
+                      </>
                     ) : (
                       <>
                         <ShoppingBag className="w-4 h-4" />
-                        <span>{isOutOfStock ? "Out of Stock" : "Add to Bag"}</span>
+                        <span>Add to Bag</span>
                       </>
                     )}
                   </button>

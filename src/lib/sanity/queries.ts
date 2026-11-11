@@ -1,17 +1,18 @@
 import { groq } from "next-sanity";
-import { client, isSanityConfigured } from "./client";
+import { client, liveClient, isSanityConfigured } from "./client";
 import { urlForImage } from "./image";
 import { Product, ProductCategory } from "@/types/database";
 import { MOCK_PRODUCTS } from "@/data/mockProducts";
 
 export const ALL_PRODUCTS_QUERY = groq`
-  *[_type == "product"] | order(_createdAt desc) {
+  *[_type == "product" && !(_id in path("drafts.**"))] | order(_createdAt desc) {
     _id,
     title,
     slug,
     price,
     sale_price,
     inStock,
+    stockQuantity,
     isBestseller,
     badge,
     isNew,
@@ -21,19 +22,19 @@ export const ALL_PRODUCTS_QUERY = groq`
       ...,
       asset->
     },
-    externalImages,
-    specifications
+    externalImages
   }
 `;
 
 export const BESTSELLERS_QUERY = groq`
-  *[_type == "product" && isBestseller == true] | order(_createdAt desc) {
+  *[_type == "product" && !(_id in path("drafts.**")) && isBestseller == true] | order(_createdAt desc) {
     _id,
     title,
     slug,
     price,
     sale_price,
     inStock,
+    stockQuantity,
     isBestseller,
     badge,
     isNew,
@@ -43,19 +44,19 @@ export const BESTSELLERS_QUERY = groq`
       ...,
       asset->
     },
-    externalImages,
-    specifications
+    externalImages
   }
 `;
 
 export const PRODUCTS_BY_CATEGORY_QUERY = groq`
-  *[_type == "product" && (category == $category || category == $categoryAlt)] | order(_createdAt desc) {
+  *[_type == "product" && !(_id in path("drafts.**")) && (category == $category || category == $categoryAlt)] | order(_createdAt desc) {
     _id,
     title,
     slug,
     price,
     sale_price,
     inStock,
+    stockQuantity,
     isBestseller,
     badge,
     isNew,
@@ -65,8 +66,7 @@ export const PRODUCTS_BY_CATEGORY_QUERY = groq`
       ...,
       asset->
     },
-    externalImages,
-    specifications
+    externalImages
   }
 `;
 
@@ -100,13 +100,22 @@ export function mapSanityProduct(doc: any): Product {
   let cat = (doc.category || "Necklace") as ProductCategory;
   if ((cat as string) === "Necklaces") cat = "Necklace";
 
+  const rawStockQty =
+    typeof doc.stockQuantity === "number" && !Number.isNaN(doc.stockQuantity)
+      ? Math.max(0, Math.floor(doc.stockQuantity))
+      : undefined;
+  const rawInStock = doc.inStock ?? doc.in_stock ?? true;
+  const effectiveInStock =
+    rawInStock && (rawStockQty === undefined || rawStockQty > 0);
+
   return {
     id: doc._id || crypto.randomUUID(),
     title: doc.title || "Royal Heirloom Jewellery",
     slug: typeof doc.slug === "object" ? doc.slug?.current : doc.slug || "jewellery-piece",
     price: Number(doc.price) || 0,
     sale_price: doc.sale_price ? Number(doc.sale_price) : undefined,
-    in_stock: doc.inStock ?? doc.in_stock ?? true,
+    in_stock: effectiveInStock,
+    stock_quantity: rawStockQty,
     is_bestseller: doc.isBestseller ?? doc.is_bestseller ?? false,
     category: cat,
     description: doc.description || "",
@@ -122,7 +131,7 @@ export function mapSanityProduct(doc: any): Product {
 }
 
 /**
- * Fetch all products with graceful zero-crash fallback to mockProducts.ts
+ * Fetch all products live (no CDN staleness) with graceful fallback to mockProducts.ts
  */
 export async function getProducts(): Promise<Product[]> {
   if (!isSanityConfigured) {
@@ -131,7 +140,7 @@ export async function getProducts(): Promise<Product[]> {
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const raw: any[] = await client.fetch(ALL_PRODUCTS_QUERY, {}, { next: { revalidate: 30 } });
+    const raw: any[] = await liveClient.fetch(ALL_PRODUCTS_QUERY, {}, { cache: "no-store" });
     if (!raw || raw.length === 0) {
       return MOCK_PRODUCTS;
     }
@@ -143,7 +152,7 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 /**
- * Fetch bestseller products with fallback
+ * Fetch bestseller products with live stock awareness
  */
 export async function getBestsellerProducts(): Promise<Product[]> {
   if (!isSanityConfigured) {
@@ -152,7 +161,7 @@ export async function getBestsellerProducts(): Promise<Product[]> {
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const raw: any[] = await client.fetch(BESTSELLERS_QUERY, {}, { next: { revalidate: 30 } });
+    const raw: any[] = await liveClient.fetch(BESTSELLERS_QUERY, {}, { cache: "no-store" });
     if (!raw || raw.length === 0) {
       return MOCK_PRODUCTS.filter((p) => p.is_bestseller);
     }
@@ -164,7 +173,7 @@ export async function getBestsellerProducts(): Promise<Product[]> {
 }
 
 /**
- * Fetch products by category with fallback
+ * Fetch products by category with live stock awareness
  */
 export async function getProductsByCategory(category: string): Promise<Product[]> {
   if (!isSanityConfigured) {
@@ -175,13 +184,13 @@ export async function getProductsByCategory(category: string): Promise<Product[]
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const raw: any[] = await client.fetch(
+    const raw: any[] = await liveClient.fetch(
       PRODUCTS_BY_CATEGORY_QUERY,
       {
         category,
         categoryAlt: category.endsWith("s") ? category.slice(0, -1) : `${category}s`,
       },
-      { next: { revalidate: 30 } }
+      { cache: "no-store" }
     );
     if (!raw || raw.length === 0) {
       return MOCK_PRODUCTS.filter(

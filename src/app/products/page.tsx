@@ -50,23 +50,43 @@ function ProductsContent() {
   const [openDropdown, setOpenDropdown] = useState<"category" | "price" | "sort" | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const closeCart = useCartStore((state) => state.closeCart);
+  const syncCartWithProducts = useCartStore((state) => state.syncCartWithProducts);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const toolsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch products from Sanity with zero-crash fallback
+  // Fetch products live from Sanity & sync cart limits, refreshing on purchases or tab focus
   useEffect(() => {
     let isMounted = true;
-    getProducts().then((data) => {
-      if (isMounted && data && data.length > 0) {
-        setProducts(data);
+
+    const refreshCatalog = () => {
+      getProducts().then((data) => {
+        if (isMounted && data && data.length > 0) {
+          setProducts(data);
+          syncCartWithProducts(data);
+        }
+      });
+    };
+
+    refreshCatalog();
+
+    const handleStockUpdate = () => refreshCatalog();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        refreshCatalog();
       }
-    });
+    };
+
+    window.addEventListener("anayas-stock-updated", handleStockUpdate);
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
       isMounted = false;
+      window.removeEventListener("anayas-stock-updated", handleStockUpdate);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, []);
+  }, [syncCartWithProducts]);
 
   // Sync searchQuery when URL query parameter changes
   useEffect(() => {

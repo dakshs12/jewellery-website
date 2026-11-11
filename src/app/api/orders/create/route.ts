@@ -1,8 +1,73 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 import { Order, OrderLineItem } from "@/types/database";
 import { sendOrderConfirmationEmails } from "@/lib/email/service";
 import { writeClient } from "@/lib/sanity/client";
+
+async function decrementProductStock(lineItems: OrderLineItem[]) {
+  const qtyByProduct = new Map<string, number>();
+
+  for (const item of lineItems) {
+    if (!item.product_id) continue;
+    const qty = Math.max(1, Math.floor(Number(item.quantity) || 1));
+    qtyByProduct.set(item.product_id, (qtyByProduct.get(item.product_id) || 0) + qty);
+  }
+
+  for (const [productId, purchasedQty] of qtyByProduct.entries()) {
+    const publishedId = productId.replace(/^drafts\./, "");
+    const draftId = `drafts.${publishedId}`;
+
+    // Retry up to 2 times in case of a concurrent optimistic-lock (_rev) conflict
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const docs = await writeClient.fetch<
+          Array<{
+            _id: string;
+            _rev: string;
+            stockQuantity?: number | null;
+            inStock?: boolean;
+          }>
+        >(
+          `*[_type == "product" && (_id in [$publishedId, $draftId] || slug.current == $productId)]{ _id, _rev, stockQuantity, inStock }`,
+          { publishedId, draftId, productId }
+        );
+
+        if (!docs || docs.length === 0) break;
+
+        for (const doc of docs) {
+          if (typeof doc.stockQuantity !== "number" || Number.isNaN(doc.stockQuantity)) {
+            continue;
+          }
+
+          const nextQty = Math.max(0, Math.floor(doc.stockQuantity) - purchasedQty);
+          const updates: { stockQuantity: number; inStock?: boolean } = {
+            stockQuantity: nextQty,
+          };
+
+          if (nextQty <= 0) {
+            updates.inStock = false;
+          }
+
+          await writeClient
+            .patch(doc._id)
+            .ifRevisionId(doc._rev)
+            .set(updates)
+            .commit();
+        }
+
+        break;
+      } catch (err) {
+        if (attempt === 1) {
+          console.error(
+            `[Sanity Stock Decrement Error] Failed for ${productId}:`,
+            err
+          );
+        }
+      }
+    }
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -117,7 +182,7 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    // 3. Write Verified Paid Order to Sanity CMS (LiveEdit enabled document)
+    // 3. Write Verified Paid Order to Sanity CMS & Deduct Live Stock Quantities
     let sanityOrderDocId: string | null = null;
     if (
       process.env.SANITY_API_WRITE_TOKEN &&
@@ -125,9 +190,18 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "dummy-project-id"
     ) {
       try {
+        const orderDocId = `order-${finalOrderNumber.toLowerCase()}`;
+        const existingOrderId = await writeClient.fetch<string | null>(
+          `*[_type == "order" && (_id == $orderDocId || razorpayPaymentId == $paymentId)][0]._id`,
+          {
+            orderDocId,
+            paymentId: newOrder.razorpay_payment_id,
+          }
+        );
+
         const sanityDoc = {
           _type: "order",
-          _id: `order-${finalOrderNumber.toLowerCase()}`,
+          _id: orderDocId,
           orderNumber: finalOrderNumber,
           status: "paid",
           courierName: "BlueDart",
@@ -160,6 +234,17 @@ export async function POST(req: NextRequest) {
 
         const sanityRes = await writeClient.createOrReplace(sanityDoc);
         sanityOrderDocId = sanityRes._id;
+
+        // Deduct product stock only on first persistence of this verified payment
+        if (!existingOrderId) {
+          await decrementProductStock(normalizedLineItems);
+          try {
+            revalidatePath("/products");
+            revalidatePath("/");
+          } catch {
+            // ignore revalidation errors in non-request contexts
+          }
+        }
       } catch (sanityErr) {
         console.error("[Sanity Order Persistence Error]:", sanityErr);
       }

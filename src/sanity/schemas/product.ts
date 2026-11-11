@@ -1,9 +1,13 @@
 import { defineType, defineField } from "sanity";
+import { ProductFormInput } from "../components/ProductFormInput";
 
 export const product = defineType({
   name: "product",
   title: "Jewellery Products",
   type: "document",
+  components: {
+    input: ProductFormInput,
+  },
   fields: [
     defineField({
       name: "title",
@@ -39,7 +43,29 @@ export const product = defineType({
       title: "In Stock",
       type: "boolean",
       initialValue: true,
-      description: "Toggle OFF to mark as 'Out of Stock' and disable purchasing.",
+      description:
+        "Toggle OFF to mark as 'Out of Stock' and disable purchasing. Automatically turns OFF when Available Stock Quantity reaches 0.",
+    }),
+    defineField({
+      name: "stockQuantity",
+      title: "Available Stock Quantity",
+      type: "number",
+      initialValue: 1,
+      description:
+        "Enter how many pieces you have in stock (e.g. 1, 2, 3). Customers cannot add more than this to their bag. Automatically decreases after each paid order and marks the product Out of Stock at 0.",
+      hidden: ({ document }) => document?.inStock === false,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const doc = context.document as { inStock?: boolean } | undefined;
+          if (value === undefined || value === null) return true;
+          if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+            return "Stock quantity must be a whole number (0 or greater).";
+          }
+          if (doc?.inStock !== false && value === 0) {
+            return "Stock quantity is 0 while 'In Stock' is ON. Enter at least 1 or toggle 'In Stock' OFF.";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "isBestseller",
@@ -121,14 +147,25 @@ export const product = defineType({
       price: "price",
       sale_price: "sale_price",
       inStock: "inStock",
+      stockQuantity: "stockQuantity",
       media: "images.0",
     },
-    prepare({ title, subtitle, price, sale_price, inStock, media }) {
-      const stockStatus = inStock === false ? " [OUT OF STOCK]" : "";
-      const priceText = sale_price ? `₹${sale_price} (MSRP ₹${price})` : `₹${price}`;
+    prepare({ title, subtitle, price, sale_price, inStock, stockQuantity, media }) {
+      const hasQty = typeof stockQuantity === "number";
+      const isSoldOut = inStock === false || (hasQty && stockQuantity <= 0);
+      const stockStatus = isSoldOut
+        ? " [OUT OF STOCK]"
+        : hasQty
+          ? ` [Qty: ${stockQuantity}]`
+          : "";
+      const priceText = sale_price
+        ? `₹${sale_price} (MSRP ₹${price ?? "-"})`
+        : price !== undefined
+          ? `₹${price}`
+          : "Price not set";
       return {
-        title: `${title}${stockStatus}`,
-        subtitle: `${subtitle} • ${priceText}`,
+        title: `${title || "Untitled Product"}${stockStatus}`,
+        subtitle: `${subtitle || "Uncategorized"} • ${priceText}`,
         media,
       };
     },

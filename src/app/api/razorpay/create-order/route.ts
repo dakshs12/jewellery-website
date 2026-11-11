@@ -17,17 +17,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Fetch live products from Sanity (with fallback to mockProducts.ts)
+    // 1. Fetch live uncached products directly from Sanity (with fallback to mockProducts.ts)
     const allProducts = await getProducts();
 
-    // 2. Server-side price & stock verification
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const verifiedItems: any[] = [];
-    let subtotal = 0;
+    // 2. Aggregate quantities per product and verify live price & stock
+    const requestedQtyByProductId = new Map<
+      string,
+      { product: (typeof allProducts)[number]; quantity: number }
+    >();
 
     for (const item of items) {
       const requestedId = item.productId || item.product?.id || item.id || item.slug;
-      const quantity = Math.max(1, Number(item.quantity) || 1);
+      const quantity = Math.max(1, Math.floor(Number(item.quantity) || 1));
 
       const product = allProducts.find(
         (p) => p.id === requestedId || p.slug === requestedId
@@ -40,10 +41,37 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      if (product.in_stock === false) {
+      const prev = requestedQtyByProductId.get(product.id);
+      requestedQtyByProductId.set(product.id, {
+        product,
+        quantity: (prev?.quantity || 0) + quantity,
+      });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const verifiedItems: any[] = [];
+    let subtotal = 0;
+
+    for (const { product, quantity } of requestedQtyByProductId.values()) {
+      if (
+        product.in_stock === false ||
+        (typeof product.stock_quantity === "number" && product.stock_quantity <= 0)
+      ) {
         return NextResponse.json(
           {
             error: `"${product.title}" is currently out of stock. Please remove it from your bag to continue.`,
+          },
+          { status: 400 }
+        );
+      }
+
+      if (
+        typeof product.stock_quantity === "number" &&
+        quantity > product.stock_quantity
+      ) {
+        return NextResponse.json(
+          {
+            error: `Only ${product.stock_quantity} piece${product.stock_quantity === 1 ? "" : "s"} of "${product.title}" left in stock. Please adjust the quantity in your bag.`,
           },
           { status: 400 }
         );

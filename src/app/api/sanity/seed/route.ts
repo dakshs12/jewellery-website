@@ -52,19 +52,13 @@ async function handleSeed() {
         price: product.price,
         sale_price: product.sale_price ?? undefined,
         inStock: product.in_stock ?? true,
+        stockQuantity: product.stock_quantity ?? 1,
         isBestseller: product.is_bestseller ?? false,
         badge: product.is_bestseller ? "Bestseller" : undefined,
         isNew: false,
         category: product.category,
         description: product.description,
         externalImages: product.images,
-        specifications: {
-          material: product.specifications.material,
-          plating: product.specifications.plating,
-          stones: product.specifications.stones,
-          weight: product.specifications.weight || "",
-          closure: product.specifications.closure || "",
-        },
       };
 
       const res = await writeClient.createOrReplace(doc);

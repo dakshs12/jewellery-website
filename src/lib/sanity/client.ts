@@ -19,6 +19,14 @@ export const client = createClient({
   useCdn: process.env.NODE_ENV === "production",
 });
 
+// Live Read Client (bypasses Sanity CDN so stock quantities & Sold Out states are always real-time)
+export const liveClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+});
+
 // Authenticated Write Client (for migrations, seeding & order mutations)
 export const writeClient = createClient({
   projectId,

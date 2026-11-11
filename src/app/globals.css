@@ -134,4 +134,11 @@ body {
   stroke: #FFFFFF !important;
 }
 
+/* Preserve full uncropped product aspect ratio inside mobile quick-view modal */
+@media (max-width: 767px) {
+  .modal-mobile-image-frame {
+    aspect-ratio: var(--mobile-img-aspect, 3 / 4);
+  }
+}
+
 

@@ -69,9 +69,15 @@ export default function GuestCheckoutModal({
   useEffect(() => {
     if (isOpen) {
       loadRazorpayScript();
-      setErrorMessage(null);
     }
   }, [isOpen]);
+
+  const handleClose = () => {
+    if (loading) return;
+    setErrorMessage(null);
+    setCompletedOrder(null);
+    onClose();
+  };
 
   // Form Validation
   const validateForm = (): string | null => {
@@ -222,6 +228,9 @@ export default function GuestCheckoutModal({
             // Order success!
             setCompletedOrder(confirmData.order);
             clearCart();
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("anayas-stock-updated"));
+            }
 
             // Trigger celebratory gold confetti
             try {
@@ -301,9 +310,7 @@ export default function GuestCheckoutModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => {
-              if (!loading) onClose();
-            }}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm"
           />
 
@@ -335,7 +342,7 @@ export default function GuestCheckoutModal({
               </div>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 disabled={loading}
                 className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-[#F3EFEA] text-[#1C1917] transition-colors focus:ring-2 focus:ring-[#C5A059] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
                 aria-label="Close checkout"
@@ -386,7 +393,7 @@ export default function GuestCheckoutModal({
 
                   <button
                     type="button"
-                    onClick={onClose}
+                    onClick={handleClose}
                     className="px-8 py-3.5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors shadow-md min-h-[44px] cursor-pointer"
                   >
                     Continue Shopping

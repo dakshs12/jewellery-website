@@ -15,7 +15,11 @@ import {
   Truck,
   Sparkles,
 } from "lucide-react";
-import { useCartStore, FREE_SHIPPING_THRESHOLD } from "@/store/useCartStore";
+import {
+  getAvailableStock,
+  useCartStore,
+  FREE_SHIPPING_THRESHOLD,
+} from "@/store/useCartStore";
 import { useHydratedCart } from "@/hooks/useHydratedCart";
 import { formatPrice } from "@/lib/utils";
 
@@ -166,6 +170,10 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
               ) : (
                 items.map(({ product, quantity }) => {
                   const unitPrice = product.sale_price ?? product.price;
+                  const availableStock = getAvailableStock(product);
+                  const atMaxStock =
+                    availableStock !== null && quantity >= availableStock;
+
                   return (
                     <motion.div
                       layout
@@ -223,10 +231,16 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                             </span>
                             <button
                               type="button"
+                              disabled={atMaxStock}
+                              title={
+                                atMaxStock
+                                  ? `Only ${availableStock} piece${availableStock === 1 ? "" : "s"} in stock`
+                                  : "Increase quantity"
+                              }
                               onClick={() =>
                                 updateQuantity(product.id, quantity + 1)
                               }
-                              className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-[#1C1917] transition-colors cursor-pointer"
+                              className="w-8 h-8 flex items-center justify-center text-[#78716C] hover:text-[#1C1917] transition-colors cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed disabled:hover:text-[#78716C]"
                               aria-label="Increase quantity"
                             >
                               <Plus className="w-3.5 h-3.5" />
@@ -242,6 +256,14 @@ export default function CartDrawer({ onProceedCheckout }: CartDrawerProps) {
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
+
+                        {availableStock !== null && atMaxStock && (
+                          <p className="mt-1.5 text-[11px] font-medium text-[#8C6D2B]">
+                            {availableStock === 1
+                              ? "Limited piece — only 1 available"
+                              : `Maximum available (${availableStock}) selected`}
+                          </p>
+                        )}
                       </div>
                     </motion.div>
                   );
