@@ -1,5 +1,15 @@
 import { Order } from "@/types/database";
 import { formatPrice } from "@/lib/utils";
+import { COD_FEE } from "@/lib/checkoutConfig";
+
+export function isCodOrder(order: Order): boolean {
+  return Boolean(
+    order.status === "cod_confirmed" ||
+      order.razorpay_order_id === "COD" ||
+      order.payment_method?.toLowerCase().includes("cod") ||
+      order.payment_method?.toLowerCase().includes("cash on delivery")
+  );
+}
 
 /**
  * Luxury HTML Email Templates for Anayas Jewels
@@ -11,11 +21,13 @@ import { formatPrice } from "@/lib/utils";
  */
 
 export function renderCustomerOrderConfirmationEmail(order: Order): string {
+  const isCod = isCodOrder(order);
   const itemsTotal = order.line_items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const shippingCost = Math.max(0, order.total_amount - itemsTotal);
+  const codFee = isCod ? order.cod_fee ?? COD_FEE : 0;
+  const shippingCost = Math.max(0, order.total_amount - itemsTotal - codFee);
 
   const itemsHtml = order.line_items
     .map(
@@ -76,7 +88,11 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
               <p style="margin: 0 0 10px; font-size: 15px;">Dear <strong>${order.customer_name}</strong>,</p>
               <p style="margin: 0 0 16px; font-size: 14px; color: #57534E;">Greetings from Anayas!</p>
               <p style="margin: 0 0 14px; color: #1C1917;">
-                We're delighted to confirm that your order has been placed successfully and your payment has been received.
+                ${
+                  isCod
+                    ? "We're delighted to confirm that your Cash on Delivery (COD) order has been placed successfully."
+                    : "We're delighted to confirm that your order has been placed successfully and your payment has been received."
+                }
               </p>
               <p style="margin: 0 0 24px; color: #57534E;">
                 Our team is preparing your order. We will notify you as soon as your order is dispatched, along with the tracking details so you can follow its journey to you.
@@ -86,7 +102,12 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
               <div style="background-color: #FAF8F5; border: 1px solid #E9E3DB; border-radius: 10px; padding: 16px 20px; margin-bottom: 22px;">
                 <p style="margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #C5A059;">ORDER DETAILS</p>
                 <p style="margin: 0 0 4px; font-size: 13px;"><strong>Order Number:</strong> ${order.order_number}</p>
-                <p style="margin: 0; font-size: 13px;"><strong>Payment ID:</strong> <span style="font-family: monospace;">${order.razorpay_payment_id || "Paid Online"}</span></p>
+                ${
+                  isCod
+                    ? `<p style="margin: 0 0 4px; font-size: 13px;"><strong>Payment Mode:</strong> Cash on Delivery (includes ₹${codFee} COD handling fee)</p>
+                       <p style="margin: 0; font-size: 13px;"><strong>Amount Payable at Delivery:</strong> ${formatPrice(order.total_amount)}</p>`
+                    : `<p style="margin: 0; font-size: 13px;"><strong>Payment ID:</strong> <span style="font-family: monospace;">${order.razorpay_payment_id || "Paid Online"}</span></p>`
+                }
               </div>
 
               <!-- DELIVERY DESTINATION -->
@@ -120,8 +141,16 @@ export function renderCustomerOrderConfirmationEmail(order: Order): string {
                     ${shippingCost === 0 ? "FREE" : formatPrice(shippingCost)}
                   </td>
                 </tr>
+                ${
+                  isCod
+                    ? `<tr>
+                  <td style="padding: 4px 0;"><strong>COD Handling Fee:</strong></td>
+                  <td style="padding: 4px 0; text-align: right; color: #1C1917;">${formatPrice(codFee)}</td>
+                </tr>`
+                    : ""
+                }
                 <tr>
-                  <td style="padding: 10px 0 0; font-size: 15px; font-weight: 700; color: #1C1917; border-top: 1px solid #E9E3DB;"><strong>Total Paid:</strong></td>
+                  <td style="padding: 10px 0 0; font-size: 15px; font-weight: 700; color: #1C1917; border-top: 1px solid #E9E3DB;"><strong>${isCod ? "Amount Payable at Delivery:" : "Total Paid:"}</strong></td>
                   <td style="padding: 10px 0 0; font-size: 16px; font-weight: 700; color: #1C1917; text-align: right; border-top: 1px solid #E9E3DB;">${formatPrice(order.total_amount)}</td>
                 </tr>
               </table>
@@ -154,7 +183,9 @@ export function renderAdminNewOrderAlertEmail(
   order: Order,
   studioBaseUrl = "https://anayasjewels.com"
 ): string {
-  const studioOrderLink = `${studioBaseUrl}/studio/structure/order;${order.id || `order-${order.order_number.toLowerCase()}`}`;
+  const isCod = isCodOrder(order);
+  const sanityDocId = `order-${order.order_number.toLowerCase()}`;
+  const studioOrderLink = `${studioBaseUrl}/studio/structure/order;${sanityDocId}`;
 
   const itemsListText = order.line_items
     .map(
@@ -163,12 +194,18 @@ export function renderAdminNewOrderAlertEmail(
     )
     .join("<br/>");
 
+  const statusBadgeHtml = isCod
+    ? `<div style="background-color: #FEF3C7; border: 2px solid #D97706; color: #92400E; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; text-align: center;">
+         💵 CASH ON DELIVERY — COLLECT ${formatPrice(order.total_amount)} AT DELIVERY
+       </div>`
+    : `<span style="display: inline-block; background-color: #EAD5BE; color: #1C1917; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;">New Paid Order</span>`;
+
   return `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>🛍️ New Order #${order.order_number} Received</title>
+  <title>${isCod ? `💵 COD Order #${order.order_number}` : `🛍️ New Order #${order.order_number} Received`}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F3EFEA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
   <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #F3EFEA; padding: 40px 16px;">
@@ -177,10 +214,14 @@ export function renderAdminNewOrderAlertEmail(
         <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 580px; background-color: #FFFFFF; border-radius: 14px; border: 1px solid #E9E3DB; padding: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
           <tr>
             <td>
-              <span style="display: inline-block; background-color: #EAD5BE; color: #1C1917; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;">New Paid Order</span>
+              ${statusBadgeHtml}
               <h1 style="margin: 0 0 12px; font-family: 'Times New Roman', Georgia, serif; font-size: 24px; color: #1C1917;">Order #${order.order_number} — ${formatPrice(order.total_amount)}</h1>
               <p style="margin: 0 0 20px; font-size: 15px; color: #1C1917; line-height: 1.5;">
-                A new order has been paid via Razorpay by <strong>${order.customer_name}</strong>. Please prepare the pieces and generate the BlueDart courier label.
+                ${
+                  isCod
+                    ? `A new <strong>Cash on Delivery (COD)</strong> order has been placed by <strong>${order.customer_name}</strong>. Please book a <strong>BlueDart COD shipment</strong> (not prepaid) for <strong>${formatPrice(order.total_amount)}</strong>.`
+                    : `A new order has been paid via Razorpay by <strong>${order.customer_name}</strong>. Please prepare the pieces and generate the BlueDart courier label.`
+                }
               </p>
 
               <!-- Shipping Slip Box -->
@@ -193,7 +234,11 @@ export function renderAdminNewOrderAlertEmail(
                   ${order.shipping_address.street}<br/>
                   ${order.shipping_address.city}, ${order.shipping_address.state} - ${order.shipping_address.postal_code}
                 </p>
-                <p style="margin: 6px 0 0; font-size: 12px; color: #78716C;"><strong>Razorpay Payment:</strong> ${order.razorpay_payment_id}</p>
+                ${
+                  isCod
+                    ? `<p style="margin: 6px 0 0; font-size: 12px; color: #92400E; font-weight: 700;"><strong>Payment Mode:</strong> Cash on Delivery (Collect ${formatPrice(order.total_amount)} at Delivery)</p>`
+                    : `<p style="margin: 6px 0 0; font-size: 12px; color: #78716C;"><strong>Razorpay Payment:</strong> ${order.razorpay_payment_id}</p>`
+                }
               </div>
 
               <!-- Product List Box -->

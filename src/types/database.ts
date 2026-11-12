@@ -48,6 +48,7 @@ export interface OrderLineItem {
 export type OrderStatus =
   | "pending"
   | "paid"
+  | "cod_confirmed"
   | "processing"
   | "dispatched"
   | "delivered"
@@ -62,6 +63,8 @@ export interface Order {
   shipping_address: ShippingAddress;
   line_items: OrderLineItem[];
   total_amount: number;
+  payment_method?: string;
+  cod_fee?: number;
   razorpay_order_id: string;
   razorpay_payment_id: string;
   status: OrderStatus;

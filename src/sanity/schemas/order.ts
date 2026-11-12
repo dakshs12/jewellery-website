@@ -27,6 +27,7 @@ export const order = defineType({
         list: [
           { title: "Payment Pending", value: "pending" },
           { title: "Paid & Confirmed", value: "paid" },
+          { title: "COD Confirmed (Unpaid)", value: "cod_confirmed" },
           { title: "Processing & Packaging", value: "processing" },
           { title: "Dispatched / Shipped", value: "dispatched" },
           { title: "Delivered", value: "delivered" },
@@ -157,8 +158,16 @@ export const order = defineType({
       ],
     }),
     defineField({
+      name: "paymentMethod",
+      title: "Payment Method",
+      type: "string",
+      group: "details",
+      initialValue: "Prepaid (Razorpay)",
+      readOnly: true,
+    }),
+    defineField({
       name: "totalAmount",
-      title: "Total Paid Amount (₹)",
+      title: "Total Amount (₹)",
       type: "number",
       group: "details",
       readOnly: true,
@@ -191,13 +200,35 @@ export const order = defineType({
       customerName: "customerName",
       totalAmount: "totalAmount",
       status: "status",
+      paymentMethod: "paymentMethod",
+      razorpayOrderId: "razorpayOrderId",
       date: "createdAt",
     },
-    prepare({ orderNumber, customerName, totalAmount, status, date }) {
+    prepare({
+      orderNumber,
+      customerName,
+      totalAmount,
+      status,
+      paymentMethod,
+      razorpayOrderId,
+      date,
+    }) {
+      const formattedAmount = Number(totalAmount || 0).toLocaleString("en-IN");
+      const isCod =
+        status === "cod_confirmed" ||
+        razorpayOrderId === "COD" ||
+        (typeof paymentMethod === "string" &&
+          (paymentMethod.toLowerCase().includes("cod") ||
+            paymentMethod.toLowerCase().includes("cash on delivery")));
       const formattedDate = date ? new Date(date).toLocaleDateString() : "";
+      const modeText = isCod
+        ? `COD (Collect ₹${formattedAmount})`
+        : `Prepaid • ₹${formattedAmount}`;
+      const statusText = (status || "pending").toUpperCase();
+
       return {
-        title: `${orderNumber || "New Order"} — ${customerName || "Customer"} (₹${totalAmount || 0})`,
-        subtitle: `Status: ${(status || "pending").toUpperCase()} • ${formattedDate}`,
+        title: `${orderNumber || "New Order"} — ${customerName || "Customer"} (₹${formattedAmount})`,
+        subtitle: `${orderNumber || "Order"} • ${modeText} • ${statusText}${formattedDate ? ` • ${formattedDate}` : ""}`,
       };
     },
   },

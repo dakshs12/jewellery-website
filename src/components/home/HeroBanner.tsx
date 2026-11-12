@@ -19,7 +19,7 @@ export default function HeroBanner({
   heroTitleText,
 }: HeroBannerProps = {}) {
   return (
-    <section className="relative overflow-hidden bg-[#FFF6EA] pt-8 pb-16 lg:pt-16 lg:pb-24">
+    <section id="hero-section" className="relative overflow-hidden bg-[#FFF6EA] pt-8 pb-16 lg:pt-16 lg:pb-24">
       {/* Subtle gold decorative gradient orbs */}
       <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-[#D4AF37]/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-96 h-96 rounded-full bg-[#E8D7D0]/20 blur-3xl pointer-events-none" />

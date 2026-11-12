@@ -9,12 +9,14 @@ import {
   X,
   ShieldCheck,
   CreditCard,
+  Banknote,
   ShoppingBag,
   CheckCircle2,
   AlertCircle,
   RefreshCw,
 } from "lucide-react";
 import { useHydratedCart } from "@/hooks/useHydratedCart";
+import { MAX_COD_AMOUNT, COD_FEE } from "@/lib/checkoutConfig";
 import { formatPrice } from "@/lib/utils";
 import { Order } from "@/types/database";
 import {
@@ -60,10 +62,27 @@ export default function GuestCheckoutModal({
     postalCode: "",
   });
 
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "cod">("online");
+  const [completedPaymentMethod, setCompletedPaymentMethod] = useState<"online" | "cod">("online");
   const [loading, setLoading] = useState(false);
   const [paymentStatusText, setPaymentStatusText] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
+
+  const isCodEligible = subtotal <= MAX_COD_AMOUNT;
+  const effectivePaymentMethod = isCodEligible ? paymentMethod : "online";
+  const activeCodFee = effectivePaymentMethod === "cod" ? COD_FEE : 0;
+  const payableTotal = finalTotal + activeCodFee;
+
+  // Automatically revert COD back to Online if subtotal exceeds ₹1,500
+  useEffect(() => {
+    if (paymentMethod === "cod" && subtotal > MAX_COD_AMOUNT) {
+      const id = window.setTimeout(() => {
+        setPaymentMethod("online");
+      }, 0);
+      return () => window.clearTimeout(id);
+    }
+  }, [paymentMethod, subtotal]);
 
   // Preload Razorpay checkout script when modal opens
   useEffect(() => {
@@ -76,6 +95,7 @@ export default function GuestCheckoutModal({
     if (loading) return;
     setErrorMessage(null);
     setCompletedOrder(null);
+    setCompletedPaymentMethod("online");
     onClose();
   };
 
@@ -119,6 +139,27 @@ export default function GuestCheckoutModal({
     return null;
   };
 
+  const finalizeOrderSuccess = (order: Order, method: "online" | "cod") => {
+    setCompletedPaymentMethod(method);
+    setCompletedOrder(order);
+    clearCart();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("anayas-stock-updated"));
+    }
+
+    // Trigger celebratory gold confetti
+    try {
+      confetti({
+        particleCount: 90,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ["#D4AF37", "#C5A059", "#E8D7D0", "#1C1917"],
+      });
+    } catch {
+      // ignore canvas errors
+    }
+  };
+
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -134,6 +175,96 @@ export default function GuestCheckoutModal({
       return;
     }
 
+    // Cash on Delivery Flow
+    if (effectivePaymentMethod === "cod") {
+      if (!isCodEligible) {
+        setPaymentMethod("online");
+        setErrorMessage(
+          "Cash on Delivery is only available for orders up to ₹1,500. Please pay online for this order."
+        );
+        return;
+      }
+
+      setLoading(true);
+      setPaymentStatusText("Confirming your Cash on Delivery order...");
+
+      try {
+        const codRes = await fetch("/api/orders/create-cod", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerDetails: {
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              shipping_address: {
+                street: formData.street,
+                city: formData.city,
+                state: formData.state,
+                postal_code: formData.postalCode,
+              },
+            },
+            items: items.map((i) => ({
+              productId: i.product.id,
+              quantity: i.quantity,
+            })),
+          }),
+        });
+
+        const codData = await codRes.json();
+        if (!codRes.ok || !codData.success) {
+          throw new Error(
+            codData.error || "Could not place Cash on Delivery order."
+          );
+        }
+
+        const fallbackOrder: Order = {
+          id: codData.orderNumber,
+          order_number: codData.orderNumber,
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          shipping_address: {
+            street: formData.street,
+            city: formData.city,
+            state: formData.state,
+            postal_code: formData.postalCode,
+          },
+          line_items: items.map((i) => ({
+            product_id: i.product.id,
+            title: i.product.title,
+            price: i.product.sale_price ?? i.product.price,
+            quantity: i.quantity,
+            image: i.product.images[0] || "/products/necklace/necklace-01.jpg",
+          })),
+          total_amount: codData.totalAmount,
+          payment_method: "Cash on Delivery (COD)",
+          cod_fee: COD_FEE,
+          razorpay_order_id: "COD",
+          razorpay_payment_id: "Pay on Delivery",
+          status: "cod_confirmed",
+          courier_name: "BlueDart",
+          tracking_number: null,
+          tracking_url: null,
+          created_at: new Date().toISOString(),
+        };
+
+        finalizeOrderSuccess(codData.order || fallbackOrder, "cod");
+      } catch (err: unknown) {
+        console.error("COD submission failed:", err);
+        setErrorMessage(
+          err instanceof Error
+            ? err.message
+            : "An unexpected error occurred while placing your COD order."
+        );
+      } finally {
+        setLoading(false);
+        setPaymentStatusText(null);
+      }
+      return;
+    }
+
+    // Online Razorpay Flow (Preserved Unchanged)
     setLoading(true);
     setPaymentStatusText("Verifying bag & initializing Razorpay...");
 
@@ -226,23 +357,7 @@ export default function GuestCheckoutModal({
             }
 
             // Order success!
-            setCompletedOrder(confirmData.order);
-            clearCart();
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new CustomEvent("anayas-stock-updated"));
-            }
-
-            // Trigger celebratory gold confetti
-            try {
-              confetti({
-                particleCount: 90,
-                spread: 80,
-                origin: { y: 0.6 },
-                colors: ["#D4AF37", "#C5A059", "#E8D7D0", "#1C1917"],
-              });
-            } catch {
-              // ignore canvas errors
-            }
+            finalizeOrderSuccess(confirmData.order, "online");
           } catch (err: unknown) {
             console.error("Order verification error:", err);
             setErrorMessage(
@@ -355,50 +470,76 @@ export default function GuestCheckoutModal({
             <div className="flex-1 overflow-y-auto p-5 sm:p-8">
               {completedOrder ? (
                 /* ORDER CONFIRMATION VIEW */
-                <div className="max-w-2xl mx-auto text-center py-4">
-                  <div className="w-16 h-16 rounded-full bg-[#E8D7D0] text-[#1C1917] flex items-center justify-center mx-auto mb-4 shadow-md">
-                    <CheckCircle2 className="w-8 h-8 text-[#2D4F3E]" />
-                  </div>
-                  <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold block mb-1">
-                    Payment Verified via Razorpay
-                  </span>
-                  <h2 className="font-serif text-3xl font-semibold text-[#1C1917] mb-3">
-                    Order <span className="font-sans font-semibold tracking-wide">#{completedOrder.order_number}</span>
-                  </h2>
-                  <p className="text-sm sm:text-base text-[#78716C] leading-relaxed mb-6 bg-white p-4 rounded-2xl border border-[#E9E3DB]">
-                    Thank you for shopping with Anayas. Your order is confirmed and our artisans are preparing it. We will email your courier tracking link as soon as it is dispatched.
-                  </p>
+                (() => {
+                  const isCompletedCod =
+                    completedPaymentMethod === "cod" ||
+                    completedOrder.status === "cod_confirmed" ||
+                    completedOrder.razorpay_order_id === "COD";
 
-                  {/* Summary card */}
-                  <div className="bg-[#F3EFEA] rounded-2xl p-5 border border-[#E9E3DB] text-left mb-6 space-y-3">
-                    <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
-                      <span className="text-[#78716C]">Recipient</span>
-                      <span className="font-semibold text-[#1C1917]">
-                        {completedOrder.customer_name} ({completedOrder.customer_phone})
+                  return (
+                    <div className="max-w-2xl mx-auto text-center py-4">
+                      <div className="w-16 h-16 rounded-full bg-[#E8D7D0] text-[#1C1917] flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <CheckCircle2 className="w-8 h-8 text-[#2D4F3E]" />
+                      </div>
+                      <span className="text-xs uppercase tracking-widest text-[#C5A059] font-bold block mb-1">
+                        {isCompletedCod
+                          ? "Cash on Delivery Confirmed"
+                          : "Payment Verified via Razorpay"}
                       </span>
-                    </div>
-                    <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
-                      <span className="text-[#78716C]">Payment Reference</span>
-                      <span className="font-mono text-[11px] text-[#1C1917]">
-                        {completedOrder.razorpay_payment_id}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm pt-1">
-                      <span className="font-serif font-bold text-[#1C1917]">Total Paid</span>
-                      <span className="font-sans font-bold text-[#1C1917]">
-                        {formatPrice(completedOrder.total_amount)}
-                      </span>
-                    </div>
-                  </div>
+                      <h2 className="font-serif text-3xl font-semibold text-[#1C1917] mb-3">
+                        Order <span className="font-sans font-semibold tracking-wide">#{completedOrder.order_number}</span>
+                      </h2>
+                      <p className="text-sm sm:text-base text-[#78716C] leading-relaxed mb-6 bg-white p-4 rounded-2xl border border-[#E9E3DB]">
+                        {isCompletedCod ? (
+                          <>
+                            <strong className="text-[#1C1917]">
+                              Order Confirmed (Cash on Delivery) — Keep {formatPrice(completedOrder.total_amount)} ready at delivery.
+                            </strong>{" "}
+                            Our artisans are preparing your order and we will email your courier tracking link as soon as it is dispatched.
+                          </>
+                        ) : (
+                          "Thank you for shopping with Anayas. Your order is confirmed and our artisans are preparing it. We will email your courier tracking link as soon as it is dispatched."
+                        )}
+                      </p>
 
-                  <button
-                    type="button"
-                    onClick={handleClose}
-                    className="px-8 py-3.5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors shadow-md min-h-[44px] cursor-pointer"
-                  >
-                    Continue Shopping
-                  </button>
-                </div>
+                      {/* Summary card */}
+                      <div className="bg-[#F3EFEA] rounded-2xl p-5 border border-[#E9E3DB] text-left mb-6 space-y-3">
+                        <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
+                          <span className="text-[#78716C]">Recipient</span>
+                          <span className="font-semibold text-[#1C1917]">
+                            {completedOrder.customer_name} ({completedOrder.customer_phone})
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs border-b border-[#E9E3DB] pb-3">
+                          <span className="text-[#78716C]">
+                            {isCompletedCod ? "Payment Mode" : "Payment Reference"}
+                          </span>
+                          <span className="font-mono text-[11px] text-[#1C1917]">
+                            {isCompletedCod
+                              ? "Cash on Delivery (COD)"
+                              : completedOrder.razorpay_payment_id}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm pt-1">
+                          <span className="font-serif font-bold text-[#1C1917]">
+                            {isCompletedCod ? "Amount Payable at Delivery" : "Total Paid"}
+                          </span>
+                          <span className="font-sans font-bold text-[#1C1917]">
+                            {formatPrice(completedOrder.total_amount)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleClose}
+                        className="px-8 py-3.5 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs font-semibold uppercase tracking-widest hover:bg-[#C5A059] transition-colors shadow-md min-h-[44px] cursor-pointer"
+                      >
+                        Continue Shopping
+                      </button>
+                    </div>
+                  );
+                })()
               ) : (
                 /* CHECKOUT FORM VIEW */
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -548,8 +689,94 @@ export default function GuestCheckoutModal({
                       </div>
                     </div>
 
-                    {/* Razorpay Standard Payment Action */}
-                    <div className="pt-4">
+                    {/* Payment Method Selector */}
+                    <div className="pt-3 space-y-3">
+                      <div className="pt-1 pb-2 border-b border-[#EAD5BE]/60">
+                        <h4 className="text-xs uppercase tracking-widest font-semibold text-[#C5A059]">
+                          PAYMENT METHOD
+                        </h4>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* Option 1: Pay Online */}
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod("online")}
+                          className={`text-left p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer flex items-start gap-3 ${effectivePaymentMethod === "online"
+                              ? "bg-[#EAD5BE]/45 border-[#1C1917] ring-1 ring-[#1C1917] shadow-sm"
+                              : "bg-white border-[#E9E3DB] hover:border-[#C5A059]"
+                            }`}
+                        >
+                          <div
+                            className={`mt-0.5 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${effectivePaymentMethod === "online"
+                                ? "border-[#1C1917] bg-[#1C1917]"
+                                : "border-[#A8A29E]"
+                              }`}
+                          >
+                            {effectivePaymentMethod === "online" && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#FFF6EA]" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <CreditCard className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
+                              <span className="text-xs font-semibold text-[#1C1917]">
+                                Pay Online (UPI, Cards, NetBanking)
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[#2D4F3E] font-medium mt-1">
+                              Avoid Handling fee
+                            </p>
+                          </div>
+                        </button>
+
+                        {/* Option 2: Cash on Delivery (COD) */}
+                        <button
+                          type="button"
+                          disabled={!isCodEligible}
+                          onClick={() => {
+                            if (isCodEligible) setPaymentMethod("cod");
+                          }}
+                          className={`text-left p-3.5 rounded-2xl border transition-all duration-200 flex items-start gap-3 ${!isCodEligible
+                              ? "bg-white/60 border-[#E9E3DB] opacity-50 cursor-not-allowed"
+                              : effectivePaymentMethod === "cod"
+                                ? "bg-[#EAD5BE]/45 border-[#1C1917] ring-1 ring-[#1C1917] shadow-sm cursor-pointer"
+                                : "bg-white border-[#E9E3DB] hover:border-[#C5A059] cursor-pointer"
+                            }`}
+                        >
+                          <div
+                            className={`mt-0.5 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${effectivePaymentMethod === "cod" && isCodEligible
+                                ? "border-[#1C1917] bg-[#1C1917]"
+                                : "border-[#A8A29E]"
+                              }`}
+                          >
+                            {effectivePaymentMethod === "cod" && isCodEligible && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#FFF6EA]" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <Banknote className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
+                              <span className="text-xs font-semibold text-[#1C1917]">
+                                Cash on Delivery (COD)
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[#78716C] mt-1">
+                              + ₹{COD_FEE} COD Handling Fee (Available up to ₹{MAX_COD_AMOUNT.toLocaleString("en-IN")})
+                            </p>
+                          </div>
+                        </button>
+                      </div>
+
+                      {!isCodEligible && (
+                        <p className="text-[11px] text-[#8C6D2B] bg-[#FAF4EB] border border-[#EAD5BE] rounded-xl px-3.5 py-2">
+                          Cash on Delivery is only available for orders up to ₹1,500. Please pay online for this order.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Primary Payment / COD Action */}
+                    <div className="pt-3">
                       {/* Electronic Acceptance Notice (Clauses 29 & 30) */}
                       <p className="text-[11px] text-[#78716C] text-center leading-relaxed mb-3">
                         By proceeding to payment, you acknowledge that you have read and agreed to our{" "}
@@ -585,17 +812,22 @@ export default function GuestCheckoutModal({
                       <button
                         type="submit"
                         disabled={loading || items.length === 0}
-                        className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-xl flex items-center justify-center gap-2 min-h-[48px] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                        className="w-full py-4 px-6 rounded-full bg-[#1C1917] text-[#FAF8F5] text-xs uppercase tracking-[0.16em] font-semibold hover:bg-[#C5A059] transition-all duration-300 shadow-xl flex items-center justify-center gap-2 min-h-[48px] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                       >
                         {loading ? (
                           <>
                             <RefreshCw className="w-4 h-4 text-[#C5A059] animate-spin" />
-                            <span>{paymentStatusText || "Processing Payment..."}</span>
+                            <span>{paymentStatusText || "Processing Order..."}</span>
+                          </>
+                        ) : effectivePaymentMethod === "cod" ? (
+                          <>
+                            <Banknote className="w-4 h-4 text-[#C5A059]" />
+                            <span>Place COD Order • Pay {formatPrice(payableTotal)} on Delivery</span>
                           </>
                         ) : (
                           <>
                             <CreditCard className="w-4 h-4 text-[#C5A059]" />
-                            <span>Pay {formatPrice(finalTotal)} via Razorpay</span>
+                            <span>Proceed to Pay {formatPrice(payableTotal)}</span>
                           </>
                         )}
                       </button>
@@ -655,16 +887,34 @@ export default function GuestCheckoutModal({
                             {shippingFee === 0 ? "FREE" : formatPrice(shippingFee)}
                           </span>
                         </div>
+                        {effectivePaymentMethod === "cod" && (
+                          <div className="flex justify-between">
+                            <span>COD Handling Fee</span>
+                            <span className="font-sans font-semibold text-[#1C1917] tracking-tight">
+                              {formatPrice(COD_FEE)}
+                            </span>
+                          </div>
+                        )}
                         <div className="flex justify-between items-baseline text-base pt-2 border-t border-[#E9E3DB]">
-                          <span className="font-serif font-semibold text-[#1C1917]">Grand Total</span>
-                          <span className="font-sans font-bold text-lg text-[#1C1917] tracking-tight">{formatPrice(finalTotal)}</span>
+                          <span className="font-serif font-semibold text-[#1C1917]">
+                            {effectivePaymentMethod === "cod"
+                              ? "Total Payable on Delivery"
+                              : "Grand Total"}
+                          </span>
+                          <span className="font-sans font-bold text-lg text-[#1C1917] tracking-tight">
+                            {formatPrice(payableTotal)}
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-[#E9E3DB] flex items-center justify-center gap-2 text-[11px] text-[#78716C]">
                       <ShieldCheck className="w-4 h-4 text-[#C5A059]" />
-                      <span>Razorpay 256-Bit SSL Standard Gateway</span>
+                      <span>
+                        {effectivePaymentMethod === "cod"
+                          ? "Cash on Delivery • Pay at Your Doorstep"
+                          : "Razorpay 256-Bit SSL Standard Gateway"}
+                      </span>
                     </div>
                   </div>
                 </div>

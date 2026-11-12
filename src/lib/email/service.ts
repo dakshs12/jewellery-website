@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { Order } from "@/types/database";
 import {
+  isCodOrder,
   renderCustomerOrderConfirmationEmail,
   renderAdminNewOrderAlertEmail,
   renderCustomerOrderDispatchedEmail,
@@ -43,6 +44,11 @@ export async function sendOrderConfirmationEmails(
     };
   }
 
+  const isCod = isCodOrder(order);
+  const adminSubject = isCod
+    ? `💵 [COD - Collect ₹${order.total_amount}] New Order #${order.order_number} (${order.customer_name})`
+    : `🛍️ New Order #${order.order_number} — ₹${order.total_amount} (${order.customer_name})`;
+
   try {
     const [customerRes, adminRes] = await Promise.allSettled([
       resend.emails.send({
@@ -56,7 +62,7 @@ export async function sendOrderConfirmationEmails(
         from: SENDER_EMAIL,
         to: ADMIN_EMAIL,
         replyTo: order.customer_email || CLIENT_REPLY_TO,
-        subject: `🛍️ New Order #${order.order_number} — ₹${order.total_amount} (${order.customer_name})`,
+        subject: adminSubject,
         html: adminHtml,
       }),
     ]);

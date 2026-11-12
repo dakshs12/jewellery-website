@@ -1,6 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ShieldCheck, Phone, Mail, MapPin } from "lucide-react";
+import {
+  InstagramIcon,
+  PinterestIcon,
+  FacebookIcon,
+  SOCIAL_LINKS,
+} from "@/components/common/SocialIcons";
 
 export default function Footer() {
   return (
@@ -30,6 +36,38 @@ export default function Footer() {
                 <ShieldCheck className="w-4 h-4 flex-shrink-0" />
                 <span>Delivery Across India</span>
               </div>
+            </div>
+            <div className="flex items-center gap-3 pt-2">
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Anayas Jewels on Instagram"
+                title="Instagram"
+                className="w-9 h-9 rounded-full bg-[#2E2925] border border-[#3E3832] flex items-center justify-center text-[#EAD5BE] hover:bg-[#C5A059] hover:text-[#1C1917] hover:border-[#C5A059] transition-all"
+              >
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.pinterest}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Anayas Jewels on Pinterest"
+                title="Pinterest"
+                className="w-9 h-9 rounded-full bg-[#2E2925] border border-[#3E3832] flex items-center justify-center text-[#EAD5BE] hover:bg-[#C5A059] hover:text-[#1C1917] hover:border-[#C5A059] transition-all"
+              >
+                <PinterestIcon className="w-4 h-4" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Anayas Jewels on Facebook"
+                title="Facebook"
+                className="w-9 h-9 rounded-full bg-[#2E2925] border border-[#3E3832] flex items-center justify-center text-[#EAD5BE] hover:bg-[#C5A059] hover:text-[#1C1917] hover:border-[#C5A059] transition-all"
+              >
+                <FacebookIcon className="w-4 h-4" />
+              </a>
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Cormorant_Garamond, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import AgentationDev from "@/components/dev/AgentationDev";
+import WhatsAppButton from "@/components/common/WhatsAppButton";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     template: "%s | Anayas Jewels",
   },
   description:
-    "Discover handcrafted Kundan, Polki, Meenakari, and heirloom imitation jewellery designed for weddings, festivities, and timeless everyday elegance.",
+    "Discover premium imitation jewellery at Anayas. Explore a wide range of Kundan, Polki, Meenakari, Heritage, Anti-tarnish and more, with premium finishes for everyday wear, bridal occasions, weddings and celebrations. Affordable luxury for every occasion.",
   alternates: {
     canonical: "https://anayasjewels.com",
   },
@@ -112,7 +113,11 @@ const jsonLd = {
         "addressRegion": "Madhya Pradesh",
         "addressCountry": "IN",
       },
-      "sameAs": ["https://www.instagram.com/_anayasjewels/"],
+      "sameAs": [
+        "https://www.instagram.com/_anayasjewels/",
+        "https://pin.it/3XUgCQ6uH",
+        "https://www.facebook.com/people/Anayas-Jewels/61594595194668/?mibextid=wwXIfr&rdid=UslZfHeamDmtnaYN&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F18gfM99xrV%2F%3Fmibextid%3DwwXIfr%26ref%3D1",
+      ],
       "areaServed": {
         "@type": "Country",
         "name": "India",
@@ -181,6 +186,7 @@ export default function RootLayout({
           </>
         )}
         {children}
+        <WhatsAppButton />
         <AgentationDev />
       </body>
     </html>

@@ -6,28 +6,14 @@ import { ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import {
+  InstagramIcon,
+  PinterestIcon,
+  SOCIAL_LINKS,
+} from "@/components/common/SocialIcons";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
-}
-
-function InstagramIcon({ className = "w-7 h-7" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  );
 }
 
 const INSTAGRAM_CARDS = [
@@ -52,7 +38,8 @@ const INSTAGRAM_CARDS = [
 ];
 
 export default function InstagramSection() {
-  const instagramUrl = "https://www.instagram.com/_anayasjewels/";
+  const instagramUrl = SOCIAL_LINKS.instagram;
+  const pinterestUrl = SOCIAL_LINKS.pinterest;
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
@@ -86,6 +73,18 @@ export default function InstagramSection() {
         <p className="font-sans text-xs sm:text-sm text-[#78716C] mt-2">
           Tag <span className="font-medium text-[#C5A059]">@_anayasjewels</span> to be featured in our feed
         </p>
+        <div className="mt-3 flex items-center justify-center">
+          <a
+            href={pinterestUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#D8C2AA] bg-white/70 text-[11px] font-medium text-[#1C1917] hover:border-[#C5A059] hover:text-[#8C6D2B] transition-colors"
+          >
+            <PinterestIcon className="w-3.5 h-3.5 text-[#C5A059]" />
+            <span>Explore our pins on Pinterest</span>
+            <ArrowRight className="w-3 h-3" />
+          </a>
+        </div>
       </div>
 
       {/* 2. Horizon Split Row: The cards row itself is bisected exactly 50/50 by the horizon */}
