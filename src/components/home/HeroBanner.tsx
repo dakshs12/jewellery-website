@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 interface HeroBannerProps {
@@ -18,6 +18,27 @@ export default function HeroBanner({
   heroBadgeText,
   heroTitleText,
 }: HeroBannerProps = {}) {
+  useEffect(() => {
+    const refreshScrollTrigger = async () => {
+      try {
+        if (typeof document !== "undefined" && document.fonts) {
+          await document.fonts.ready;
+        }
+        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+        ScrollTrigger.refresh();
+      } catch {
+        // Continue gracefully if GSAP ScrollTrigger is not loaded
+      }
+    };
+
+    refreshScrollTrigger();
+    const fontTimer = setTimeout(refreshScrollTrigger, 400);
+
+    return () => {
+      clearTimeout(fontTimer);
+    };
+  }, []);
+
   return (
     <section id="hero-section" className="relative overflow-hidden bg-[#FFF6EA] pt-8 pb-16 lg:pt-16 lg:pb-24">
       {/* Subtle gold decorative gradient orbs */}
@@ -27,12 +48,7 @@ export default function HeroBanner({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
           {/* Editorial Content (Desktop: Left Column | Mobile: Shifted Below Photo) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="order-2 lg:order-1 lg:col-span-7 flex flex-col justify-center text-left"
-          >
+          <div className="order-2 lg:order-1 lg:col-span-7 flex flex-col justify-center text-left opacity-100">
 
             {/* High-Impact Editorial Bold Headline */}
             <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.15rem] font-bold text-[#1C1917] tracking-tight leading-[1.18] mb-4 sm:mb-6">
@@ -79,15 +95,10 @@ export default function HeroBanner({
                 </span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Editorial Showcase Image (Desktop: Right Column | Mobile: Appears First at Top) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="order-1 lg:order-2 lg:col-span-5 relative w-full"
-          >
+          <div className="order-1 lg:order-2 lg:col-span-5 relative w-full opacity-100">
             {/* Primary Hero Portrait */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-[#FFF6EA] bg-[#F3EFEA] max-w-md mx-auto lg:max-w-none w-full">
               <Image
@@ -97,6 +108,13 @@ export default function HeroBanner({
                 priority
                 sizes="(max-width: 1024px) 100vw, 40vw"
                 className="object-cover object-center"
+                onLoad={() => {
+                  if (typeof window !== "undefined") {
+                    import("gsap/ScrollTrigger")
+                      .then(({ ScrollTrigger }) => ScrollTrigger.refresh())
+                      .catch(() => {});
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-white">
@@ -105,7 +123,7 @@ export default function HeroBanner({
                 </h2>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

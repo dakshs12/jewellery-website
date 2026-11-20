@@ -141,4 +141,12 @@ body {
   }
 }
 
+/* Fail-safe visibility fallback for above-the-fold Hero banner and Logo on fresh page loads */
+#hero-section,
+#hero-section .order-2,
+#hero-section .order-1 {
+  opacity: 1 !important;
+}
+
+
 
